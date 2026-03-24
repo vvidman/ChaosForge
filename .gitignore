@@ -1,0 +1,18 @@
+# Claude Code personal files — never commit
+CLAUDE.local.md
+.claude/settings.local.json
+
+# Auto memory — machine-local, never commit
+.claude/memory/
+
+# SQLite database files
+*.db
+*.db-shm
+*.db-wal
+
+# Frontend dependencies
+src/ChaosForge.Web/node_modules/
+
+# Local development settings
+**/appsettings.Development.json
+**/appsettings.Local.json
