@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ChaosForge.API/ChaosForge.API.csproj" />
+    <Project Path="src/ChaosForge.Application/ChaosForge.Application.csproj" />
+    <Project Path="src/ChaosForge.Domain/ChaosForge.Domain.csproj" />
+    <Project Path="src/ChaosForge.Infrastructure/ChaosForge.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ChaosForge.Application.Tests/ChaosForge.Application.Tests.csproj" />
+    <Project Path="tests/ChaosForge.Domain.Tests/ChaosForge.Domain.Tests.csproj" />
+    <Project Path="tests/ChaosForge.Infrastructure.Tests/ChaosForge.Infrastructure.Tests.csproj" />
+  </Folder>
+</Solution>

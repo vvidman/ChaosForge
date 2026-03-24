@@ -16,3 +16,54 @@ src/ChaosForge.Web/node_modules/
 # Local development settings
 **/appsettings.Development.json
 **/appsettings.Local.json
+
+## [ Visual Studio ]
+## Build eredmények
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+## Visual Studio ideiglenes fájlok és cache-ek
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+
+## [ .NET Core / .NET 10 ]
+## Publish kimenetek
+publish/
+/bin/Release/net10.0/publish/
+/bin/Debug/net10.0/publish/
+
+## Tooling és egyéb
+.artifacts/
+*.ipch
+*.log
+
+## [ Tesztelés ]
+## Test results
+TestResults/
+*.trx
+
+## [ IDE-specifikus fájlok ]
+## JetBrains Rider
+.idea/
+*.sln.iml
+
+## VS Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+## [ Felhasználói adatok és biztonság ]
+## Helyi beállítások (Soha ne commitolj titkokat!)
+appsettings.Development.json
+appsettings.Local.json
+*.pfx
+*.publishsettings
+
+## [ Operációs rendszer ]
+.DS_Store
+Thumbs.db
