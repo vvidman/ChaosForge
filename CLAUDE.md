@@ -43,7 +43,6 @@ Key non-negotiables:
 * `nameof` instead of string literals for member names
 
 ## Permanent Prohibitions
-* NEVER run git commands (see Git Management section above)
 * NEVER put business logic in controllers or SignalR hubs
 * NEVER reference Infrastructure from Domain or Application
 * NEVER call LLM providers directly from Application layer — always through ILLMProvider
@@ -88,13 +87,17 @@ Specs are not standing rules — they define intent for a specific feature and a
 
 Every non-trivial implementation follows these steps in order. Do not skip steps.
 
-1. **Plan** — read the spec from `docs/specs/`, produce a numbered plan. Wait for approval.
-2. **Branch** — create branch from spec `branch` frontmatter field.
+1. **Branch** — create branch from spec `branch` frontmatter field.
+2. **Plan** — read the spec from `docs/specs/`, produce a numbered plan. Wait for approval.
 3. **Implement** — follow the spec. Flag conflicts instead of deviating.
 4. **License** — every new source file requires the license header. See `docs/conventions/csharp.md`.
 5. **Test** — generate or update unit tests. See `docs/conventions/testing.md`.
 6. **Build** — `dotnet build` must pass with zero errors.
-7. **Commit + PR** — commit, open PR to `dev`. Report files created/modified, tests added, manual steps.
+7. **Finalize spec** — after successful build, update the feature spec file:
+   - Set `status: done` in the frontmatter
+   - Check off all completed items in the Implementation Scope checklist
+   - Update the `docs/specs/README.md` frontmatter entry and table row: set status to `done`
+8. **Commit + PR** — commit, open PR to `dev`. Report files created/modified, tests added, manual steps.
 
 For coding standards: `docs/conventions/`
 For build commands: load `docs/conventions/toolchain.md` before running any dotnet command.
