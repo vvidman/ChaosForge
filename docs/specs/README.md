@@ -1,11 +1,11 @@
 ---
 category: specs
-last_updated: "YYYY-MM-DD"
+last_updated: "2026-03-29"
 documents:
-  - file: example-feature.md
-    title: "Example Feature"
-    status: draft
-    date: "YYYY-MM-DD"
+  - file: domain-entities.md
+    title: "Domain Entities"
+    status: ready
+    date: "2026-03-29"
 ---
 
 # Feature Specifications
@@ -26,7 +26,7 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 
 | Title | Status | Date |
 |-------|--------|------|
-| Example Feature | draft | YYYY-MM-DD |
+| Domain Entities | ready | 2026-03-29 |
 
 ---
 
