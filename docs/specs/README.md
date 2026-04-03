@@ -4,7 +4,7 @@ last_updated: "2026-03-29"
 documents:
   - file: domain-entities.md
     title: "Domain Entities"
-    status: ready
+    status: done
     date: "2026-03-29"
 ---
 
@@ -26,7 +26,7 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 
 | Title | Status | Date |
 |-------|--------|------|
-| Domain Entities | ready | 2026-03-29 |
+| Domain Entities | done | 2026-03-29 |
 
 ---
 

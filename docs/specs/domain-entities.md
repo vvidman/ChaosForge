@@ -2,7 +2,7 @@
 category: specs
 title: "Domain Entities"
 branch: "domain-entities"
-status: ready
+status: done
 date: "2026-03-29"
 related_domain: [Project, UseCase, URS, SRS, WorkTask, TaskAttempt, RevisionGate, AgentSlot, AgentInstance]
 related_adr: []
@@ -89,19 +89,19 @@ src/ChaosForge.Domain/
 
 ### Checklist
 
-- [ ] Create `EntityBase<TId>` abstract class with `Id`, `CreatedAt`, and both constructors
-- [ ] Create `DomainException` sealed class with `(string message)` and `(string message, Exception inner)` constructors
-- [ ] Create all 9 enumerations (one file each)
-- [ ] Create `Project` entity with `TransitionTo` status validation (linear sequence only)
-- [ ] Create `UseCase` entity with `UpdatePriority` >= 0 guard
-- [ ] Create `URS` entity with `ApplyHumanEdit` (both params required, non-whitespace)
-- [ ] Create `SRS` entity with `ApplyHumanEdit` (same rules as URS)
-- [ ] Create `WorkTask` entity with all 8 transition methods, each validating current status
-- [ ] Create `TaskAttempt` entity with `Complete`, `Approve`, `Reject`; idempotency guard on resolve
-- [ ] Create `RevisionGate` entity with `Accept`, `EditAndAccept`, `Reject`; already-resolved guard
-- [ ] Create `AgentSlot` entity with `SingletonRoles` static set and `UpdateCount` guard
-- [ ] Create `AgentInstance` entity with `StartWork`, `FinishWork`, `Block`, `MarkFinished`
-- [ ] Verify `dotnet build` passes with zero warnings and zero errors
+- [x] Create `EntityBase<TId>` abstract class with `Id`, `CreatedAt`, and both constructors
+- [x] Create `DomainException` sealed class with `(string message)` and `(string message, Exception inner)` constructors
+- [x] Create all 9 enumerations (one file each)
+- [x] Create `Project` entity with `TransitionTo` status validation (linear sequence only)
+- [x] Create `UseCase` entity with `UpdatePriority` >= 0 guard
+- [x] Create `URS` entity with `ApplyHumanEdit` (both params required, non-whitespace)
+- [x] Create `SRS` entity with `ApplyHumanEdit` (same rules as URS)
+- [x] Create `WorkTask` entity with all 8 transition methods, each validating current status
+- [x] Create `TaskAttempt` entity with `Complete`, `Approve`, `Reject`; idempotency guard on resolve
+- [x] Create `RevisionGate` entity with `Accept`, `EditAndAccept`, `Reject`; already-resolved guard
+- [x] Create `AgentSlot` entity with `SingletonRoles` static set and `UpdateCount` guard
+- [x] Create `AgentInstance` entity with `StartWork`, `FinishWork`, `Block`, `MarkFinished`
+- [x] Verify `dotnet build` passes with zero warnings and zero errors
 
 ### Entity specifications
 
