@@ -41,6 +41,11 @@ public sealed class WorkTask : EntityBase<Guid>
     /// <param name="storyPoints">The estimated complexity in story points.</param>
     public WorkTask(Guid srsId, string title, string description, int storyPoints) : base(Guid.NewGuid())
     {
+        if (string.IsNullOrWhiteSpace(title))
+            throw new DomainException("WorkTask title must not be null or whitespace.");
+        if (string.IsNullOrWhiteSpace(description))
+            throw new DomainException("WorkTask description must not be null or whitespace.");
+
         SRSId = srsId;
         Title = title;
         Description = description;

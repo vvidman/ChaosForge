@@ -50,6 +50,11 @@ public sealed class Project : EntityBase<Guid>
     /// <param name="deadline">Optional deadline for the project.</param>
     public Project(string name, string description, DateTime? deadline = null) : base(Guid.NewGuid())
     {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new DomainException("Project name must not be null or whitespace.");
+        if (string.IsNullOrWhiteSpace(description))
+            throw new DomainException("Project description must not be null or whitespace.");
+
         Name = name;
         Description = description;
         Status = ProjectStatus.Setup;
@@ -74,6 +79,11 @@ public sealed class Project : EntityBase<Guid>
     /// <param name="description">The new description.</param>
     public void UpdateDescription(string description)
     {
+        if (string.IsNullOrWhiteSpace(description))
+        {
+            throw new DomainException("Project description must not be null or whitespace.");
+        }
+
         Description = description;
     }
 
