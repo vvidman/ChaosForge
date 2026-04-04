@@ -16,6 +16,7 @@
 
 using ChaosForge.Domain.Common;
 using ChaosForge.Domain.Enums;
+using ChaosForge.Domain.Events;
 using ChaosForge.Domain.Exceptions;
 
 namespace ChaosForge.Domain.Entities;
@@ -99,6 +100,8 @@ public sealed class Project : EntityBase<Guid>
                 $"Cannot transition project from {Status} to {newStatus}. Only forward sequential transitions are allowed.");
         }
 
+        var oldStatus = Status;
         Status = newStatus;
+        AddDomainEvent(new ProjectStatusChangedEvent(Id, oldStatus, newStatus));
     }
 }

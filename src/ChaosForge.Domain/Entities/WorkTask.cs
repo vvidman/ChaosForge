@@ -16,6 +16,7 @@
 
 using ChaosForge.Domain.Common;
 using ChaosForge.Domain.Enums;
+using ChaosForge.Domain.Events;
 using ChaosForge.Domain.Exceptions;
 
 namespace ChaosForge.Domain.Entities;
@@ -108,7 +109,9 @@ public sealed class WorkTask : EntityBase<Guid>
             throw new DomainException("Cannot start task: no sprint has been assigned.");
         }
 
+        var oldStatus = Status;
         Status = WorkTaskStatus.InProgress;
+        AddDomainEvent(new WorkTaskStatusChangedEvent(Id, oldStatus, Status));
     }
 
     /// <summary>
@@ -122,7 +125,9 @@ public sealed class WorkTask : EntityBase<Guid>
             throw new DomainException($"Cannot send task to review: current status is {Status}, expected {WorkTaskStatus.InProgress}.");
         }
 
+        var oldStatus = Status;
         Status = WorkTaskStatus.InReview;
+        AddDomainEvent(new WorkTaskStatusChangedEvent(Id, oldStatus, Status));
     }
 
     /// <summary>
@@ -146,7 +151,9 @@ public sealed class WorkTask : EntityBase<Guid>
             throw new DomainException($"Cannot approve task: current status is {Status}, expected {WorkTaskStatus.InReview}.");
         }
 
+        var oldStatus = Status;
         Status = WorkTaskStatus.InTesting;
+        AddDomainEvent(new WorkTaskStatusChangedEvent(Id, oldStatus, Status));
     }
 
     /// <summary>
@@ -160,7 +167,9 @@ public sealed class WorkTask : EntityBase<Guid>
             throw new DomainException($"Cannot pass testing: current status is {Status}, expected {WorkTaskStatus.InTesting}.");
         }
 
+        var oldStatus = Status;
         Status = WorkTaskStatus.InDocumentation;
+        AddDomainEvent(new WorkTaskStatusChangedEvent(Id, oldStatus, Status));
     }
 
     /// <summary>
@@ -174,7 +183,9 @@ public sealed class WorkTask : EntityBase<Guid>
             throw new DomainException($"Cannot complete task: current status is {Status}, expected {WorkTaskStatus.InDocumentation}.");
         }
 
+        var oldStatus = Status;
         Status = WorkTaskStatus.Done;
+        AddDomainEvent(new WorkTaskStatusChangedEvent(Id, oldStatus, Status));
     }
 
     /// <summary>
@@ -189,7 +200,9 @@ public sealed class WorkTask : EntityBase<Guid>
             throw new DomainException($"Cannot reject task: current status is {Status}. Must be {WorkTaskStatus.InReview} or {WorkTaskStatus.InTesting}.");
         }
 
+        var oldStatus = Status;
         Status = WorkTaskStatus.Backlog;
         SprintId = null;
+        AddDomainEvent(new WorkTaskStatusChangedEvent(Id, oldStatus, Status));
     }
 }

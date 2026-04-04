@@ -2,7 +2,7 @@
 category: specs
 title: "Domain Events"
 branch: "domain-evts"
-status: ready
+status: done
 date: "2026-04-03"
 related_domain: [Project, WorkTask, TaskAttempt, RevisionGate, AgentInstance]
 related_adr: []
@@ -56,10 +56,10 @@ collection.
 
 ## Implementation Scope — What must be done
 
-- [ ] Create `IDomainEvent` marker interface in `Domain/Events/`
-- [ ] Create `IDomainEventDispatcher` in `Domain/Events/`
-- [ ] Extend `EntityBase<TId>` with domain event collection (see Architecture Decisions)
-- [ ] Create event records in `Domain/Events/`:
+- [x] Create `IDomainEvent` marker interface in `Domain/Events/`
+- [x] Create `IDomainEventDispatcher` in `Domain/Events/`
+- [x] Extend `EntityBase<TId>` with domain event collection (see Architecture Decisions)
+- [x] Create event records in `Domain/Events/`:
 
   `ProjectStatusChangedEvent`
   ```
@@ -110,10 +110,10 @@ collection.
   ```
   Raised in: `AgentInstance.StartWork()`, `FinishWork()`, `Block()`, `MarkFinished()`
 
-- [ ] Update existing entity tests in `Domain.Tests` to assert that the correct domain event
+- [x] Update existing entity tests in `Domain.Tests` to assert that the correct domain event
   is added after each triggering method call (add assertions to existing test methods —
   do not create new test classes)
-- [ ] Run `dotnet build` and `dotnet test` — zero errors, zero failures
+- [x] Run `dotnet build` and `dotnet test` — zero errors, zero failures
 
 ---
 

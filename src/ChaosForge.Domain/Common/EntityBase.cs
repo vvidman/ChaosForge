@@ -14,14 +14,19 @@
    limitations under the License.
 */
 
+using ChaosForge.Domain.Events;
+
 namespace ChaosForge.Domain.Common;
 
 /// <summary>
-/// Abstract base class for all domain entities. Provides identity and creation timestamp.
+/// Abstract base class for all domain entities. Provides identity, creation timestamp,
+/// and a collection of domain events raised during the entity's lifetime.
 /// </summary>
 /// <typeparam name="TId">The type of the entity identifier. Must be non-null.</typeparam>
 public abstract class EntityBase<TId> where TId : notnull
 {
+    private readonly List<IDomainEvent> _domainEvents = [];
+
     /// <summary>
     /// Parameterless constructor required by EF Core. Do not use directly.
     /// </summary>
@@ -45,4 +50,24 @@ public abstract class EntityBase<TId> where TId : notnull
 
     /// <summary>Gets the UTC timestamp when this entity was created.</summary>
     public DateTime CreatedAt { get; private set; }
+
+    /// <summary>Gets the domain events raised by this entity since the last <see cref="ClearDomainEvents"/> call.</summary>
+    public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
+
+    /// <summary>
+    /// Records a domain event to be dispatched after the current unit of work completes.
+    /// </summary>
+    /// <param name="domainEvent">The event to record.</param>
+    protected void AddDomainEvent(IDomainEvent domainEvent)
+    {
+        _domainEvents.Add(domainEvent);
+    }
+
+    /// <summary>
+    /// Removes all recorded domain events. Called by the infrastructure after dispatching.
+    /// </summary>
+    public void ClearDomainEvents()
+    {
+        _domainEvents.Clear();
+    }
 }

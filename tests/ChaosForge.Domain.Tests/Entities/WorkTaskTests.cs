@@ -16,6 +16,7 @@
 
 using ChaosForge.Domain.Entities;
 using ChaosForge.Domain.Enums;
+using ChaosForge.Domain.Events;
 using ChaosForge.Domain.Exceptions;
 using FluentAssertions;
 
@@ -99,6 +100,10 @@ public sealed class WorkTaskTests
 
         // Assert
         task.Status.Should().Be(WorkTaskStatus.InProgress);
+        var evt = task.DomainEvents.Should().ContainSingle().Which.Should().BeOfType<WorkTaskStatusChangedEvent>().Subject;
+        evt.WorkTaskId.Should().Be(task.Id);
+        evt.OldStatus.Should().Be(WorkTaskStatus.Backlog);
+        evt.NewStatus.Should().Be(WorkTaskStatus.InProgress);
     }
 
     [Fact]
@@ -172,6 +177,9 @@ public sealed class WorkTaskTests
         // Assert
         task.Status.Should().Be(WorkTaskStatus.Backlog);
         task.SprintId.Should().BeNull();
+        var evt = task.DomainEvents.OfType<WorkTaskStatusChangedEvent>().Last();
+        evt.OldStatus.Should().Be(WorkTaskStatus.InReview);
+        evt.NewStatus.Should().Be(WorkTaskStatus.Backlog);
     }
 
     [Fact]
@@ -186,6 +194,9 @@ public sealed class WorkTaskTests
         // Assert
         task.Status.Should().Be(WorkTaskStatus.Backlog);
         task.SprintId.Should().BeNull();
+        var evt = task.DomainEvents.OfType<WorkTaskStatusChangedEvent>().Last();
+        evt.OldStatus.Should().Be(WorkTaskStatus.InTesting);
+        evt.NewStatus.Should().Be(WorkTaskStatus.Backlog);
     }
 
     [Theory]
