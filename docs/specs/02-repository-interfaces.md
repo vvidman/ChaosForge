@@ -2,7 +2,7 @@
 category: specs
 title: "Repository Interfaces"
 branch: "repo-ifaces"
-status: ready
+status: done
 date: "2026-04-03"
 related_domain: [Project, UseCase, URS, SRS, WorkTask, TaskAttempt, RevisionGate, AgentSlot, AgentInstance]
 related_adr: []
@@ -55,57 +55,57 @@ this spec only defines the contracts.
 
 ## Implementation Scope — What must be done
 
-- [ ] Create `IRepository<TEntity, TId>` in `Domain/Repositories/`:
+- [x] Create `IRepository<TEntity, TId>` in `Domain/Repositories/`:
   ```
   Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken = default)
   Task AddAsync(TEntity entity, CancellationToken cancellationToken = default)
   void Delete(TEntity entity)
   ```
-- [ ] `IProjectRepository : IRepository<Project, Guid>`
+- [x] `IProjectRepository : IRepository<Project, Guid>`
   ```
   Task<IReadOnlyList<Project>> GetAllAsync(CancellationToken cancellationToken = default)
   ```
-- [ ] `IUseCaseRepository : IRepository<UseCase, Guid>`
+- [x] `IUseCaseRepository : IRepository<UseCase, Guid>`
   ```
   Task<IReadOnlyList<UseCase>> GetByProjectIdAsync(Guid projectId, CancellationToken cancellationToken = default)
   ```
-- [ ] `IURSRepository : IRepository<URS, Guid>`
+- [x] `IURSRepository : IRepository<URS, Guid>`
   ```
   Task<IReadOnlyList<URS>> GetByUseCaseIdAsync(Guid useCaseId, CancellationToken cancellationToken = default)
   ```
-- [ ] `ISRSRepository : IRepository<SRS, Guid>`
+- [x] `ISRSRepository : IRepository<SRS, Guid>`
   ```
   Task<IReadOnlyList<SRS>> GetByURSIdAsync(Guid ursId, CancellationToken cancellationToken = default)
   ```
-- [ ] `IWorkTaskRepository : IRepository<WorkTask, Guid>`
+- [x] `IWorkTaskRepository : IRepository<WorkTask, Guid>`
   ```
   Task<IReadOnlyList<WorkTask>> GetBySRSIdAsync(Guid srsId, CancellationToken cancellationToken = default)
   Task<IReadOnlyList<WorkTask>> GetBySprintIdAsync(Guid sprintId, CancellationToken cancellationToken = default)
   Task<IReadOnlyList<WorkTask>> GetByStatusAsync(WorkTaskStatus status, CancellationToken cancellationToken = default)
   ```
-- [ ] `ITaskAttemptRepository : IRepository<TaskAttempt, Guid>`
+- [x] `ITaskAttemptRepository : IRepository<TaskAttempt, Guid>`
   ```
   Task<IReadOnlyList<TaskAttempt>> GetByWorkTaskIdAsync(Guid workTaskId, CancellationToken cancellationToken = default)
   ```
-- [ ] `IRevisionGateRepository : IRepository<RevisionGate, Guid>`
+- [x] `IRevisionGateRepository : IRepository<RevisionGate, Guid>`
   ```
   Task<IReadOnlyList<RevisionGate>> GetByProjectIdAsync(Guid projectId, CancellationToken cancellationToken = default)
   Task<RevisionGate?> GetOpenByProjectIdAsync(Guid projectId, CancellationToken cancellationToken = default)
   ```
-- [ ] `IAgentSlotRepository : IRepository<AgentSlot, Guid>`
+- [x] `IAgentSlotRepository : IRepository<AgentSlot, Guid>`
   ```
   Task<IReadOnlyList<AgentSlot>> GetByProjectIdAsync(Guid projectId, CancellationToken cancellationToken = default)
   ```
-- [ ] `IAgentInstanceRepository : IRepository<AgentInstance, Guid>`
+- [x] `IAgentInstanceRepository : IRepository<AgentInstance, Guid>`
   ```
   Task<IReadOnlyList<AgentInstance>> GetByProjectIdAsync(Guid projectId, CancellationToken cancellationToken = default)
   Task<IReadOnlyList<AgentInstance>> GetByStatusAsync(AgentInstanceStatus status, CancellationToken cancellationToken = default)
   ```
-- [ ] `IUnitOfWork` in `Domain/Repositories/`:
+- [x] `IUnitOfWork` in `Domain/Repositories/`:
   ```
   Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
   ```
-- [ ] Run `dotnet build` — zero warnings, zero errors
+- [x] Run `dotnet build` — zero warnings, zero errors
 
 ---
 

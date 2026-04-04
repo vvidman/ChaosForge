@@ -12,7 +12,7 @@ documents:
     date: "2026-04-03"
   - file: 02-repository-interfaces.md
     title: "Repository Interfaces"
-    status: ready
+    status: done
     date: "2026-04-03"
   - file: 03-domain-events.md
     title: "Domain Events"
@@ -68,7 +68,7 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 |-------|--------|------|
 | Domain Entities | done | 2026-03-29 |
 | Domain Unit Tests | done | 2026-04-03 |
-| Repository Interfaces | ready | 2026-04-03 |
+| Repository Interfaces | done | 2026-04-03 |
 | Domain Events | ready | 2026-04-03 |
 | Application Pipeline | ready | 2026-04-03 |
 | Project Commands | ready | 2026-04-03 |
