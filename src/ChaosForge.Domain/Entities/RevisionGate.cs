@@ -16,6 +16,7 @@
 
 using ChaosForge.Domain.Common;
 using ChaosForge.Domain.Enums;
+using ChaosForge.Domain.Events;
 using ChaosForge.Domain.Exceptions;
 
 namespace ChaosForge.Domain.Entities;
@@ -81,6 +82,7 @@ public sealed class RevisionGate : EntityBase<Guid>
         Action = RevisionGateAction.Accept;
         Status = RevisionGateStatus.Resolved;
         ResolvedAt = DateTime.UtcNow;
+        AddDomainEvent(new RevisionGateResolvedEvent(Id, ProjectId, RevisionGateAction.Accept));
     }
 
     /// <summary>
@@ -101,6 +103,7 @@ public sealed class RevisionGate : EntityBase<Guid>
         Action = RevisionGateAction.EditAndAccept;
         Status = RevisionGateStatus.Resolved;
         ResolvedAt = DateTime.UtcNow;
+        AddDomainEvent(new RevisionGateResolvedEvent(Id, ProjectId, RevisionGateAction.EditAndAccept));
     }
 
     /// <summary>
@@ -121,6 +124,7 @@ public sealed class RevisionGate : EntityBase<Guid>
         Action = RevisionGateAction.Reject;
         Status = RevisionGateStatus.Resolved;
         ResolvedAt = DateTime.UtcNow;
+        AddDomainEvent(new RevisionGateResolvedEvent(Id, ProjectId, RevisionGateAction.Reject));
     }
 
     private void EnsureOpen()

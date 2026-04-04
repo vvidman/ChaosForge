@@ -16,6 +16,7 @@
 
 using ChaosForge.Domain.Entities;
 using ChaosForge.Domain.Enums;
+using ChaosForge.Domain.Events;
 using FluentAssertions;
 
 namespace ChaosForge.Domain.Tests.Entities;
@@ -45,5 +46,29 @@ public sealed class EntityBaseTests
         entity.CreatedAt.Kind.Should().Be(DateTimeKind.Utc);
         entity.CreatedAt.Should().BeOnOrAfter(before);
         entity.CreatedAt.Should().BeOnOrBefore(DateTime.UtcNow);
+    }
+
+    [Fact]
+    public void Constructor_Always_HasNoDomainEvents()
+    {
+        // Arrange / Act
+        var entity = new Project("Name", "Description");
+
+        // Assert
+        entity.DomainEvents.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void ClearDomainEvents_AfterEventsRaised_EmptiesCollection()
+    {
+        // Arrange
+        var project = new Project("Name", "Description");
+        project.TransitionTo(ProjectStatus.RequirementsPhase);
+
+        // Act
+        project.ClearDomainEvents();
+
+        // Assert
+        project.DomainEvents.Should().BeEmpty();
     }
 }

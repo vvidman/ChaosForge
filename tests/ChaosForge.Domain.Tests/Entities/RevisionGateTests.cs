@@ -16,6 +16,7 @@
 
 using ChaosForge.Domain.Entities;
 using ChaosForge.Domain.Enums;
+using ChaosForge.Domain.Events;
 using ChaosForge.Domain.Exceptions;
 using FluentAssertions;
 
@@ -37,7 +38,8 @@ public sealed class RevisionGateTests
     public void Accept_WhenOpen_SetsActionAndResolvesGate()
     {
         // Arrange
-        var gate = new RevisionGate(Guid.NewGuid(), RevisionGateType.Requirements, "agent output");
+        var projectId = Guid.NewGuid();
+        var gate = new RevisionGate(projectId, RevisionGateType.Requirements, "agent output");
         var before = DateTime.UtcNow;
 
         // Act
@@ -48,13 +50,18 @@ public sealed class RevisionGateTests
         gate.Status.Should().Be(RevisionGateStatus.Resolved);
         gate.ResolvedAt.Should().NotBeNull();
         gate.ResolvedAt!.Value.Should().BeOnOrAfter(before);
+        var evt = gate.DomainEvents.Should().ContainSingle().Which.Should().BeOfType<RevisionGateResolvedEvent>().Subject;
+        evt.RevisionGateId.Should().Be(gate.Id);
+        evt.ProjectId.Should().Be(projectId);
+        evt.Action.Should().Be(RevisionGateAction.Accept);
     }
 
     [Fact]
     public void EditAndAccept_ValidOutput_SetsHumanEditedOutputAndResolvesGate()
     {
         // Arrange
-        var gate = new RevisionGate(Guid.NewGuid(), RevisionGateType.Requirements, "agent output");
+        var projectId = Guid.NewGuid();
+        var gate = new RevisionGate(projectId, RevisionGateType.Requirements, "agent output");
 
         // Act
         gate.EditAndAccept("human-edited output");
@@ -63,6 +70,10 @@ public sealed class RevisionGateTests
         gate.HumanEditedOutput.Should().Be("human-edited output");
         gate.Action.Should().Be(RevisionGateAction.EditAndAccept);
         gate.Status.Should().Be(RevisionGateStatus.Resolved);
+        var evt = gate.DomainEvents.Should().ContainSingle().Which.Should().BeOfType<RevisionGateResolvedEvent>().Subject;
+        evt.RevisionGateId.Should().Be(gate.Id);
+        evt.ProjectId.Should().Be(projectId);
+        evt.Action.Should().Be(RevisionGateAction.EditAndAccept);
     }
 
     [Theory]
@@ -85,7 +96,8 @@ public sealed class RevisionGateTests
     public void Reject_ValidReason_SetsRejectionReasonAndResolvesGate()
     {
         // Arrange
-        var gate = new RevisionGate(Guid.NewGuid(), RevisionGateType.Requirements, "agent output");
+        var projectId = Guid.NewGuid();
+        var gate = new RevisionGate(projectId, RevisionGateType.Requirements, "agent output");
 
         // Act
         gate.Reject("Needs more detail");
@@ -94,6 +106,10 @@ public sealed class RevisionGateTests
         gate.RejectionReason.Should().Be("Needs more detail");
         gate.Action.Should().Be(RevisionGateAction.Reject);
         gate.Status.Should().Be(RevisionGateStatus.Resolved);
+        var evt = gate.DomainEvents.Should().ContainSingle().Which.Should().BeOfType<RevisionGateResolvedEvent>().Subject;
+        evt.RevisionGateId.Should().Be(gate.Id);
+        evt.ProjectId.Should().Be(projectId);
+        evt.Action.Should().Be(RevisionGateAction.Reject);
     }
 
     [Theory]

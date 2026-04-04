@@ -16,6 +16,7 @@
 
 using ChaosForge.Domain.Entities;
 using ChaosForge.Domain.Enums;
+using ChaosForge.Domain.Events;
 using ChaosForge.Domain.Exceptions;
 using FluentAssertions;
 
@@ -46,6 +47,10 @@ public sealed class AgentInstanceTests
         // Assert
         agent.CurrentTaskId.Should().Be(taskId);
         agent.Status.Should().Be(AgentInstanceStatus.Working);
+        var evt = agent.DomainEvents.Should().ContainSingle().Which.Should().BeOfType<AgentInstanceStatusChangedEvent>().Subject;
+        evt.AgentInstanceId.Should().Be(agent.Id);
+        evt.OldStatus.Should().Be(AgentInstanceStatus.Idle);
+        evt.NewStatus.Should().Be(AgentInstanceStatus.Working);
     }
 
     [Fact]
@@ -75,6 +80,10 @@ public sealed class AgentInstanceTests
         // Assert
         agent.CurrentTaskId.Should().BeNull();
         agent.Status.Should().Be(AgentInstanceStatus.Idle);
+        var evt = agent.DomainEvents.OfType<AgentInstanceStatusChangedEvent>().Last();
+        evt.AgentInstanceId.Should().Be(agent.Id);
+        evt.OldStatus.Should().Be(AgentInstanceStatus.Working);
+        evt.NewStatus.Should().Be(AgentInstanceStatus.Idle);
     }
 
     [Fact]
@@ -88,6 +97,10 @@ public sealed class AgentInstanceTests
 
         // Assert
         agent.Status.Should().Be(AgentInstanceStatus.Blocked);
+        var evt = agent.DomainEvents.Should().ContainSingle().Which.Should().BeOfType<AgentInstanceStatusChangedEvent>().Subject;
+        evt.AgentInstanceId.Should().Be(agent.Id);
+        evt.OldStatus.Should().Be(AgentInstanceStatus.Idle);
+        evt.NewStatus.Should().Be(AgentInstanceStatus.Blocked);
     }
 
     [Fact]
@@ -101,5 +114,9 @@ public sealed class AgentInstanceTests
 
         // Assert
         agent.Status.Should().Be(AgentInstanceStatus.Finished);
+        var evt = agent.DomainEvents.Should().ContainSingle().Which.Should().BeOfType<AgentInstanceStatusChangedEvent>().Subject;
+        evt.AgentInstanceId.Should().Be(agent.Id);
+        evt.OldStatus.Should().Be(AgentInstanceStatus.Idle);
+        evt.NewStatus.Should().Be(AgentInstanceStatus.Finished);
     }
 }

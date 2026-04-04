@@ -16,6 +16,7 @@
 
 using ChaosForge.Domain.Entities;
 using ChaosForge.Domain.Enums;
+using ChaosForge.Domain.Events;
 using ChaosForge.Domain.Exceptions;
 using FluentAssertions;
 
@@ -60,7 +61,8 @@ public sealed class TaskAttemptTests
     public void Complete_ValidOutput_SetsOutputAndCompletedAt()
     {
         // Arrange
-        var attempt = new TaskAttempt(Guid.NewGuid(), Guid.NewGuid(), AttemptType.Implementation);
+        var workTaskId = Guid.NewGuid();
+        var attempt = new TaskAttempt(workTaskId, Guid.NewGuid(), AttemptType.Implementation);
         var before = DateTime.UtcNow;
 
         // Act
@@ -70,6 +72,10 @@ public sealed class TaskAttemptTests
         attempt.Output.Should().Be("The agent output");
         attempt.CompletedAt.Should().NotBeNull();
         attempt.CompletedAt!.Value.Should().BeOnOrAfter(before);
+        var evt = attempt.DomainEvents.Should().ContainSingle().Which.Should().BeOfType<TaskAttemptCompletedEvent>().Subject;
+        evt.TaskAttemptId.Should().Be(attempt.Id);
+        evt.WorkTaskId.Should().Be(workTaskId);
+        evt.Type.Should().Be(AttemptType.Implementation);
     }
 
     [Theory]
@@ -106,13 +112,18 @@ public sealed class TaskAttemptTests
     public void Approve_WhenPending_SetsResultToApproved()
     {
         // Arrange
-        var attempt = new TaskAttempt(Guid.NewGuid(), Guid.NewGuid(), AttemptType.Implementation);
+        var workTaskId = Guid.NewGuid();
+        var attempt = new TaskAttempt(workTaskId, Guid.NewGuid(), AttemptType.Implementation);
 
         // Act
         attempt.Approve();
 
         // Assert
         attempt.Result.Should().Be(AttemptResult.Approved);
+        var evt = attempt.DomainEvents.Should().ContainSingle().Which.Should().BeOfType<TaskAttemptResolvedEvent>().Subject;
+        evt.TaskAttemptId.Should().Be(attempt.Id);
+        evt.WorkTaskId.Should().Be(workTaskId);
+        evt.Result.Should().Be(AttemptResult.Approved);
     }
 
     [Theory]
@@ -134,7 +145,8 @@ public sealed class TaskAttemptTests
     public void Reject_WithReviewType_SetsReviewNote()
     {
         // Arrange
-        var attempt = new TaskAttempt(Guid.NewGuid(), Guid.NewGuid(), AttemptType.Review);
+        var workTaskId = Guid.NewGuid();
+        var attempt = new TaskAttempt(workTaskId, Guid.NewGuid(), AttemptType.Review);
 
         // Act
         attempt.Reject("Not good enough");
@@ -142,13 +154,18 @@ public sealed class TaskAttemptTests
         // Assert
         attempt.ReviewNote.Should().Be("Not good enough");
         attempt.Result.Should().Be(AttemptResult.Rejected);
+        var evt = attempt.DomainEvents.Should().ContainSingle().Which.Should().BeOfType<TaskAttemptResolvedEvent>().Subject;
+        evt.TaskAttemptId.Should().Be(attempt.Id);
+        evt.WorkTaskId.Should().Be(workTaskId);
+        evt.Result.Should().Be(AttemptResult.Rejected);
     }
 
     [Fact]
     public void Reject_WithTestingType_SetsTestNote()
     {
         // Arrange
-        var attempt = new TaskAttempt(Guid.NewGuid(), Guid.NewGuid(), AttemptType.Testing);
+        var workTaskId = Guid.NewGuid();
+        var attempt = new TaskAttempt(workTaskId, Guid.NewGuid(), AttemptType.Testing);
 
         // Act
         attempt.Reject("Tests failed");
@@ -156,6 +173,10 @@ public sealed class TaskAttemptTests
         // Assert
         attempt.TestNote.Should().Be("Tests failed");
         attempt.Result.Should().Be(AttemptResult.Rejected);
+        var evt = attempt.DomainEvents.Should().ContainSingle().Which.Should().BeOfType<TaskAttemptResolvedEvent>().Subject;
+        evt.TaskAttemptId.Should().Be(attempt.Id);
+        evt.WorkTaskId.Should().Be(workTaskId);
+        evt.Result.Should().Be(AttemptResult.Rejected);
     }
 
     [Theory]

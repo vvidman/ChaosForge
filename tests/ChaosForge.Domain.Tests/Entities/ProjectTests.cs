@@ -16,6 +16,7 @@
 
 using ChaosForge.Domain.Entities;
 using ChaosForge.Domain.Enums;
+using ChaosForge.Domain.Events;
 using ChaosForge.Domain.Exceptions;
 using FluentAssertions;
 
@@ -62,6 +63,10 @@ public sealed class ProjectTests
 
         // Assert
         project.Status.Should().Be(to);
+        var evt = project.DomainEvents.OfType<ProjectStatusChangedEvent>().Last();
+        evt.ProjectId.Should().Be(project.Id);
+        evt.OldStatus.Should().Be(from);
+        evt.NewStatus.Should().Be(to);
     }
 
     [Theory]
