@@ -2,7 +2,7 @@
 category: specs
 title: "Application Pipeline"
 branch: "app-pipeline"
-status: ready
+status: done
 date: "2026-04-03"
 related_domain: []
 related_adr: []
@@ -54,7 +54,7 @@ spec — nothing user-visible is built here, but every subsequent Application sp
 
 ## Implementation Scope — What must be done
 
-- [ ] Create `Result` and `Result<T>` in `Application/Common/`:
+- [x] Create `Result` and `Result<T>` in `Application/Common/`:
   ```
   readonly struct Result
     bool IsSuccess
@@ -69,20 +69,20 @@ spec — nothing user-visible is built here, but every subsequent Application sp
     static Result<T> Success(T value)
     static Result<T> Failure(string error)
   ```
-- [ ] Create `LoggingBehavior<TRequest, TResponse>` in `Application/Common/Behaviors/`
+- [x] Create `LoggingBehavior<TRequest, TResponse>` in `Application/Common/Behaviors/`
   - Implements `IPipelineBehavior<TRequest, TResponse>`
   - Logs: request type name on entry, elapsed ms and success/failure on exit
-- [ ] Create `ValidationBehavior<TRequest, TResponse>` in `Application/Common/Behaviors/`
+- [x] Create `ValidationBehavior<TRequest, TResponse>` in `Application/Common/Behaviors/`
   - Implements `IPipelineBehavior<TRequest, TResponse>`
   - Injects `IEnumerable<IValidator<TRequest>>`
   - If no validators: pass through
   - If validators: run all, collect failures, throw `ValidationException` if any
-- [ ] Create `DependencyInjection.cs` in `Application/`:
+- [x] Create `DependencyInjection.cs` in `Application/`:
   - `AddApplication(this IServiceCollection services)` registers:
     - `services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(...).Assembly))`
     - `LoggingBehavior` and `ValidationBehavior` as open generic pipeline behaviors
     - `services.AddValidatorsFromAssembly(...)` for FluentValidation
-- [ ] Run `dotnet build` — zero warnings, zero errors
+- [x] Run `dotnet build` — zero warnings, zero errors
 
 ---
 
