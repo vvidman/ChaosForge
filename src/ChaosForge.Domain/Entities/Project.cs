@@ -74,6 +74,11 @@ public sealed class Project : EntityBase<Guid>
     /// <param name="description">The new description.</param>
     public void UpdateDescription(string description)
     {
+        if (string.IsNullOrWhiteSpace(description))
+        {
+            throw new DomainException($"{nameof(description)} must not be null or whitespace.");
+        }
+
         Description = description;
     }
 

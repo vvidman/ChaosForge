@@ -2,7 +2,7 @@
 category: specs
 title: "Domain Unit Tests"
 branch: "domain-tests"
-status: ready
+status: done
 date: "2026-04-03"
 related_domain: [Project, UseCase, URS, SRS, WorkTask, TaskAttempt, RevisionGate, AgentSlot, AgentInstance]
 related_adr: []
@@ -48,59 +48,59 @@ caught immediately. All tests live in `ChaosForge.Domain.Tests`.
 
 ## Implementation Scope — What must be done
 
-- [ ] `EntityBaseTests` — verify `Id` is set, `CreatedAt` is UTC and close to now
-- [ ] `ProjectTests`
-  - [ ] Constructor sets `Status = Setup`, `CreatedAt` is populated
-  - [ ] `TransitionTo` advances correctly through every sequential step
-  - [ ] `TransitionTo` throws `DomainException` for every backward or skip transition
-  - [ ] `TransitionTo` throws `DomainException` when already `Completed`
-  - [ ] `UpdateDescription` updates the value
-  - [ ] `UpdateDescription` throws `DomainException` for null, empty, and whitespace
-- [ ] `WorkTaskTests`
-  - [ ] Constructor sets `Status = Backlog`, validates title/description
-  - [ ] `AssignToSprint` sets `SprintId` when in `Backlog`
-  - [ ] `AssignToSprint` throws when not in `Backlog`
-  - [ ] `Start` transitions to `InProgress` when sprint is assigned
-  - [ ] `Start` throws when no sprint assigned
-  - [ ] `Start` throws when not in `Backlog`
-  - [ ] Full happy-path: `Backlog → InProgress → InReview → InTesting → InDocumentation → Done`
-  - [ ] `SendToTesting` is equivalent to `Approve`
-  - [ ] `Reject` from `InReview` resets `SprintId` to null and returns to `Backlog`
-  - [ ] `Reject` from `InTesting` resets `SprintId` to null and returns to `Backlog`
-  - [ ] `Reject` throws from every other status
-- [ ] `TaskAttemptTests`
-  - [ ] Constructor sets `Result = Pending`, `StartedAt` is populated, `Output` is empty
-  - [ ] `Complete` sets `Output` and `CompletedAt`
-  - [ ] `Complete` throws on null, empty, whitespace
-  - [ ] `Complete` throws when called a second time (idempotency guard)
-  - [ ] `Approve` sets `Result = Approved`
-  - [ ] `Approve` throws when already resolved (Approved or Rejected)
-  - [ ] `Reject` with `AttemptType.Review` sets `ReviewNote`
-  - [ ] `Reject` with `AttemptType.Testing` sets `TestNote`
-  - [ ] `Reject` with unsupported type throws `DomainException`
-  - [ ] `Reject` throws when already resolved
-  - [ ] `Reject` throws on null, empty, whitespace note
-- [ ] `RevisionGateTests`
-  - [ ] Constructor sets `Status = Open`
-  - [ ] `Accept` sets `Action`, `Status = Resolved`, `ResolvedAt`
-  - [ ] `EditAndAccept` sets `HumanEditedOutput`, `Action`, `Status = Resolved`
-  - [ ] `EditAndAccept` throws on null, empty, whitespace
-  - [ ] `Reject` sets `RejectionReason`, `Action`, `Status = Resolved`
-  - [ ] `Reject` throws on null, empty, whitespace
-  - [ ] All three resolution methods throw `DomainException` when gate is already resolved
-- [ ] `AgentSlotTests`
-  - [ ] `UpdateCount` accepts count >= 1 for non-singleton roles
-  - [ ] `UpdateCount` throws for count < 1
-  - [ ] `UpdateCount` throws for count > 1 on singleton roles
-  - [ ] `SingletonRoles` contains exactly `BusinessAnalyst`, `Architect`, `ScrumMaster`
-- [ ] `AgentInstanceTests`
-  - [ ] Constructor sets `Status = Idle`
-  - [ ] `StartWork` sets `CurrentTaskId` and `Status = Working`
-  - [ ] `StartWork` throws when already `Working`
-  - [ ] `FinishWork` clears `CurrentTaskId` and sets `Status = Idle`
-  - [ ] `Block` sets `Status = Blocked`
-  - [ ] `MarkFinished` sets `Status = Finished`
-- [ ] Run `dotnet test` — all tests must pass, zero skipped
+- [x] `EntityBaseTests` — verify `Id` is set, `CreatedAt` is UTC and close to now
+- [x] `ProjectTests`
+  - [x] Constructor sets `Status = Setup`, `CreatedAt` is populated
+  - [x] `TransitionTo` advances correctly through every sequential step
+  - [x] `TransitionTo` throws `DomainException` for every backward or skip transition
+  - [x] `TransitionTo` throws `DomainException` when already `Completed`
+  - [x] `UpdateDescription` updates the value
+  - [x] `UpdateDescription` throws `DomainException` for null, empty, and whitespace
+- [x] `WorkTaskTests`
+  - [x] Constructor sets `Status = Backlog`, validates title/description
+  - [x] `AssignToSprint` sets `SprintId` when in `Backlog`
+  - [x] `AssignToSprint` throws when not in `Backlog`
+  - [x] `Start` transitions to `InProgress` when sprint is assigned
+  - [x] `Start` throws when no sprint assigned
+  - [x] `Start` throws when not in `Backlog`
+  - [x] Full happy-path: `Backlog → InProgress → InReview → InTesting → InDocumentation → Done`
+  - [x] `SendToTesting` is equivalent to `Approve`
+  - [x] `Reject` from `InReview` resets `SprintId` to null and returns to `Backlog`
+  - [x] `Reject` from `InTesting` resets `SprintId` to null and returns to `Backlog`
+  - [x] `Reject` throws from every other status
+- [x] `TaskAttemptTests`
+  - [x] Constructor sets `Result = Pending`, `StartedAt` is populated, `Output` is empty
+  - [x] `Complete` sets `Output` and `CompletedAt`
+  - [x] `Complete` throws on null, empty, whitespace
+  - [x] `Complete` throws when called a second time (idempotency guard)
+  - [x] `Approve` sets `Result = Approved`
+  - [x] `Approve` throws when already resolved (Approved or Rejected)
+  - [x] `Reject` with `AttemptType.Review` sets `ReviewNote`
+  - [x] `Reject` with `AttemptType.Testing` sets `TestNote`
+  - [x] `Reject` with unsupported type throws `DomainException`
+  - [x] `Reject` throws when already resolved
+  - [x] `Reject` throws on null, empty, whitespace note
+- [x] `RevisionGateTests`
+  - [x] Constructor sets `Status = Open`
+  - [x] `Accept` sets `Action`, `Status = Resolved`, `ResolvedAt`
+  - [x] `EditAndAccept` sets `HumanEditedOutput`, `Action`, `Status = Resolved`
+  - [x] `EditAndAccept` throws on null, empty, whitespace
+  - [x] `Reject` sets `RejectionReason`, `Action`, `Status = Resolved`
+  - [x] `Reject` throws on null, empty, whitespace
+  - [x] All three resolution methods throw `DomainException` when gate is already resolved
+- [x] `AgentSlotTests`
+  - [x] `UpdateCount` accepts count >= 1 for non-singleton roles
+  - [x] `UpdateCount` throws for count < 1
+  - [x] `UpdateCount` throws for count > 1 on singleton roles
+  - [x] `SingletonRoles` contains exactly `BusinessAnalyst`, `Architect`, `ScrumMaster`
+- [x] `AgentInstanceTests`
+  - [x] Constructor sets `Status = Idle`
+  - [x] `StartWork` sets `CurrentTaskId` and `Status = Working`
+  - [x] `StartWork` throws when already `Working`
+  - [x] `FinishWork` clears `CurrentTaskId` and sets `Status = Idle`
+  - [x] `Block` sets `Status = Blocked`
+  - [x] `MarkFinished` sets `Status = Finished`
+- [x] Run `dotnet test` — all tests must pass, zero skipped
 
 ---
 
