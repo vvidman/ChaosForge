@@ -20,7 +20,7 @@ documents:
     date: "2026-04-03"
   - file: 04-application-pipeline.md
     title: "Application Pipeline"
-    status: ready
+    status: done
     date: "2026-04-03"
   - file: 05-project-commands.md
     title: "Project Commands"
@@ -70,7 +70,7 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 | Domain Unit Tests | done | 2026-04-03 |
 | Repository Interfaces | done | 2026-04-03 |
 | Domain Events | done | 2026-04-03 |
-| Application Pipeline | ready | 2026-04-03 |
+| Application Pipeline | done | 2026-04-03 |
 | Project Commands | ready | 2026-04-03 |
 | WorkTask Commands | ready | 2026-04-03 |
 | RevisionGate Commands | ready | 2026-04-03 |
