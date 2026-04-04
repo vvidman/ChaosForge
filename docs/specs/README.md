@@ -1,11 +1,51 @@
 ---
 category: specs
-last_updated: "2026-03-29"
+last_updated: "2026-04-04"
 documents:
   - file: domain-entities.md
     title: "Domain Entities"
     status: done
     date: "2026-03-29"
+  - file: 01-domain-unit-tests.md
+    title: "Domain Unit Tests"
+    status: ready
+    date: "2026-04-03"
+  - file: 02-repository-interfaces.md
+    title: "Repository Interfaces"
+    status: ready
+    date: "2026-04-03"
+  - file: 03-domain-events.md
+    title: "Domain Events"
+    status: ready
+    date: "2026-04-03"
+  - file: 04-application-pipeline.md
+    title: "Application Pipeline"
+    status: ready
+    date: "2026-04-03"
+  - file: 05-project-commands.md
+    title: "Project Commands"
+    status: ready
+    date: "2026-04-03"
+  - file: 06-worktask-commands.md
+    title: "WorkTask Commands"
+    status: ready
+    date: "2026-04-03"
+  - file: 07-revision-gate-commands.md
+    title: "RevisionGate Commands"
+    status: ready
+    date: "2026-04-03"
+  - file: 08-ef-core-configuration.md
+    title: "EF Core Configuration"
+    status: ready
+    date: "2026-04-03"
+  - file: 09-repository-implementations.md
+    title: "Repository Implementations"
+    status: ready
+    date: "2026-04-03"
+  - file: 10-api-wiring.md
+    title: "API Wiring and Project Endpoints"
+    status: ready
+    date: "2026-04-03"
 ---
 
 # Feature Specifications
@@ -27,6 +67,16 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 | Title | Status | Date |
 |-------|--------|------|
 | Domain Entities | done | 2026-03-29 |
+| Domain Unit Tests | ready | 2026-04-03 |
+| Repository Interfaces | ready | 2026-04-03 |
+| Domain Events | ready | 2026-04-03 |
+| Application Pipeline | ready | 2026-04-03 |
+| Project Commands | ready | 2026-04-03 |
+| WorkTask Commands | ready | 2026-04-03 |
+| RevisionGate Commands | ready | 2026-04-03 |
+| EF Core Configuration | ready | 2026-04-03 |
+| Repository Implementations | ready | 2026-04-03 |
+| API Wiring and Project Endpoints | ready | 2026-04-03 |
 
 ---
 
