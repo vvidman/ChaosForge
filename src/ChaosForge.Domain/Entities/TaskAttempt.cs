@@ -86,6 +86,11 @@ public sealed class TaskAttempt : EntityBase<Guid>
             throw new DomainException($"{nameof(output)} must not be null or whitespace.");
         }
 
+        if (CompletedAt is not null)
+        {
+            throw new DomainException("Attempt has already been completed.");
+        }
+
         Output = output;
         CompletedAt = DateTime.UtcNow;
     }
@@ -115,13 +120,16 @@ public sealed class TaskAttempt : EntityBase<Guid>
 
         EnsureNotResolved();
 
-        if (Type is AttemptType.Review)
+        switch (Type)
         {
-            ReviewNote = note;
-        }
-        else
-        {
-            TestNote = note;
+            case AttemptType.Review:
+                ReviewNote = note;
+                break;
+            case AttemptType.Testing:
+                TestNote = note;
+                break;
+            default:
+                throw new DomainException($"Attempt type {Type} does not support rejection notes.");
         }
 
         Result = AttemptResult.Rejected;
