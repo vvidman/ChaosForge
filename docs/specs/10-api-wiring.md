@@ -2,7 +2,7 @@
 category: specs
 title: "API Wiring and Project Endpoints"
 branch: "api-wiring"
-status: ready
+status: done
 date: "2026-04-03"
 related_domain: [Project]
 related_adr: []
@@ -58,26 +58,27 @@ Depends on: specs 04, 05, 08, 09.
 
 ## Implementation Scope — What must be done
 
-- [ ] Update `Program.cs`:
+- [x] Update `Program.cs`:
   - Call `AddApplication()` and `AddInfrastructure(configuration)`
   - Add `app.UseExceptionHandler` middleware
   - Call `MigrateAsync()` on startup
   - Map `OpenApi` in Development environment
-- [ ] Create `ProjectEndpoints.cs` in `API/Endpoints/` with:
+- [x] Create `ProjectEndpoints.cs` in `API/Endpoints/` with:
   - `POST /api/projects` → `CreateProjectCommand`
   - `POST /api/projects/{id}/transition` → `TransitionProjectCommand`
   - `PATCH /api/projects/{id}/description` → `UpdateProjectDescriptionCommand`
-- [ ] Create request DTOs for each endpoint in `API/Endpoints/` (do NOT pass MediatR
+- [x] Create request DTOs for each endpoint in `API/Endpoints/` (do NOT pass MediatR
   commands directly as request bodies — map from DTO to command in the handler lambda):
   ```
   CreateProjectRequest  { Name, Description, Deadline? }
   TransitionProjectRequest  { NewStatus }
   UpdateProjectDescriptionRequest  { Description }
   ```
-- [ ] Map FluentValidation `ValidationException` to `Results.ValidationProblem` in the
+- [x] Map FluentValidation `ValidationException` to `Results.ValidationProblem` in the
   exception handler
-- [ ] Verify end-to-end with `dotnet run` and at least one manual `curl` call to
+- [x] Verify end-to-end with `dotnet run` and at least one manual `curl` call to
   `POST /api/projects` — include the successful response in the implementation notes
+  - `curl -X POST http://localhost:5143/api/projects -H "Content-Type: application/json" -d '{"name":"Test Project","description":"A smoke-test project","deadline":null}'` → HTTP 200
 
 ---
 
