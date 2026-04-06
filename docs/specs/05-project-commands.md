@@ -2,7 +2,7 @@
 category: specs
 title: "Project Commands"
 branch: "project-cmds"
-status: ready
+status: done
 date: "2026-04-03"
 related_domain: [Project]
 related_adr: []
@@ -47,25 +47,25 @@ Depends on: Application Pipeline (spec 04) and Repository Interfaces (spec 02).
 
 ## Implementation Scope — What must be done
 
-- [ ] `CreateProjectCommand` + `CreateProjectCommandValidator` + `CreateProjectCommandHandler`
+- [x] `CreateProjectCommand` + `CreateProjectCommandValidator` + `CreateProjectCommandHandler`
   ```
   Command properties: Name (string), Description (string), Deadline (DateTime?)
   Validator: Name not empty, Description not empty
   Handler: new Project(Name, Description, Deadline) → AddAsync → SaveChangesAsync
   ```
-- [ ] `TransitionProjectCommand` + `TransitionProjectCommandValidator` + handler
+- [x] `TransitionProjectCommand` + `TransitionProjectCommandValidator` + handler
   ```
   Command properties: ProjectId (Guid), NewStatus (ProjectStatus)
   Validator: ProjectId not empty
   Handler: GetByIdAsync → TransitionTo(NewStatus) → SaveChangesAsync
   ```
-- [ ] `UpdateProjectDescriptionCommand` + validator + handler
+- [x] `UpdateProjectDescriptionCommand` + validator + handler
   ```
   Command properties: ProjectId (Guid), Description (string)
   Validator: ProjectId not empty, Description not empty
   Handler: GetByIdAsync → UpdateDescription(Description) → SaveChangesAsync
   ```
-- [ ] Run `dotnet build` — zero warnings, zero errors
+- [x] Run `dotnet build` — zero warnings, zero errors
 
 ---
 
