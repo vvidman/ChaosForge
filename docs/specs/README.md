@@ -40,7 +40,7 @@ documents:
     date: "2026-04-03"
   - file: 09-repository-implementations.md
     title: "Repository Implementations"
-    status: ready
+    status: done
     date: "2026-04-03"
   - file: 10-api-wiring.md
     title: "API Wiring and Project Endpoints"
@@ -75,7 +75,7 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 | WorkTask Commands | done | 2026-04-03 |
 | RevisionGate Commands | done | 2026-04-03 |
 | EF Core Configuration | done | 2026-04-03 |
-| Repository Implementations | ready | 2026-04-03 |
+| Repository Implementations | done | 2026-04-03 |
 | API Wiring and Project Endpoints | ready | 2026-04-03 |
 
 ---

@@ -2,7 +2,7 @@
 category: specs
 title: "Repository Implementations"
 branch: "repo-impl"
-status: ready
+status: done
 date: "2026-04-03"
 related_domain: [Project, UseCase, URS, SRS, WorkTask, TaskAttempt, RevisionGate, AgentSlot, AgentInstance]
 related_adr: []
@@ -54,30 +54,30 @@ Depends on: specs 02 and 08.
 
 ## Implementation Scope — What must be done
 
-- [ ] Create `RepositoryBase<TEntity, TId>` in `Infrastructure/Persistence/Repositories/`
+- [x] Create `RepositoryBase<TEntity, TId>` in `Infrastructure/Persistence/Repositories/`
   implementing `IRepository<TEntity, TId>`:
   ```
   GetByIdAsync   → _context.Set<T>().FindAsync(id, ct)
   AddAsync       → _context.Set<T>().AddAsync(entity, ct)
   Delete         → _context.Set<T>().Remove(entity)
   ```
-- [ ] `ProjectRepository : RepositoryBase<Project, Guid>, IProjectRepository`
+- [x] `ProjectRepository : RepositoryBase<Project, Guid>, IProjectRepository`
   - `GetAllAsync` → `_context.Projects.AsNoTracking().ToListAsync(ct)`
-- [ ] `UseCaseRepository : RepositoryBase<UseCase, Guid>, IUseCaseRepository`
-- [ ] `URSRepository : RepositoryBase<URS, Guid>, IURSRepository`
-- [ ] `SRSRepository : RepositoryBase<SRS, Guid>, ISRSRepository`
-- [ ] `WorkTaskRepository : RepositoryBase<WorkTask, Guid>, IWorkTaskRepository`
+- [x] `UseCaseRepository : RepositoryBase<UseCase, Guid>, IUseCaseRepository`
+- [x] `URSRepository : RepositoryBase<URS, Guid>, IURSRepository`
+- [x] `SRSRepository : RepositoryBase<SRS, Guid>, ISRSRepository`
+- [x] `WorkTaskRepository : RepositoryBase<WorkTask, Guid>, IWorkTaskRepository`
   - `GetByStatusAsync` — filter by `Status`
   - `GetBySprintIdAsync` — filter by `SprintId`
   - `GetBySRSIdAsync` — filter by `SRSId`
-- [ ] `TaskAttemptRepository : RepositoryBase<TaskAttempt, Guid>, ITaskAttemptRepository`
-- [ ] `RevisionGateRepository : RepositoryBase<RevisionGate, Guid>, IRevisionGateRepository`
+- [x] `TaskAttemptRepository : RepositoryBase<TaskAttempt, Guid>, ITaskAttemptRepository`
+- [x] `RevisionGateRepository : RepositoryBase<RevisionGate, Guid>, IRevisionGateRepository`
   - `GetOpenByProjectIdAsync` — filter by `ProjectId` and `Status == Open`, `FirstOrDefaultAsync`
-- [ ] `AgentSlotRepository : RepositoryBase<AgentSlot, Guid>, IAgentSlotRepository`
-- [ ] `AgentInstanceRepository : RepositoryBase<AgentInstance, Guid>, IAgentInstanceRepository`
+- [x] `AgentSlotRepository : RepositoryBase<AgentSlot, Guid>, IAgentSlotRepository`
+- [x] `AgentInstanceRepository : RepositoryBase<AgentInstance, Guid>, IAgentInstanceRepository`
   - `GetByStatusAsync` — filter by `Status`
-- [ ] Create `DependencyInjection.cs` in `Infrastructure/` with `AddInfrastructure`
-- [ ] Run `dotnet build` — zero warnings, zero errors
+- [x] Create `DependencyInjection.cs` in `Infrastructure/` with `AddInfrastructure`
+- [x] Run `dotnet build` — zero warnings, zero errors
 
 ---
 
