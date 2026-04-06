@@ -28,7 +28,7 @@ documents:
     date: "2026-04-03"
   - file: 06-worktask-commands.md
     title: "WorkTask Commands"
-    status: ready
+    status: done
     date: "2026-04-03"
   - file: 07-revision-gate-commands.md
     title: "RevisionGate Commands"
@@ -72,7 +72,7 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 | Domain Events | done | 2026-04-03 |
 | Application Pipeline | done | 2026-04-03 |
 | Project Commands | done | 2026-04-03 |
-| WorkTask Commands | ready | 2026-04-03 |
+| WorkTask Commands | done | 2026-04-03 |
 | RevisionGate Commands | ready | 2026-04-03 |
 | EF Core Configuration | ready | 2026-04-03 |
 | Repository Implementations | ready | 2026-04-03 |

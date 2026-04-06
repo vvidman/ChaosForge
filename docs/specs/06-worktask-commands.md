@@ -2,7 +2,7 @@
 category: specs
 title: "WorkTask Commands"
 branch: "task-cmds"
-status: ready
+status: done
 date: "2026-04-03"
 related_domain: [WorkTask, SRS]
 related_adr: []
@@ -44,50 +44,50 @@ Depends on: Application Pipeline (spec 04), Repository Interfaces (spec 02).
 
 ## Implementation Scope — What must be done
 
-- [ ] `CreateWorkTaskCommand` + validator + handler
+- [x] `CreateWorkTaskCommand` + validator + handler
   ```
   Command: SRSId (Guid), Title (string), Description (string), StoryPoints (int)
   Validator: SRSId not empty, Title not empty, Description not empty, StoryPoints >= 1
   Handler: new WorkTask(...) → AddAsync → SaveChangesAsync
   ```
-- [ ] `AssignWorkTaskToSprintCommand` + validator + handler
+- [x] `AssignWorkTaskToSprintCommand` + validator + handler
   ```
   Command: WorkTaskId (Guid), SprintId (Guid)
   Validator: both not empty
   Handler: GetByIdAsync → AssignToSprint(SprintId) → SaveChangesAsync
   ```
-- [ ] `StartWorkTaskCommand` + validator + handler
+- [x] `StartWorkTaskCommand` + validator + handler
   ```
   Command: WorkTaskId (Guid)
   Validator: not empty
   Handler: GetByIdAsync → Start() → SaveChangesAsync
   ```
-- [ ] `SendWorkTaskToReviewCommand` + validator + handler
+- [x] `SendWorkTaskToReviewCommand` + validator + handler
   ```
   Command: WorkTaskId (Guid)
   Handler: GetByIdAsync → SendToReview() → SaveChangesAsync
   ```
-- [ ] `ApproveWorkTaskCommand` + validator + handler
+- [x] `ApproveWorkTaskCommand` + validator + handler
   ```
   Command: WorkTaskId (Guid)
   Handler: GetByIdAsync → Approve() → SaveChangesAsync
   ```
-- [ ] `PassWorkTaskTestingCommand` + validator + handler
+- [x] `PassWorkTaskTestingCommand` + validator + handler
   ```
   Command: WorkTaskId (Guid)
   Handler: GetByIdAsync → PassTesting() → SaveChangesAsync
   ```
-- [ ] `CompleteWorkTaskCommand` + validator + handler
+- [x] `CompleteWorkTaskCommand` + validator + handler
   ```
   Command: WorkTaskId (Guid)
   Handler: GetByIdAsync → Complete() → SaveChangesAsync
   ```
-- [ ] `RejectWorkTaskCommand` + validator + handler
+- [x] `RejectWorkTaskCommand` + validator + handler
   ```
   Command: WorkTaskId (Guid)
   Handler: GetByIdAsync → Reject() → SaveChangesAsync
   ```
-- [ ] Run `dotnet build` — zero warnings, zero errors
+- [x] Run `dotnet build` — zero warnings, zero errors
 
 ---
 
