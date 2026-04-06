@@ -22,6 +22,7 @@ namespace ChaosForge.Infrastructure.Persistence.Repositories;
 internal abstract class RepositoryBase<TEntity, TId>(AppDbContext context)
     : IRepository<TEntity, TId>
     where TEntity : class
+    where TId : notnull
 {
     protected readonly AppDbContext _context = context;
 

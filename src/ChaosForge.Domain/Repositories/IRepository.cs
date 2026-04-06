@@ -21,7 +21,7 @@ namespace ChaosForge.Domain.Repositories;
 /// </summary>
 /// <typeparam name="TEntity">The aggregate root type.</typeparam>
 /// <typeparam name="TId">The type of the entity's identifier.</typeparam>
-public interface IRepository<TEntity, TId>
+public interface IRepository<TEntity, TId> where TId : notnull
 {
     /// <summary>
     /// Returns the entity with the given <paramref name="id"/>, or <see langword="null"/> if it does not exist.

@@ -17,6 +17,7 @@
 using ChaosForge.Application.Common;
 using ChaosForge.Domain.Entities;
 using ChaosForge.Domain.Enums;
+using ChaosForge.Domain.Exceptions;
 using ChaosForge.Domain.Repositories;
 using FluentValidation;
 using MediatR;
@@ -48,7 +49,16 @@ internal sealed class OpenRevisionGateCommandHandler(
             return Result.Failure("A revision gate is already open for this project.");
         }
 
-        var gate = new RevisionGate(request.ProjectId, request.Type, request.AgentOutput);
+        RevisionGate gate;
+
+        try
+        {
+            gate = new RevisionGate(request.ProjectId, request.Type, request.AgentOutput);
+        }
+        catch (DomainException ex)
+        {
+            return Result.Failure(ex.Message);
+        }
 
         await revisionGateRepository.AddAsync(gate, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);

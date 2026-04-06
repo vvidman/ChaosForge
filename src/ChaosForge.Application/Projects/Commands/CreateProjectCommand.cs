@@ -16,6 +16,7 @@
 
 using ChaosForge.Application.Common;
 using ChaosForge.Domain.Entities;
+using ChaosForge.Domain.Exceptions;
 using ChaosForge.Domain.Repositories;
 using FluentValidation;
 using MediatR;
@@ -40,7 +41,16 @@ internal sealed class CreateProjectCommandHandler(
 {
     public async Task<Result> Handle(CreateProjectCommand request, CancellationToken cancellationToken)
     {
-        var project = new Project(request.Name, request.Description, request.Deadline);
+        Project project;
+
+        try
+        {
+            project = new Project(request.Name, request.Description, request.Deadline);
+        }
+        catch (DomainException ex)
+        {
+            return Result.Failure(ex.Message);
+        }
 
         await projectRepository.AddAsync(project, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);

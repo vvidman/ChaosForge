@@ -16,6 +16,7 @@
 
 using ChaosForge.Application.Common;
 using ChaosForge.Domain.Entities;
+using ChaosForge.Domain.Exceptions;
 using ChaosForge.Domain.Repositories;
 using FluentValidation;
 using MediatR;
@@ -42,7 +43,16 @@ internal sealed class CreateWorkTaskCommandHandler(
 {
     public async Task<Result> Handle(CreateWorkTaskCommand request, CancellationToken cancellationToken)
     {
-        var task = new WorkTask(request.SRSId, request.Title, request.Description, request.StoryPoints);
+        WorkTask task;
+
+        try
+        {
+            task = new WorkTask(request.SRSId, request.Title, request.Description, request.StoryPoints);
+        }
+        catch (DomainException ex)
+        {
+            return Result.Failure(ex.Message);
+        }
 
         await workTaskRepository.AddAsync(task, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
