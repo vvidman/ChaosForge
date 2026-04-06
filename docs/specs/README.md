@@ -32,7 +32,7 @@ documents:
     date: "2026-04-03"
   - file: 07-revision-gate-commands.md
     title: "RevisionGate Commands"
-    status: ready
+    status: done
     date: "2026-04-03"
   - file: 08-ef-core-configuration.md
     title: "EF Core Configuration"
@@ -73,7 +73,7 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 | Application Pipeline | done | 2026-04-03 |
 | Project Commands | done | 2026-04-03 |
 | WorkTask Commands | done | 2026-04-03 |
-| RevisionGate Commands | ready | 2026-04-03 |
+| RevisionGate Commands | done | 2026-04-03 |
 | EF Core Configuration | ready | 2026-04-03 |
 | Repository Implementations | ready | 2026-04-03 |
 | API Wiring and Project Endpoints | ready | 2026-04-03 |

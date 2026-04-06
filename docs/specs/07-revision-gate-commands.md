@@ -2,7 +2,7 @@
 category: specs
 title: "RevisionGate Commands"
 branch: "gate-cmds"
-status: ready
+status: done
 date: "2026-04-03"
 related_domain: [RevisionGate, Project]
 related_adr: []
@@ -47,32 +47,32 @@ Depends on: Application Pipeline (spec 04), Repository Interfaces (spec 02).
 
 ## Implementation Scope — What must be done
 
-- [ ] `OpenRevisionGateCommand` + validator + handler
+- [x] `OpenRevisionGateCommand` + validator + handler
   ```
   Command: ProjectId (Guid), Type (RevisionGateType), AgentOutput (string)
   Validator: ProjectId not empty, AgentOutput not empty
   Handler: GetOpenByProjectIdAsync → fail if already open
            new RevisionGate(...) → AddAsync → SaveChangesAsync
   ```
-- [ ] `AcceptRevisionGateCommand` + validator + handler
+- [x] `AcceptRevisionGateCommand` + validator + handler
   ```
   Command: RevisionGateId (Guid)
   Validator: not empty
   Handler: GetByIdAsync → Accept() → SaveChangesAsync
   ```
-- [ ] `EditAndAcceptRevisionGateCommand` + validator + handler
+- [x] `EditAndAcceptRevisionGateCommand` + validator + handler
   ```
   Command: RevisionGateId (Guid), EditedOutput (string)
   Validator: not empty, EditedOutput not empty
   Handler: GetByIdAsync → EditAndAccept(EditedOutput) → SaveChangesAsync
   ```
-- [ ] `RejectRevisionGateCommand` + validator + handler
+- [x] `RejectRevisionGateCommand` + validator + handler
   ```
   Command: RevisionGateId (Guid), Reason (string)
   Validator: not empty, Reason not empty
   Handler: GetByIdAsync → Reject(Reason) → SaveChangesAsync
   ```
-- [ ] Run `dotnet build` — zero warnings, zero errors
+- [x] Run `dotnet build` — zero warnings, zero errors
 
 ---
 
