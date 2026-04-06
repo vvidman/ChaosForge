@@ -2,7 +2,7 @@
 category: specs
 title: "EF Core Configuration"
 branch: "ef-core-cfg"
-status: ready
+status: done
 date: "2026-04-03"
 related_domain: [Project, UseCase, URS, SRS, WorkTask, TaskAttempt, RevisionGate, AgentSlot, AgentInstance]
 related_adr: []
@@ -53,28 +53,28 @@ in this spec — only the configuration code.
 
 ## Implementation Scope — What must be done
 
-- [ ] Create `AppDbContext : DbContext, IUnitOfWork` in `Infrastructure/Persistence/`
+- [x] Create `AppDbContext : DbContext, IUnitOfWork` in `Infrastructure/Persistence/`
   - `DbSet<Project>`, `DbSet<UseCase>`, `DbSet<URS>`, `DbSet<SRS>`, `DbSet<WorkTask>`,
     `DbSet<TaskAttempt>`, `DbSet<RevisionGate>`, `DbSet<AgentSlot>`, `DbSet<AgentInstance>`
   - `OnModelCreating` applies all configurations from the assembly
   - Implements `IUnitOfWork.SaveChangesAsync`
-- [ ] Create `ProjectConfiguration : IEntityTypeConfiguration<Project>`
+- [x] Create `ProjectConfiguration : IEntityTypeConfiguration<Project>`
   - Table name: `Projects`
   - All string fields with `IsRequired` + `HasMaxLength`
   - `Deadline` is optional
-- [ ] `UseCaseConfiguration` — table `UseCases`, FK to `Projects`
-- [ ] `URSConfiguration` — table `URSs`, FK to `UseCases`
-- [ ] `SRSConfiguration` — table `SRSs`, FK to `URSs`
-- [ ] `WorkTaskConfiguration` — table `WorkTasks`, FK to `SRSs`, nullable FK `SprintId` (no nav)
-- [ ] `TaskAttemptConfiguration` — table `TaskAttempts`, FK to `WorkTasks`
-- [ ] `RevisionGateConfiguration` — table `RevisionGates`, FK to `Projects`
-- [ ] `AgentSlotConfiguration` — table `AgentSlots`, FK to `Projects`
-- [ ] `AgentInstanceConfiguration` — table `AgentInstances`, FK to `Projects`,
+- [x] `UseCaseConfiguration` — table `UseCases`, FK to `Projects`
+- [x] `URSConfiguration` — table `URSs`, FK to `UseCases`
+- [x] `SRSConfiguration` — table `SRSs`, FK to `URSs`
+- [x] `WorkTaskConfiguration` — table `WorkTasks`, FK to `SRSs`, nullable FK `SprintId` (no nav)
+- [x] `TaskAttemptConfiguration` — table `TaskAttempts`, FK to `WorkTasks`
+- [x] `RevisionGateConfiguration` — table `RevisionGates`, FK to `Projects`
+- [x] `AgentSlotConfiguration` — table `AgentSlots`, FK to `Projects`
+- [x] `AgentInstanceConfiguration` — table `AgentInstances`, FK to `Projects`,
   nullable `CurrentTaskId` (no nav)
-- [ ] Add initial EF Core migration: `dotnet ef migrations add InitialCreate`
+- [x] Add initial EF Core migration: `dotnet ef migrations add InitialCreate`
   (run from the `ChaosForge.API` project, targeting Infrastructure)
-- [ ] Verify migration generates without error: `dotnet ef database update`
-- [ ] Run `dotnet build` — zero warnings, zero errors
+- [x] Verify migration generates without error: `dotnet ef database update`
+- [x] Run `dotnet build` — zero warnings, zero errors
 
 ---
 
