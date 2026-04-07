@@ -56,7 +56,7 @@ documents:
     date: "2026-04-07"
   - file: 13-usecase-urs-srs-queries.md
     title: "UseCase, URS and SRS Queries"
-    status: ready
+    status: done
     date: "2026-04-07"
   - file: 14-agent-attempt-queries.md
     title: "AgentSlot, AgentInstance and TaskAttempt Queries"
@@ -119,7 +119,7 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 | API Wiring and Project Endpoints | done | 2026-04-03 |
 | Project Queries | done | 2026-04-07 |
 | WorkTask and RevisionGate Queries | done | 2026-04-07 |
-| UseCase, URS and SRS Queries | ready | 2026-04-07 |
+| UseCase, URS and SRS Queries | done | 2026-04-07 |
 | AgentSlot, AgentInstance and TaskAttempt Queries | ready | 2026-04-07 |
 | UseCase, URS and SRS Commands | ready | 2026-04-07 |
 | AgentSlot, AgentInstance and TaskAttempt Commands | ready | 2026-04-07 |

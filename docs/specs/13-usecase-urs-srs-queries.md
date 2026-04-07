@@ -2,7 +2,7 @@
 category: specs
 title: "UseCase, URS and SRS Queries"
 branch: "req-queries"
-status: ready
+status: done
 date: "2026-04-07"
 related_domain: [UseCase, URS, SRS]
 related_adr: []
@@ -47,35 +47,35 @@ Depends on spec 11 (query pattern established).
 
 ### UseCase
 
-- [ ] Create `UseCaseDto` record:
+- [x] Create `UseCaseDto` record:
   ```
   Guid Id, Guid ProjectId, string Title, string Description, int Priority, DateTime CreatedAt
   ```
-- [ ] `GetUseCaseByIdQuery(Guid UseCaseId)` → `Result<UseCaseDto>`
-- [ ] `GetUseCasesByProjectIdQuery(Guid ProjectId)` → `Result<IReadOnlyList<UseCaseDto>>`
+- [x] `GetUseCaseByIdQuery(Guid UseCaseId)` → `Result<UseCaseDto>`
+- [x] `GetUseCasesByProjectIdQuery(Guid ProjectId)` → `Result<IReadOnlyList<UseCaseDto>>`
   - Handler: `IUseCaseRepository.GetByProjectIdAsync`
 
 ### URS
 
-- [ ] Create `URSDto` record:
+- [x] Create `URSDto` record:
   ```
   Guid Id, Guid UseCaseId, string Title, string Description, string? HumanEditNote, DateTime CreatedAt
   ```
-- [ ] `GetURSByIdQuery(Guid URSId)` → `Result<URSDto>`
-- [ ] `GetURSsByUseCaseIdQuery(Guid UseCaseId)` → `Result<IReadOnlyList<URSDto>>`
+- [x] `GetURSByIdQuery(Guid URSId)` → `Result<URSDto>`
+- [x] `GetURSsByUseCaseIdQuery(Guid UseCaseId)` → `Result<IReadOnlyList<URSDto>>`
   - Handler: `IURSRepository.GetByUseCaseIdAsync`
 
 ### SRS
 
-- [ ] Create `SRSDto` record:
+- [x] Create `SRSDto` record:
   ```
   Guid Id, Guid URSId, string Title, string TechnicalDescription, string? HumanEditNote, DateTime CreatedAt
   ```
-- [ ] `GetSRSByIdQuery(Guid SRSId)` → `Result<SRSDto>`
-- [ ] `GetSRSsByURSIdQuery(Guid URSId)` → `Result<IReadOnlyList<SRSDto>>`
+- [x] `GetSRSByIdQuery(Guid SRSId)` → `Result<SRSDto>`
+- [x] `GetSRSsByURSIdQuery(Guid URSId)` → `Result<IReadOnlyList<SRSDto>>`
   - Handler: `ISRSRepository.GetByURSIdAsync`
 
-- [ ] Run `dotnet build` — zero warnings, zero errors
+- [x] Run `dotnet build` — zero warnings, zero errors
 
 ---
 
