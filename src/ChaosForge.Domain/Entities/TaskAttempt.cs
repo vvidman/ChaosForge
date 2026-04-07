@@ -82,6 +82,11 @@ public sealed class TaskAttempt : EntityBase<Guid>
     /// <exception cref="DomainException">Thrown when <paramref name="output"/> is null or whitespace.</exception>
     public void Complete(string output)
     {
+        if (CompletedAt is not null)
+        {
+            throw new DomainException("Attempt has already been completed.");
+        }
+
         if (string.IsNullOrWhiteSpace(output))
         {
             throw new DomainException($"{nameof(output)} must not be null or whitespace.");
