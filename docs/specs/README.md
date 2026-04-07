@@ -1,6 +1,6 @@
 ---
 category: specs
-last_updated: "2026-04-04"
+last_updated: "2026-04-07"
 documents:
   - file: domain-entities.md
     title: "Domain Entities"
@@ -46,6 +46,46 @@ documents:
     title: "API Wiring and Project Endpoints"
     status: done
     date: "2026-04-03"
+  - file: 11-project-queries.md
+    title: "Project Queries"
+    status: ready
+    date: "2026-04-07"
+  - file: 12-worktask-revgate-queries.md
+    title: "WorkTask and RevisionGate Queries"
+    status: ready
+    date: "2026-04-07"
+  - file: 13-usecase-urs-srs-queries.md
+    title: "UseCase, URS and SRS Queries"
+    status: ready
+    date: "2026-04-07"
+  - file: 14-agent-attempt-queries.md
+    title: "AgentSlot, AgentInstance and TaskAttempt Queries"
+    status: ready
+    date: "2026-04-07"
+  - file: 15-usecase-urs-srs-commands.md
+    title: "UseCase, URS and SRS Commands"
+    status: ready
+    date: "2026-04-07"
+  - file: 16-agent-attempt-commands.md
+    title: "AgentSlot, AgentInstance and TaskAttempt Commands"
+    status: ready
+    date: "2026-04-07"
+  - file: 17-remaining-api-endpoints.md
+    title: "Remaining API Endpoints"
+    status: ready
+    date: "2026-04-07"
+  - file: 18-domain-event-dispatcher.md
+    title: "Domain Event Dispatcher"
+    status: ready
+    date: "2026-04-07"
+  - file: 19-llm-provider-groq.md
+    title: "ILlmProvider Abstraction and Groq Client"
+    status: ready
+    date: "2026-04-07"
+  - file: 20-llm-provider-llamasharp.md
+    title: "LlamaSharp Local LLM Provider"
+    status: ready
+    date: "2026-04-07"
 ---
 
 # Feature Specifications
@@ -77,6 +117,16 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 | EF Core Configuration | done | 2026-04-03 |
 | Repository Implementations | done | 2026-04-03 |
 | API Wiring and Project Endpoints | done | 2026-04-03 |
+| Project Queries | ready | 2026-04-07 |
+| WorkTask and RevisionGate Queries | ready | 2026-04-07 |
+| UseCase, URS and SRS Queries | ready | 2026-04-07 |
+| AgentSlot, AgentInstance and TaskAttempt Queries | ready | 2026-04-07 |
+| UseCase, URS and SRS Commands | ready | 2026-04-07 |
+| AgentSlot, AgentInstance and TaskAttempt Commands | ready | 2026-04-07 |
+| Remaining API Endpoints | ready | 2026-04-07 |
+| Domain Event Dispatcher | ready | 2026-04-07 |
+| ILlmProvider Abstraction and Groq Client | ready | 2026-04-07 |
+| LlamaSharp Local LLM Provider | ready | 2026-04-07 |
 
 ---
 
