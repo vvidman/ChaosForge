@@ -2,7 +2,7 @@
 category: specs
 title: "Project Queries"
 branch: "project-qry"
-status: ready
+status: done
 date: "2026-04-07"
 related_domain: [Project]
 related_adr: []
@@ -52,27 +52,27 @@ Application layer and establish the query handler pattern for all subsequent que
 
 ## Implementation Scope — What must be done
 
-- [ ] Create `ProjectSummaryDto` record:
+- [x] Create `ProjectSummaryDto` record:
   ```
   Guid Id, string Name, string Description, ProjectStatus Status, DateTime? Deadline, DateTime CreatedAt
   ```
-- [ ] Create `ProjectDto` record (same fields as summary — no extra fields at this stage):
+- [x] Create `ProjectDto` record (same fields as summary — no extra fields at this stage):
   ```
   Guid Id, string Name, string Description, ProjectStatus Status, DateTime? Deadline, DateTime CreatedAt
   ```
-- [ ] Create `GetAllProjectsQuery` record implementing `IRequest<Result<IReadOnlyList<ProjectSummaryDto>>>`
+- [x] Create `GetAllProjectsQuery` record implementing `IRequest<Result<IReadOnlyList<ProjectSummaryDto>>>`
   - No properties
-- [ ] Create `GetAllProjectsQueryHandler` (`internal sealed`)
+- [x] Create `GetAllProjectsQueryHandler` (`internal sealed`)
   - Calls `IProjectRepository.GetAllAsync()`
   - Maps each `Project` to `ProjectSummaryDto`
   - Returns `Result<IReadOnlyList<ProjectSummaryDto>>.Success(...)`
-- [ ] Create `GetProjectByIdQuery` record implementing `IRequest<Result<ProjectDto>>`
+- [x] Create `GetProjectByIdQuery` record implementing `IRequest<Result<ProjectDto>>`
   - Property: `Guid ProjectId`
-- [ ] Create `GetProjectByIdQueryHandler` (`internal sealed`)
+- [x] Create `GetProjectByIdQueryHandler` (`internal sealed`)
   - Calls `IProjectRepository.GetByIdAsync(ProjectId)`
   - Returns `Result<ProjectDto>.Failure("Project not found.")` if null
   - Maps `Project` to `ProjectDto` and returns `Result<ProjectDto>.Success(...)`
-- [ ] Run `dotnet build` — zero warnings, zero errors
+- [x] Run `dotnet build` — zero warnings, zero errors
 
 ---
 
