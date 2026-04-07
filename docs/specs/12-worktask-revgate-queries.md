@@ -2,7 +2,7 @@
 category: specs
 title: "WorkTask and RevisionGate Queries"
 branch: "task-gate-qry"
-status: ready
+status: done
 date: "2026-04-07"
 related_domain: [WorkTask, RevisionGate]
 related_adr: []
@@ -49,36 +49,36 @@ their handler patterns are identical. Depends on spec 11 (query pattern establis
 
 ### WorkTask DTOs and Queries
 
-- [ ] Create `WorkTaskDto` record:
+- [x] Create `WorkTaskDto` record:
   ```
   Guid Id, Guid SRSId, Guid? SprintId, string Title, string Description,
   WorkTaskStatus Status, int StoryPoints, DateTime CreatedAt
   ```
-- [ ] `GetWorkTaskByIdQuery(Guid WorkTaskId)` → `Result<WorkTaskDto>`
+- [x] `GetWorkTaskByIdQuery(Guid WorkTaskId)` → `Result<WorkTaskDto>`
   - Handler: `GetByIdAsync` → map → Success, or Failure if null
-- [ ] `GetWorkTasksBySRSIdQuery(Guid SRSId)` → `Result<IReadOnlyList<WorkTaskDto>>`
+- [x] `GetWorkTasksBySRSIdQuery(Guid SRSId)` → `Result<IReadOnlyList<WorkTaskDto>>`
   - Handler: `GetBySRSIdAsync` → map all
-- [ ] `GetWorkTasksBySprintIdQuery(Guid SprintId)` → `Result<IReadOnlyList<WorkTaskDto>>`
+- [x] `GetWorkTasksBySprintIdQuery(Guid SprintId)` → `Result<IReadOnlyList<WorkTaskDto>>`
   - Handler: `GetBySprintIdAsync` → map all
-- [ ] `GetWorkTasksByStatusQuery(WorkTaskStatus Status)` → `Result<IReadOnlyList<WorkTaskDto>>`
+- [x] `GetWorkTasksByStatusQuery(WorkTaskStatus Status)` → `Result<IReadOnlyList<WorkTaskDto>>`
   - Handler: `GetByStatusAsync` → map all
 
 ### RevisionGate DTOs and Queries
 
-- [ ] Create `RevisionGateDto` record:
+- [x] Create `RevisionGateDto` record:
   ```
   Guid Id, Guid ProjectId, RevisionGateType Type, RevisionGateStatus Status,
   string AgentOutput, string? HumanEditedOutput, string? RejectionReason,
   RevisionGateAction? Action, DateTime? ResolvedAt, DateTime CreatedAt
   ```
-- [ ] `GetRevisionGateByIdQuery(Guid RevisionGateId)` → `Result<RevisionGateDto>`
+- [x] `GetRevisionGateByIdQuery(Guid RevisionGateId)` → `Result<RevisionGateDto>`
   - Handler: `GetByIdAsync` → map → Success, or Failure if null
-- [ ] `GetRevisionGatesByProjectIdQuery(Guid ProjectId)` → `Result<IReadOnlyList<RevisionGateDto>>`
+- [x] `GetRevisionGatesByProjectIdQuery(Guid ProjectId)` → `Result<IReadOnlyList<RevisionGateDto>>`
   - Handler: `GetByProjectIdAsync` → map all
-- [ ] `GetOpenRevisionGateQuery(Guid ProjectId)` → `Result<RevisionGateDto>`
+- [x] `GetOpenRevisionGateQuery(Guid ProjectId)` → `Result<RevisionGateDto>`
   - Handler: `GetOpenByProjectIdAsync` → Success if found, Failure("No open revision gate found for this project.") if null
 
-- [ ] Run `dotnet build` — zero warnings, zero errors
+- [x] Run `dotnet build` — zero warnings, zero errors
 
 ---
 
