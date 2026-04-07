@@ -1,11 +1,91 @@
 ---
 category: specs
-last_updated: "2026-03-29"
+last_updated: "2026-04-07"
 documents:
   - file: domain-entities.md
     title: "Domain Entities"
     status: done
     date: "2026-03-29"
+  - file: 01-domain-unit-tests.md
+    title: "Domain Unit Tests"
+    status: done
+    date: "2026-04-03"
+  - file: 02-repository-interfaces.md
+    title: "Repository Interfaces"
+    status: done
+    date: "2026-04-03"
+  - file: 03-domain-events.md
+    title: "Domain Events"
+    status: done
+    date: "2026-04-03"
+  - file: 04-application-pipeline.md
+    title: "Application Pipeline"
+    status: done
+    date: "2026-04-03"
+  - file: 05-project-commands.md
+    title: "Project Commands"
+    status: done
+    date: "2026-04-03"
+  - file: 06-worktask-commands.md
+    title: "WorkTask Commands"
+    status: done
+    date: "2026-04-03"
+  - file: 07-revision-gate-commands.md
+    title: "RevisionGate Commands"
+    status: done
+    date: "2026-04-03"
+  - file: 08-ef-core-configuration.md
+    title: "EF Core Configuration"
+    status: done
+    date: "2026-04-03"
+  - file: 09-repository-implementations.md
+    title: "Repository Implementations"
+    status: done
+    date: "2026-04-03"
+  - file: 10-api-wiring.md
+    title: "API Wiring and Project Endpoints"
+    status: done
+    date: "2026-04-03"
+  - file: 11-project-queries.md
+    title: "Project Queries"
+    status: done
+    date: "2026-04-07"
+  - file: 12-worktask-revgate-queries.md
+    title: "WorkTask and RevisionGate Queries"
+    status: done
+    date: "2026-04-07"
+  - file: 13-usecase-urs-srs-queries.md
+    title: "UseCase, URS and SRS Queries"
+    status: done
+    date: "2026-04-07"
+  - file: 14-agent-attempt-queries.md
+    title: "AgentSlot, AgentInstance and TaskAttempt Queries"
+    status: ready
+    date: "2026-04-07"
+  - file: 15-usecase-urs-srs-commands.md
+    title: "UseCase, URS and SRS Commands"
+    status: ready
+    date: "2026-04-07"
+  - file: 16-agent-attempt-commands.md
+    title: "AgentSlot, AgentInstance and TaskAttempt Commands"
+    status: ready
+    date: "2026-04-07"
+  - file: 17-remaining-api-endpoints.md
+    title: "Remaining API Endpoints"
+    status: ready
+    date: "2026-04-07"
+  - file: 18-domain-event-dispatcher.md
+    title: "Domain Event Dispatcher"
+    status: ready
+    date: "2026-04-07"
+  - file: 19-llm-provider-groq.md
+    title: "ILlmProvider Abstraction and Groq Client"
+    status: ready
+    date: "2026-04-07"
+  - file: 20-llm-provider-llamasharp.md
+    title: "LlamaSharp Local LLM Provider"
+    status: ready
+    date: "2026-04-07"
 ---
 
 # Feature Specifications
@@ -27,6 +107,26 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 | Title | Status | Date |
 |-------|--------|------|
 | Domain Entities | done | 2026-03-29 |
+| Domain Unit Tests | done | 2026-04-03 |
+| Repository Interfaces | done | 2026-04-03 |
+| Domain Events | done | 2026-04-03 |
+| Application Pipeline | done | 2026-04-03 |
+| Project Commands | done | 2026-04-03 |
+| WorkTask Commands | done | 2026-04-03 |
+| RevisionGate Commands | done | 2026-04-03 |
+| EF Core Configuration | done | 2026-04-03 |
+| Repository Implementations | done | 2026-04-03 |
+| API Wiring and Project Endpoints | done | 2026-04-03 |
+| Project Queries | done | 2026-04-07 |
+| WorkTask and RevisionGate Queries | done | 2026-04-07 |
+| UseCase, URS and SRS Queries | done | 2026-04-07 |
+| AgentSlot, AgentInstance and TaskAttempt Queries | ready | 2026-04-07 |
+| UseCase, URS and SRS Commands | ready | 2026-04-07 |
+| AgentSlot, AgentInstance and TaskAttempt Commands | ready | 2026-04-07 |
+| Remaining API Endpoints | ready | 2026-04-07 |
+| Domain Event Dispatcher | ready | 2026-04-07 |
+| ILlmProvider Abstraction and Groq Client | ready | 2026-04-07 |
+| LlamaSharp Local LLM Provider | ready | 2026-04-07 |
 
 ---
 

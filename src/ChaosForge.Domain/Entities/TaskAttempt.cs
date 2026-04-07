@@ -16,6 +16,7 @@
 
 using ChaosForge.Domain.Common;
 using ChaosForge.Domain.Enums;
+using ChaosForge.Domain.Events;
 using ChaosForge.Domain.Exceptions;
 
 namespace ChaosForge.Domain.Entities;
@@ -91,8 +92,14 @@ public sealed class TaskAttempt : EntityBase<Guid>
             throw new DomainException($"{nameof(output)} must not be null or whitespace.");
         }
 
+        if (CompletedAt is not null)
+        {
+            throw new DomainException("Attempt has already been completed.");
+        }
+
         Output = output;
         CompletedAt = DateTime.UtcNow;
+        AddDomainEvent(new TaskAttemptCompletedEvent(Id, WorkTaskId, Type));
     }
 
     /// <summary>
@@ -104,6 +111,7 @@ public sealed class TaskAttempt : EntityBase<Guid>
         EnsureNotResolved();
 
         Result = AttemptResult.Approved;
+        AddDomainEvent(new TaskAttemptResolvedEvent(Id, WorkTaskId, Result));
     }
 
     /// <summary>
@@ -133,6 +141,7 @@ public sealed class TaskAttempt : EntityBase<Guid>
         }
 
         Result = AttemptResult.Rejected;
+        AddDomainEvent(new TaskAttemptResolvedEvent(Id, WorkTaskId, Result));
     }
 
     private void EnsureNotResolved()

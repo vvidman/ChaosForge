@@ -16,6 +16,7 @@
 
 using ChaosForge.Domain.Common;
 using ChaosForge.Domain.Enums;
+using ChaosForge.Domain.Events;
 using ChaosForge.Domain.Exceptions;
 
 namespace ChaosForge.Domain.Entities;
@@ -72,8 +73,10 @@ public sealed class AgentInstance : EntityBase<Guid>
             throw new DomainException($"Agent {PersonaName} is already working on task {CurrentTaskId}.");
         }
 
+        var oldStatus = Status;
         CurrentTaskId = taskId;
         Status = AgentInstanceStatus.Working;
+        AddDomainEvent(new AgentInstanceStatusChangedEvent(Id, oldStatus, Status));
     }
 
     /// <summary>
@@ -81,8 +84,10 @@ public sealed class AgentInstance : EntityBase<Guid>
     /// </summary>
     public void FinishWork()
     {
+        var oldStatus = Status;
         CurrentTaskId = null;
         Status = AgentInstanceStatus.Idle;
+        AddDomainEvent(new AgentInstanceStatusChangedEvent(Id, oldStatus, Status));
     }
 
     /// <summary>
@@ -90,7 +95,9 @@ public sealed class AgentInstance : EntityBase<Guid>
     /// </summary>
     public void Block()
     {
+        var oldStatus = Status;
         Status = AgentInstanceStatus.Blocked;
+        AddDomainEvent(new AgentInstanceStatusChangedEvent(Id, oldStatus, Status));
     }
 
     /// <summary>
@@ -98,6 +105,8 @@ public sealed class AgentInstance : EntityBase<Guid>
     /// </summary>
     public void MarkFinished()
     {
+        var oldStatus = Status;
         Status = AgentInstanceStatus.Finished;
+        AddDomainEvent(new AgentInstanceStatusChangedEvent(Id, oldStatus, Status));
     }
 }
