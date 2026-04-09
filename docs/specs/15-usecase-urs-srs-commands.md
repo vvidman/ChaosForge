@@ -2,7 +2,7 @@
 category: specs
 title: "UseCase, URS and SRS Commands"
 branch: "req-commands"
-status: ready
+status: done
 date: "2026-04-07"
 related_domain: [UseCase, URS, SRS]
 related_adr: []
@@ -50,35 +50,35 @@ Depends on: specs 04 (pipeline), 02 (repository interfaces).
 
 ### UseCase Commands
 
-- [ ] `CreateUseCaseCommand(Guid ProjectId, string Title, string Description, int Priority)`
+- [x] `CreateUseCaseCommand(Guid ProjectId, string Title, string Description, int Priority)`
   + validator (ProjectId not empty, Title not empty, Description not empty, Priority >= 0)
   + handler: `new UseCase(...)` → `AddAsync` → `SaveChangesAsync`
 
-- [ ] `UpdateUseCasePriorityCommand(Guid UseCaseId, int Priority)`
+- [x] `UpdateUseCasePriorityCommand(Guid UseCaseId, int Priority)`
   + validator (UseCaseId not empty, Priority >= 0)
   + handler: `GetByIdAsync` → not-found check → `UpdatePriority(Priority)` → `SaveChangesAsync`
 
 ### URS Commands
 
-- [ ] `CreateURSCommand(Guid UseCaseId, string Title, string Description)`
+- [x] `CreateURSCommand(Guid UseCaseId, string Title, string Description)`
   + validator (UseCaseId not empty, Title not empty, Description not empty)
   + handler: `new URS(...)` → `AddAsync` → `SaveChangesAsync`
 
-- [ ] `ApplyHumanEditToURSCommand(Guid URSId, string EditedDescription, string Note)`
+- [x] `ApplyHumanEditToURSCommand(Guid URSId, string EditedDescription, string Note)`
   + validator (URSId not empty, EditedDescription not empty, Note not empty)
   + handler: `GetByIdAsync` → not-found check → `ApplyHumanEdit(...)` → `SaveChangesAsync`
 
 ### SRS Commands
 
-- [ ] `CreateSRSCommand(Guid URSId, string Title, string TechnicalDescription)`
+- [x] `CreateSRSCommand(Guid URSId, string Title, string TechnicalDescription)`
   + validator (URSId not empty, Title not empty, TechnicalDescription not empty)
   + handler: `new SRS(...)` → `AddAsync` → `SaveChangesAsync`
 
-- [ ] `ApplyHumanEditToSRSCommand(Guid SRSId, string EditedDescription, string Note)`
+- [x] `ApplyHumanEditToSRSCommand(Guid SRSId, string EditedDescription, string Note)`
   + validator (SRSId not empty, EditedDescription not empty, Note not empty)
   + handler: `GetByIdAsync` → not-found check → `ApplyHumanEdit(...)` → `SaveChangesAsync`
 
-- [ ] Run `dotnet build` — zero warnings, zero errors
+- [x] Run `dotnet build` — zero warnings, zero errors
 
 ---
 

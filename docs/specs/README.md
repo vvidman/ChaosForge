@@ -64,7 +64,7 @@ documents:
     date: "2026-04-07"
   - file: 15-usecase-urs-srs-commands.md
     title: "UseCase, URS and SRS Commands"
-    status: ready
+    status: done
     date: "2026-04-07"
   - file: 16-agent-attempt-commands.md
     title: "AgentSlot, AgentInstance and TaskAttempt Commands"
@@ -121,7 +121,7 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 | WorkTask and RevisionGate Queries | done | 2026-04-07 |
 | UseCase, URS and SRS Queries | done | 2026-04-07 |
 | AgentSlot, AgentInstance and TaskAttempt Queries | done | 2026-04-07 |
-| UseCase, URS and SRS Commands | ready | 2026-04-07 |
+| UseCase, URS and SRS Commands | done | 2026-04-07 |
 | AgentSlot, AgentInstance and TaskAttempt Commands | ready | 2026-04-07 |
 | Remaining API Endpoints | ready | 2026-04-07 |
 | Domain Event Dispatcher | ready | 2026-04-07 |
