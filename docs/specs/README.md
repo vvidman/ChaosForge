@@ -68,7 +68,7 @@ documents:
     date: "2026-04-07"
   - file: 16-agent-attempt-commands.md
     title: "AgentSlot, AgentInstance and TaskAttempt Commands"
-    status: ready
+    status: done
     date: "2026-04-07"
   - file: 17-remaining-api-endpoints.md
     title: "Remaining API Endpoints"
@@ -122,7 +122,7 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 | UseCase, URS and SRS Queries | done | 2026-04-07 |
 | AgentSlot, AgentInstance and TaskAttempt Queries | done | 2026-04-07 |
 | UseCase, URS and SRS Commands | done | 2026-04-07 |
-| AgentSlot, AgentInstance and TaskAttempt Commands | ready | 2026-04-07 |
+| AgentSlot, AgentInstance and TaskAttempt Commands | done | 2026-04-07 |
 | Remaining API Endpoints | ready | 2026-04-07 |
 | Domain Event Dispatcher | ready | 2026-04-07 |
 | ILlmProvider Abstraction and Groq Client | ready | 2026-04-07 |

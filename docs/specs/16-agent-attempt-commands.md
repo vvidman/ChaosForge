@@ -2,7 +2,7 @@
 category: specs
 title: "AgentSlot, AgentInstance and TaskAttempt Commands"
 branch: "agent-att-cmd"
-status: ready
+status: done
 date: "2026-04-07"
 related_domain: [AgentSlot, AgentInstance, TaskAttempt]
 related_adr: []
@@ -50,57 +50,57 @@ Depends on: specs 04 (pipeline), 02 (repository interfaces).
 
 ### AgentSlot Commands
 
-- [ ] `CreateAgentSlotCommand(Guid ProjectId, AgentRole Role, int Count)`
+- [x] `CreateAgentSlotCommand(Guid ProjectId, AgentRole Role, int Count)`
   + validator (ProjectId not empty, Count >= 1)
   + handler: `new AgentSlot(...)` → `AddAsync` → `SaveChangesAsync`
 
-- [ ] `UpdateAgentSlotCountCommand(Guid AgentSlotId, int Count)`
+- [x] `UpdateAgentSlotCountCommand(Guid AgentSlotId, int Count)`
   + validator (AgentSlotId not empty, Count >= 1)
   + handler: `GetByIdAsync` → not-found check → `UpdateCount(Count)` → `SaveChangesAsync`
 
 ### AgentInstance Commands
 
-- [ ] `CreateAgentInstanceCommand(Guid ProjectId, AgentRole Role, string PersonaName)`
+- [x] `CreateAgentInstanceCommand(Guid ProjectId, AgentRole Role, string PersonaName)`
   + validator (ProjectId not empty, PersonaName not empty)
   + handler: `new AgentInstance(...)` → `AddAsync` → `SaveChangesAsync`
 
-- [ ] `StartAgentWorkCommand(Guid AgentInstanceId, Guid TaskId)`
+- [x] `StartAgentWorkCommand(Guid AgentInstanceId, Guid TaskId)`
   + validator (both not empty)
   + handler: `GetByIdAsync` → not-found check → `StartWork(TaskId)` → `SaveChangesAsync`
 
-- [ ] `FinishAgentWorkCommand(Guid AgentInstanceId)`
+- [x] `FinishAgentWorkCommand(Guid AgentInstanceId)`
   + validator (not empty)
   + handler: `GetByIdAsync` → not-found check → `FinishWork()` → `SaveChangesAsync`
 
-- [ ] `BlockAgentCommand(Guid AgentInstanceId)`
+- [x] `BlockAgentCommand(Guid AgentInstanceId)`
   + validator (not empty)
   + handler: `GetByIdAsync` → not-found check → `Block()` → `SaveChangesAsync`
 
-- [ ] `MarkAgentFinishedCommand(Guid AgentInstanceId)`
+- [x] `MarkAgentFinishedCommand(Guid AgentInstanceId)`
   + validator (not empty)
   + handler: `GetByIdAsync` → not-found check → `MarkFinished()` → `SaveChangesAsync`
 
 ### TaskAttempt Commands
 
-- [ ] `CreateTaskAttemptCommand(Guid WorkTaskId, Guid AgentInstanceId, AttemptType Type)`
+- [x] `CreateTaskAttemptCommand(Guid WorkTaskId, Guid AgentInstanceId, AttemptType Type)`
   → `Result<Guid>` (returns the new attempt Id)
   + validator (WorkTaskId not empty, AgentInstanceId not empty)
   + handler: `new TaskAttempt(...)` → `AddAsync` → `SaveChangesAsync`
   → return `Result<Guid>.Success(attempt.Id)`
 
-- [ ] `CompleteTaskAttemptCommand(Guid TaskAttemptId, string Output)`
+- [x] `CompleteTaskAttemptCommand(Guid TaskAttemptId, string Output)`
   + validator (TaskAttemptId not empty, Output not empty)
   + handler: `GetByIdAsync` → not-found check → `Complete(Output)` → `SaveChangesAsync`
 
-- [ ] `ApproveTaskAttemptCommand(Guid TaskAttemptId)`
+- [x] `ApproveTaskAttemptCommand(Guid TaskAttemptId)`
   + validator (not empty)
   + handler: `GetByIdAsync` → not-found check → `Approve()` → `SaveChangesAsync`
 
-- [ ] `RejectTaskAttemptCommand(Guid TaskAttemptId, string Note)`
+- [x] `RejectTaskAttemptCommand(Guid TaskAttemptId, string Note)`
   + validator (TaskAttemptId not empty, Note not empty)
   + handler: `GetByIdAsync` → not-found check → `Reject(Note)` → `SaveChangesAsync`
 
-- [ ] Run `dotnet build` — zero warnings, zero errors
+- [x] Run `dotnet build` — zero warnings, zero errors
 
 ---
 
