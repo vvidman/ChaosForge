@@ -2,7 +2,7 @@
 category: specs
 title: "AgentSlot, AgentInstance and TaskAttempt Queries"
 branch: "agent-att-qry"
-status: ready
+status: done
 date: "2026-04-07"
 related_domain: [AgentSlot, AgentInstance, TaskAttempt]
 related_adr: []
@@ -47,39 +47,39 @@ Depends on spec 11 (query pattern established).
 
 ### AgentSlot
 
-- [ ] Create `AgentSlotDto` record:
+- [x] Create `AgentSlotDto` record:
   ```
   Guid Id, Guid ProjectId, AgentRole Role, int Count, DateTime CreatedAt
   ```
-- [ ] `GetAgentSlotsByProjectIdQuery(Guid ProjectId)` → `Result<IReadOnlyList<AgentSlotDto>>`
+- [x] `GetAgentSlotsByProjectIdQuery(Guid ProjectId)` → `Result<IReadOnlyList<AgentSlotDto>>`
   - Handler: `IAgentSlotRepository.GetByProjectIdAsync`
 
 ### AgentInstance
 
-- [ ] Create `AgentInstanceDto` record:
+- [x] Create `AgentInstanceDto` record:
   ```
   Guid Id, Guid ProjectId, AgentRole Role, string PersonaName,
   AgentInstanceStatus Status, Guid? CurrentTaskId, DateTime CreatedAt
   ```
-- [ ] `GetAgentInstanceByIdQuery(Guid AgentInstanceId)` → `Result<AgentInstanceDto>`
-- [ ] `GetAgentInstancesByProjectIdQuery(Guid ProjectId)` → `Result<IReadOnlyList<AgentInstanceDto>>`
+- [x] `GetAgentInstanceByIdQuery(Guid AgentInstanceId)` → `Result<AgentInstanceDto>`
+- [x] `GetAgentInstancesByProjectIdQuery(Guid ProjectId)` → `Result<IReadOnlyList<AgentInstanceDto>>`
   - Handler: `IAgentInstanceRepository.GetByProjectIdAsync`
-- [ ] `GetAgentInstancesByStatusQuery(AgentInstanceStatus Status)` → `Result<IReadOnlyList<AgentInstanceDto>>`
+- [x] `GetAgentInstancesByStatusQuery(AgentInstanceStatus Status)` → `Result<IReadOnlyList<AgentInstanceDto>>`
   - Handler: `IAgentInstanceRepository.GetByStatusAsync`
 
 ### TaskAttempt
 
-- [ ] Create `TaskAttemptDto` record:
+- [x] Create `TaskAttemptDto` record:
   ```
   Guid Id, Guid WorkTaskId, Guid AgentInstanceId, AttemptType Type,
   string Output, string? ReviewNote, string? TestNote,
   AttemptResult Result, DateTime StartedAt, DateTime? CompletedAt, DateTime CreatedAt
   ```
-- [ ] `GetTaskAttemptByIdQuery(Guid TaskAttemptId)` → `Result<TaskAttemptDto>`
-- [ ] `GetTaskAttemptsByWorkTaskIdQuery(Guid WorkTaskId)` → `Result<IReadOnlyList<TaskAttemptDto>>`
+- [x] `GetTaskAttemptByIdQuery(Guid TaskAttemptId)` → `Result<TaskAttemptDto>`
+- [x] `GetTaskAttemptsByWorkTaskIdQuery(Guid WorkTaskId)` → `Result<IReadOnlyList<TaskAttemptDto>>`
   - Handler: `ITaskAttemptRepository.GetByWorkTaskIdAsync`
 
-- [ ] Run `dotnet build` — zero warnings, zero errors
+- [x] Run `dotnet build` — zero warnings, zero errors
 
 ---
 
