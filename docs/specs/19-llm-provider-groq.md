@@ -2,7 +2,7 @@
 category: specs
 title: "ILlmProvider Abstraction and Groq Client"
 branch: "llm-groq"
-status: ready
+status: done
 date: "2026-04-07"
 related_domain: []
 related_adr: [004-illmprovider-abstraction, 007-llamasharp-vs-ollama]
@@ -77,13 +77,13 @@ ADR-004 and ADR-007 define the reasoning behind this split.
 
 ## Implementation Scope — What must be done
 
-- [ ] Create `Application/Abstractions/ILlmProvider.cs` with the interface above
-- [ ] Create `Infrastructure/LLM/GroqLlmProvider.cs` (`internal sealed`):
+- [x] Create `Application/Abstractions/ILlmProvider.cs` with the interface above
+- [x] Create `Infrastructure/LLM/GroqLlmProvider.cs` (`internal sealed`):
   - Constructor injects `HttpClient` (named) and `IOptions<GroqOptions>`
   - `CompleteAsync` builds the JSON payload, POSTs to `/openai/v1/chat/completions`,
     deserializes `choices[0].message.content`, and returns it
   - Throws `InvalidOperationException` on HTTP error or missing content
-- [ ] Create `Infrastructure/LLM/GroqOptions.cs`:
+- [x] Create `Infrastructure/LLM/GroqOptions.cs`:
   ```csharp
   public sealed class GroqOptions
   {
@@ -91,13 +91,13 @@ ADR-004 and ADR-007 define the reasoning behind this split.
       public string Model { get; init; } = "llama-3.3-70b-versatile";
   }
   ```
-- [ ] Register in `DependencyInjection.cs`:
+- [x] Register in `DependencyInjection.cs`:
   - `services.Configure<GroqOptions>(configuration.GetSection("Groq"))`
   - Named `HttpClient` with base address and `Authorization: Bearer {ApiKey}` header
   - `services.AddScoped<ILlmProvider, GroqLlmProvider>()`
-- [ ] Add Groq config section to `appsettings.json` (ApiKey empty, Model set)
-- [ ] Add `appsettings.Development.json` entry with placeholder key comment
-- [ ] Run `dotnet build` — zero warnings, zero errors
+- [x] Add Groq config section to `appsettings.json` (ApiKey empty, Model set)
+- [x] Add `appsettings.Development.json` entry with placeholder key comment
+- [x] Run `dotnet build` — zero warnings, zero errors
 
 ---
 
