@@ -14,7 +14,9 @@
    limitations under the License.
 */
 
+using ChaosForge.Domain.Events;
 using ChaosForge.Domain.Repositories;
+using ChaosForge.Infrastructure.Events;
 using ChaosForge.Infrastructure.Persistence;
 using ChaosForge.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -41,6 +43,8 @@ public static class DependencyInjection
         services.AddScoped<IAgentInstanceRepository, AgentInstanceRepository>();
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<AppDbContext>());
+
+        services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
 
         return services;
     }
