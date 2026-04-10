@@ -2,7 +2,7 @@
 category: specs
 title: "Domain Event Dispatcher"
 branch: "evt-dispatch"
-status: ready
+status: done
 date: "2026-04-07"
 related_domain: []
 related_adr: [003-background-service-workers, 009-signalr-events]
@@ -58,7 +58,7 @@ logic). This spec implements the dispatcher in Infrastructure and wires it into 
 
 ## Implementation Scope — What must be done
 
-- [ ] Create `Infrastructure/Events/DomainEventDispatcher.cs`:
+- [x] Create `Infrastructure/Events/DomainEventDispatcher.cs`:
   ```csharp
   internal sealed class DomainEventDispatcher(IPublisher publisher) : IDomainEventDispatcher
   {
@@ -74,7 +74,7 @@ logic). This spec implements the dispatcher in Infrastructure and wires it into 
   }
   ```
 
-- [ ] Update `AppDbContext`:
+- [x] Update `AppDbContext`:
   - Add `IDomainEventDispatcher _dispatcher` via constructor injection (primary constructor)
   - Override `SaveChangesAsync` to:
     1. Call `await base.SaveChangesAsync(cancellationToken)`
@@ -84,20 +84,20 @@ logic). This spec implements the dispatcher in Infrastructure and wires it into 
     4. Call `ClearDomainEvents()` on each entity
     5. Return the int from step 1
 
-- [ ] Update `AppDbContextFactory` to pass a no-op dispatcher (for EF CLI tooling):
+- [x] Update `AppDbContextFactory` to pass a no-op dispatcher (for EF CLI tooling):
   ```csharp
   // Use a NullDomainEventDispatcher or pass a Substitute for design-time factory
   ```
   Simplest approach: create `NullDomainEventDispatcher : IDomainEventDispatcher` in
   `Infrastructure/Events/` that does nothing — used by the design-time factory only.
 
-- [ ] Register in `Infrastructure/DependencyInjection.cs`:
+- [x] Register in `Infrastructure/DependencyInjection.cs`:
   ```csharp
   services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
   ```
 
-- [ ] Run `dotnet build` — zero warnings, zero errors
-- [ ] Run `dotnet test` — all existing tests must still pass (no handler exists yet,
+- [x] Run `dotnet build` — zero warnings, zero errors
+- [x] Run `dotnet test` — all existing tests must still pass (no handler exists yet,
   so Publish calls will be no-ops in unit tests — verify NSubstitute mocks are not broken)
 
 ---

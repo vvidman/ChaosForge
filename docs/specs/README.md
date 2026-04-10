@@ -76,7 +76,7 @@ documents:
     date: "2026-04-07"
   - file: 18-domain-event-dispatcher.md
     title: "Domain Event Dispatcher"
-    status: ready
+    status: done
     date: "2026-04-07"
   - file: 19-llm-provider-groq.md
     title: "ILlmProvider Abstraction and Groq Client"
@@ -124,7 +124,7 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 | UseCase, URS and SRS Commands | done | 2026-04-07 |
 | AgentSlot, AgentInstance and TaskAttempt Commands | done | 2026-04-07 |
 | Remaining API Endpoints | done | 2026-04-07 |
-| Domain Event Dispatcher | ready | 2026-04-07 |
+| Domain Event Dispatcher | done | 2026-04-07 |
 | ILlmProvider Abstraction and Groq Client | ready | 2026-04-07 |
 | LlamaSharp Local LLM Provider | ready | 2026-04-07 |
 

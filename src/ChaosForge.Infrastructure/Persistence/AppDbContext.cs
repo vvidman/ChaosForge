@@ -14,7 +14,9 @@
    limitations under the License.
 */
 
+using ChaosForge.Domain.Common;
 using ChaosForge.Domain.Entities;
+using ChaosForge.Domain.Events;
 using ChaosForge.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,14 +24,12 @@ namespace ChaosForge.Infrastructure.Persistence;
 
 /// <summary>
 /// The EF Core database context for the ChaosForge application.
-/// Implements <see cref="IUnitOfWork"/> by delegating <see cref="SaveChangesAsync"/> to the base context.
+/// Implements <see cref="IUnitOfWork"/> by persisting changes and dispatching domain events.
 /// </summary>
-public sealed class AppDbContext : DbContext, IUnitOfWork
+public sealed class AppDbContext(
+    DbContextOptions<AppDbContext> options,
+    IDomainEventDispatcher dispatcher) : DbContext(options), IUnitOfWork
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-    {
-    }
-
     public DbSet<Project> Projects => Set<Project>();
     public DbSet<UseCase> UseCases => Set<UseCase>();
     public DbSet<URS> URSs => Set<URS>();
@@ -40,9 +40,28 @@ public sealed class AppDbContext : DbContext, IUnitOfWork
     public DbSet<AgentSlot> AgentSlots => Set<AgentSlot>();
     public DbSet<AgentInstance> AgentInstances => Set<AgentInstance>();
 
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        return base.SaveChangesAsync(cancellationToken);
+        var result = await base.SaveChangesAsync(cancellationToken);
+
+        var entitiesWithEvents = ChangeTracker
+            .Entries<EntityBase<Guid>>()
+            .Select(e => e.Entity)
+            .Where(e => e.DomainEvents.Count > 0)
+            .ToList();
+
+        var events = entitiesWithEvents
+            .SelectMany(e => e.DomainEvents)
+            .ToList();
+
+        await dispatcher.DispatchAsync(events, cancellationToken);
+
+        foreach (var entity in entitiesWithEvents)
+        {
+            entity.ClearDomainEvents();
+        }
+
+        return result;
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
