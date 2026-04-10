@@ -14,9 +14,12 @@
    limitations under the License.
 */
 
+using System.Net.Http.Headers;
+using ChaosForge.Application.Abstractions;
 using ChaosForge.Domain.Events;
 using ChaosForge.Domain.Repositories;
 using ChaosForge.Infrastructure.Events;
+using ChaosForge.Infrastructure.LLM;
 using ChaosForge.Infrastructure.Persistence;
 using ChaosForge.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +48,28 @@ public static class DependencyInjection
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<AppDbContext>());
 
         services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
+
+        services.AddGroqLlmProvider(configuration);
+
+        return services;
+    }
+
+    private static IServiceCollection AddGroqLlmProvider(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        services.Configure<GroqOptions>(configuration.GetSection("Groq"));
+
+        var apiKey = configuration["Groq:ApiKey"] ?? string.Empty;
+
+        services.AddHttpClient<GroqLlmProvider>(client =>
+        {
+            client.BaseAddress = new Uri("https://api.groq.com");
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", apiKey);
+        });
+
+        services.AddScoped<ILlmProvider>(sp => sp.GetRequiredService<GroqLlmProvider>());
 
         return services;
     }
