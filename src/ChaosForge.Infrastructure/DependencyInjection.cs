@@ -50,6 +50,7 @@ public static class DependencyInjection
         services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
 
         services.AddGroqLlmProvider(configuration);
+        services.AddLlamaSharpLlmProvider(configuration);
 
         return services;
     }
@@ -70,6 +71,21 @@ public static class DependencyInjection
         });
 
         services.AddScoped<ILlmProvider>(sp => sp.GetRequiredService<GroqLlmProvider>());
+        services.AddKeyedScoped<ILlmProvider>("groq", (sp, _) => sp.GetRequiredService<GroqLlmProvider>());
+
+        return services;
+    }
+
+    private static IServiceCollection AddLlamaSharpLlmProvider(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        services.Configure<LlamaSharpOptions>(configuration.GetSection("LlamaSharp"));
+
+        services.AddSingleton<LlamaSharpLlmProvider>();
+        services.AddKeyedSingleton<ILlmProvider>("llama", (sp, _) => sp.GetRequiredService<LlamaSharpLlmProvider>());
+
+        services.AddScoped<ILlmProviderSelector, LlmProviderSelector>();
 
         return services;
     }

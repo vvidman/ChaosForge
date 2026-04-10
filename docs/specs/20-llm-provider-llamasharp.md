@@ -2,7 +2,7 @@
 category: specs
 title: "LlamaSharp Local LLM Provider"
 branch: "llm-llama"
-status: ready
+status: done
 date: "2026-04-07"
 related_domain: []
 related_adr: [004-illmprovider-abstraction, 007-llamasharp-vs-ollama]
@@ -65,8 +65,8 @@ Depends on: spec 19 (`ILlmProvider` interface).
 
 ## Implementation Scope — What must be done
 
-- [ ] Create `Application/Abstractions/ILlmProviderSelector.cs` with interface above
-- [ ] Create `Infrastructure/LLM/LlamaSharpOptions.cs`:
+- [x] Create `Application/Abstractions/ILlmProviderSelector.cs` with interface above
+- [x] Create `Infrastructure/LLM/LlamaSharpOptions.cs`:
   ```csharp
   public sealed class LlamaSharpOptions
   {
@@ -74,25 +74,25 @@ Depends on: spec 19 (`ILlmProvider` interface).
       public int MaxTokens { get; init; } = 512;
   }
   ```
-- [ ] Create `Infrastructure/LLM/LlamaSharpLlmProvider.cs` (`internal sealed`, `Singleton`):
+- [x] Create `Infrastructure/LLM/LlamaSharpLlmProvider.cs` (`internal sealed`, `Singleton`):
   - Constructor: load model from `ModelPath`, validate file exists
   - `CompleteAsync`: run inference, return generated text as string
   - Dispose `LLamaWeights` / context on disposal (`IDisposable`)
-- [ ] Create `Infrastructure/LLM/LlmProviderSelector.cs` (`internal sealed`):
+- [x] Create `Infrastructure/LLM/LlmProviderSelector.cs` (`internal sealed`):
   - Injects both `GroqLlmProvider` and `LlamaSharpLlmProvider` (keyed or named)
   - `GetProviderForRole` returns the correct instance based on the role mapping above
-- [ ] Update `Infrastructure/DependencyInjection.cs`:
+- [x] Update `Infrastructure/DependencyInjection.cs`:
   - `services.Configure<LlamaSharpOptions>(configuration.GetSection("LlamaSharp"))`
   - Register `LlamaSharpLlmProvider` as Singleton
   - Register `ILlmProviderSelector` → `LlmProviderSelector` as Scoped
-- [ ] Add `LlamaSharp` config section to `appsettings.json`:
+- [x] Add `LlamaSharp` config section to `appsettings.json`:
   ```json
   "LlamaSharp": {
     "ModelPath": "",
     "MaxTokens": 512
   }
   ```
-- [ ] Run `dotnet build` — zero warnings, zero errors
+- [x] Run `dotnet build` — zero warnings, zero errors
 
 ---
 

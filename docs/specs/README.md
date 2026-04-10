@@ -84,7 +84,7 @@ documents:
     date: "2026-04-07"
   - file: 20-llm-provider-llamasharp.md
     title: "LlamaSharp Local LLM Provider"
-    status: ready
+    status: done
     date: "2026-04-07"
 ---
 
@@ -126,7 +126,7 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 | Remaining API Endpoints | done | 2026-04-07 |
 | Domain Event Dispatcher | done | 2026-04-07 |
 | ILlmProvider Abstraction and Groq Client | done | 2026-04-07 |
-| LlamaSharp Local LLM Provider | ready | 2026-04-07 |
+| LlamaSharp Local LLM Provider | done | 2026-04-07 |
 
 ---
 
