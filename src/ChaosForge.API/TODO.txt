@@ -1,0 +1,2 @@
+  Manual step: Set the API key via user secrets before running the API:
+  dotnet user-secrets set "Groq:ApiKey" "<your-key>" --project src/ChaosForge.API
