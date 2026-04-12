@@ -14,7 +14,9 @@
    limitations under the License.
 */
 
+using ChaosForge.Application.Abstractions;
 using ChaosForge.Application.Common.Behaviors;
+using ChaosForge.Application.Orchestration;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,6 +34,8 @@ public static class DependencyInjection
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
+
+        services.AddScoped<IButterflyService, ButterflyService>();
 
         return services;
     }
