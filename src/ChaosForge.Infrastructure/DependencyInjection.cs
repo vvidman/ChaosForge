@@ -18,6 +18,7 @@ using System.Net.Http.Headers;
 using ChaosForge.Application.Abstractions;
 using ChaosForge.Domain.Events;
 using ChaosForge.Domain.Repositories;
+using ChaosForge.Infrastructure.Agents;
 using ChaosForge.Infrastructure.Events;
 using ChaosForge.Infrastructure.LLM;
 using ChaosForge.Infrastructure.Persistence;
@@ -51,6 +52,7 @@ public static class DependencyInjection
 
         services.AddGroqLlmProvider(configuration);
         services.AddLlamaSharpLlmProvider(configuration);
+        services.AddAgentWorkers(configuration);
 
         return services;
     }
@@ -86,6 +88,15 @@ public static class DependencyInjection
         services.AddKeyedSingleton<ILlmProvider>("llama", (sp, _) => sp.GetRequiredService<LlamaSharpLlmProvider>());
 
         services.AddScoped<ILlmProviderSelector, LlmProviderSelector>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddAgentWorkers(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        services.Configure<AgentWorkerOptions>(configuration.GetSection("Agents"));
 
         return services;
     }
