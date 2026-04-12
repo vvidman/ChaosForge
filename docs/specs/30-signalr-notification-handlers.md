@@ -2,7 +2,7 @@
 category: specs
 title: "SignalR Notification Handlers — Domain Events to Frontend"
 branch: "signalr-notify"
-status: ready
+status: done
 date: "2026-04-12"
 related_domain: []
 related_adr: [009-signalr-events]
@@ -91,12 +91,12 @@ Depends on: spec 29 (hub), spec 18 (dispatcher), specs 26–27 (events fired).
 
 ## Implementation Scope — What must be done
 
-- [ ] Create `Infrastructure/Hubs/SignalRMessage.cs`:
+- [x] Create `Infrastructure/Hubs/SignalRMessage.cs`:
   ```csharp
   internal sealed record SignalRMessage(string Type, object Payload);
   ```
 
-- [ ] Create one handler per event in `Infrastructure/Hubs/Notifications/`:
+- [x] Create one handler per event in `Infrastructure/Hubs/Notifications/`:
   - `ProjectStatusChangedSignalRHandler`
   - `AgentStatusChangedSignalRHandler`
   - `WorkTaskStatusChangedSignalRHandler`
@@ -110,7 +110,7 @@ Depends on: spec 29 (hub), spec 18 (dispatcher), specs 26–27 (events fired).
   - Constructs a `SignalRMessage` with the appropriate type string and payload
   - Calls `await _hubContext.Clients.All.SendAsync("ReceiveEvent", message, cancellationToken)`
 
-- [ ] Configure SignalR JSON serialization in `DependencyInjection.cs`:
+- [x] Configure SignalR JSON serialization in `DependencyInjection.cs`:
   ```csharp
   services.AddSignalR().AddJsonProtocol(options =>
   {
@@ -118,13 +118,13 @@ Depends on: spec 29 (hub), spec 18 (dispatcher), specs 26–27 (events fired).
   });
   ```
 
-- [ ] Register Infrastructure MediatR handlers in `Infrastructure/DependencyInjection.cs`:
+- [x] Register Infrastructure MediatR handlers in `Infrastructure/DependencyInjection.cs`:
   ```csharp
   services.AddMediatR(cfg =>
       cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
   ```
 
-- [ ] Run `dotnet build` — zero warnings, zero errors
+- [x] Run `dotnet build` — zero warnings, zero errors
 
 ---
 
