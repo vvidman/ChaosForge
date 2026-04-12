@@ -17,6 +17,7 @@
 using ChaosForge.API.Endpoints;
 using ChaosForge.Application;
 using ChaosForge.Infrastructure;
+using ChaosForge.Infrastructure.Hubs;
 using ChaosForge.Infrastructure.Persistence;
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
@@ -64,6 +65,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -79,5 +82,7 @@ app.MapRevisionGateEndpoints();
 app.MapAgentSlotEndpoints();
 app.MapAgentInstanceEndpoints();
 app.MapTaskAttemptEndpoints();
+
+app.MapHub<ChaosForgeHub>("/hubs/chaosforge");
 
 app.Run();

@@ -2,7 +2,7 @@
 category: specs
 title: "SignalR Hub and Infrastructure"
 branch: "signalr-hub"
-status: ready
+status: done
 date: "2026-04-12"
 related_domain: []
 related_adr: [009-signalr-events]
@@ -57,7 +57,7 @@ in spec 30. Depends on: spec 18 (DomainEventDispatcher), spec 26–27 (events fi
 
 ## Implementation Scope — What must be done
 
-- [ ] Create `Infrastructure/Hubs/ChaosForgeHub.cs`:
+- [x] Create `Infrastructure/Hubs/ChaosForgeHub.cs`:
   ```csharp
   public sealed class ChaosForgeHub : Hub
   {
@@ -66,10 +66,10 @@ in spec 30. Depends on: spec 18 (DomainEventDispatcher), spec 26–27 (events fi
   }
   ```
 
-- [ ] Update `Infrastructure/DependencyInjection.cs`:
+- [x] Update `Infrastructure/DependencyInjection.cs`:
   - Add `services.AddSignalR()` to `AddInfrastructure`
 
-- [ ] Update `src/ChaosForge.API/Program.cs`:
+- [x] Update `src/ChaosForge.API/Program.cs`:
   - After `app.UseHttpsRedirection()`:
     ```csharp
     app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
@@ -80,12 +80,16 @@ in spec 30. Depends on: spec 18 (DomainEventDispatcher), spec 26–27 (events fi
     ```
   - Add `using ChaosForge.Infrastructure.Hubs;`
 
-- [ ] Add `Microsoft.AspNetCore.SignalR.Client` NuGet package to
+- [x] Add `Microsoft.AspNetCore.SignalR.Client` NuGet package to
   `ChaosForge.Infrastructure.csproj` only if not already present. The server-side SignalR
   is part of the ASP.NET Core framework and needs no extra package — only the client
   SDK would need one, and that is a frontend concern.
+  > Note: `FrameworkReference Include="Microsoft.AspNetCore.App"` was added instead, as
+  > the project uses `Microsoft.NET.Sdk` (not Web SDK). Three now-redundant standalone
+  > package references (`Microsoft.Extensions.Hosting`, `.Hosting.Abstractions`, `.Http`)
+  > were removed as they became covered by the framework reference.
 
-- [ ] Run `dotnet build` — zero warnings, zero errors
+- [x] Run `dotnet build` — zero warnings, zero errors
 - [ ] Verify hub is reachable: start the API and confirm that a WebSocket connection to
   `ws://localhost:5143/hubs/chaosforge` is accepted (use a tool like `wscat` or browser
   DevTools — no functional test required in this spec)
