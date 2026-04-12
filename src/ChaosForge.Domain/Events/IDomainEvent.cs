@@ -14,9 +14,11 @@
    limitations under the License.
 */
 
+using MediatR;
+
 namespace ChaosForge.Domain.Events;
 
 /// <summary>
 /// Marker interface for all domain events. Implement this interface on sealed record types only.
 /// </summary>
-public interface IDomainEvent;
+public interface IDomainEvent : INotification;

@@ -14,6 +14,7 @@
    limitations under the License.
 */
 
+using ChaosForge.Infrastructure.Events;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
@@ -31,6 +32,6 @@ internal sealed class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbCon
             .UseSqlite("Data Source=chaosforge-dev.db")
             .Options;
 
-        return new AppDbContext(options);
+        return new AppDbContext(options, new NullDomainEventDispatcher());
     }
 }

@@ -15,6 +15,7 @@
 */
 
 using ChaosForge.Application.Projects.Commands;
+using ChaosForge.Application.Projects.Queries;
 using ChaosForge.Domain.Enums;
 using MediatR;
 
@@ -31,6 +32,25 @@ public static class ProjectEndpoints
     public static IEndpointRouteBuilder MapProjectEndpoints(this IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("/api/projects");
+
+        group.MapGet("/", async (
+            IMediator mediator,
+            CancellationToken ct) =>
+        {
+            var result = await mediator.Send(new GetAllProjectsQuery(), ct);
+
+            return result.IsSuccess ? Results.Ok(result.Value) : Results.BadRequest(new { error = result.Error });
+        });
+
+        group.MapGet("/{id:guid}", async (
+            Guid id,
+            IMediator mediator,
+            CancellationToken ct) =>
+        {
+            var result = await mediator.Send(new GetProjectByIdQuery(id), ct);
+
+            return result.IsSuccess ? Results.Ok(result.Value) : Results.NotFound(new { error = result.Error });
+        });
 
         group.MapPost("/", async (
             CreateProjectRequest request,

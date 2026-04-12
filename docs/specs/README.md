@@ -1,6 +1,6 @@
 ---
 category: specs
-last_updated: "2026-04-07"
+last_updated: "2026-04-12"
 documents:
   - file: domain-entities.md
     title: "Domain Entities"
@@ -60,32 +60,76 @@ documents:
     date: "2026-04-07"
   - file: 14-agent-attempt-queries.md
     title: "AgentSlot, AgentInstance and TaskAttempt Queries"
-    status: ready
+    status: done
     date: "2026-04-07"
   - file: 15-usecase-urs-srs-commands.md
     title: "UseCase, URS and SRS Commands"
-    status: ready
+    status: done
     date: "2026-04-07"
   - file: 16-agent-attempt-commands.md
     title: "AgentSlot, AgentInstance and TaskAttempt Commands"
-    status: ready
+    status: done
     date: "2026-04-07"
   - file: 17-remaining-api-endpoints.md
     title: "Remaining API Endpoints"
-    status: ready
+    status: done
     date: "2026-04-07"
   - file: 18-domain-event-dispatcher.md
     title: "Domain Event Dispatcher"
-    status: ready
+    status: done
     date: "2026-04-07"
   - file: 19-llm-provider-groq.md
     title: "ILlmProvider Abstraction and Groq Client"
-    status: ready
+    status: done
     date: "2026-04-07"
   - file: 20-llm-provider-llamasharp.md
     title: "LlamaSharp Local LLM Provider"
-    status: ready
+    status: done
     date: "2026-04-07"
+  - file: 21-agent-worker-base.md
+    title: "Agent Worker Base Infrastructure"
+    status: done
+    date: "2026-04-12"
+  - file: 22-agent-business-analyst.md
+    title: "BusinessAnalyst Agent Worker"
+    status: done
+    date: "2026-04-12"
+  - file: 23-agent-architect.md
+    title: "Architect Agent Worker"
+    status: done
+    date: "2026-04-12"
+  - file: 24-agent-scrum-master.md
+    title: "ScrumMaster Agent Worker"
+    status: done
+    date: "2026-04-12"
+  - file: 25-agent-development-cycle.md
+    title: "Development Cycle Agent Workers"
+    status: done
+    date: "2026-04-12"
+  - file: 26-orchestrator-phase.md
+    title: "Phase Orchestrator — Domain Event Notification Handlers"
+    status: done
+    date: "2026-04-12"
+  - file: 27-orchestrator-dev-loop.md
+    title: "Development Loop Orchestration Handlers"
+    status: done
+    date: "2026-04-12"
+  - file: 28-butterfly-service.md
+    title: "ButterflyService — EditAndAccept Downstream Propagation"
+    status: ready
+    date: "2026-04-12"
+  - file: 29-signalr-hub.md
+    title: "SignalR Hub and Infrastructure"
+    status: ready
+    date: "2026-04-12"
+  - file: 30-signalr-notification-handlers.md
+    title: "SignalR Notification Handlers — Domain Events to Frontend"
+    status: ready
+    date: "2026-04-12"
+  - file: 31-agent-instance-activation.md
+    title: "Agent Instance Activation Handler"
+    status: ready
+    date: "2026-04-12"
 ---
 
 # Feature Specifications
@@ -120,13 +164,24 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 | Project Queries | done | 2026-04-07 |
 | WorkTask and RevisionGate Queries | done | 2026-04-07 |
 | UseCase, URS and SRS Queries | done | 2026-04-07 |
-| AgentSlot, AgentInstance and TaskAttempt Queries | ready | 2026-04-07 |
-| UseCase, URS and SRS Commands | ready | 2026-04-07 |
-| AgentSlot, AgentInstance and TaskAttempt Commands | ready | 2026-04-07 |
-| Remaining API Endpoints | ready | 2026-04-07 |
-| Domain Event Dispatcher | ready | 2026-04-07 |
-| ILlmProvider Abstraction and Groq Client | ready | 2026-04-07 |
-| LlamaSharp Local LLM Provider | ready | 2026-04-07 |
+| AgentSlot, AgentInstance and TaskAttempt Queries | done | 2026-04-07 |
+| UseCase, URS and SRS Commands | done | 2026-04-07 |
+| AgentSlot, AgentInstance and TaskAttempt Commands | done | 2026-04-07 |
+| Remaining API Endpoints | done | 2026-04-07 |
+| Domain Event Dispatcher | done | 2026-04-07 |
+| ILlmProvider Abstraction and Groq Client | done | 2026-04-07 |
+| LlamaSharp Local LLM Provider | done | 2026-04-07 |
+| Agent Worker Base Infrastructure | done | 2026-04-12 |
+| BusinessAnalyst Agent Worker | done | 2026-04-12 |
+| Architect Agent Worker | done | 2026-04-12 |
+| ScrumMaster Agent Worker | done | 2026-04-12 |
+| Development Cycle Agent Workers | done | 2026-04-12 |
+| Phase Orchestrator — Domain Event Notification Handlers | done | 2026-04-12 |
+| Development Loop Orchestration Handlers | done | 2026-04-12 |
+| ButterflyService — EditAndAccept Downstream Propagation | ready | 2026-04-12 |
+| SignalR Hub and Infrastructure | ready | 2026-04-12 |
+| SignalR Notification Handlers — Domain Events to Frontend | ready | 2026-04-12 |
+| Agent Instance Activation Handler | ready | 2026-04-12 |
 
 ---
 

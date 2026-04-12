@@ -14,7 +14,13 @@
    limitations under the License.
 */
 
+using System.Net.Http.Headers;
+using ChaosForge.Application.Abstractions;
+using ChaosForge.Domain.Events;
 using ChaosForge.Domain.Repositories;
+using ChaosForge.Infrastructure.Agents;
+using ChaosForge.Infrastructure.Events;
+using ChaosForge.Infrastructure.LLM;
 using ChaosForge.Infrastructure.Persistence;
 using ChaosForge.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -41,6 +47,63 @@ public static class DependencyInjection
         services.AddScoped<IAgentInstanceRepository, AgentInstanceRepository>();
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<AppDbContext>());
+
+        services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
+
+        services.AddGroqLlmProvider(configuration);
+        services.AddLlamaSharpLlmProvider(configuration);
+        services.AddAgentWorkers(configuration);
+
+        return services;
+    }
+
+    private static IServiceCollection AddGroqLlmProvider(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        services.Configure<GroqOptions>(configuration.GetSection("Groq"));
+
+        var apiKey = configuration["Groq:ApiKey"] ?? string.Empty;
+
+        services.AddHttpClient<GroqLlmProvider>(client =>
+        {
+            client.BaseAddress = new Uri("https://api.groq.com");
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", apiKey);
+        });
+
+        services.AddScoped<ILlmProvider>(sp => sp.GetRequiredService<GroqLlmProvider>());
+        services.AddKeyedScoped<ILlmProvider>("groq", (sp, _) => sp.GetRequiredService<GroqLlmProvider>());
+
+        return services;
+    }
+
+    private static IServiceCollection AddLlamaSharpLlmProvider(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        services.Configure<LlamaSharpOptions>(configuration.GetSection("LlamaSharp"));
+
+        services.AddSingleton<LlamaSharpLlmProvider>();
+        services.AddKeyedSingleton<ILlmProvider>("llama", (sp, _) => sp.GetRequiredService<LlamaSharpLlmProvider>());
+
+        services.AddScoped<ILlmProviderSelector, LlmProviderSelector>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddAgentWorkers(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        services.Configure<AgentWorkerOptions>(configuration.GetSection("Agents"));
+        services.AddHostedService<BusinessAnalystWorker>();
+        services.AddHostedService<ArchitectWorker>();
+        services.AddHostedService<ScrumMasterWorker>();
+        services.AddHostedService<DeveloperWorker>();
+        services.AddHostedService<ReviewerWorker>();
+        services.AddHostedService<TesterWorker>();
+        services.AddHostedService<TechnicalWriterWorker>();
 
         return services;
     }

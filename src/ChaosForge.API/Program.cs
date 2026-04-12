@@ -71,5 +71,13 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.MapProjectEndpoints();
+app.MapUseCaseEndpoints();
+app.MapURSEndpoints();
+app.MapSRSEndpoints();
+app.MapWorkTaskEndpoints();
+app.MapRevisionGateEndpoints();
+app.MapAgentSlotEndpoints();
+app.MapAgentInstanceEndpoints();
+app.MapTaskAttemptEndpoints();
 
 app.Run();

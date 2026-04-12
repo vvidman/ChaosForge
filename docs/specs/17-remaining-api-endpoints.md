@@ -2,7 +2,7 @@
 category: specs
 title: "Remaining API Endpoints"
 branch: "api-endpoints"
-status: ready
+status: done
 date: "2026-04-07"
 related_domain: [UseCase, URS, SRS, WorkTask, RevisionGate, AgentSlot, AgentInstance, TaskAttempt]
 related_adr: []
@@ -56,72 +56,72 @@ is reachable from outside. Depends on: specs 11–16.
 ## Implementation Scope — What must be done
 
 ### UseCaseEndpoints — `/api/usecases`
-- [ ] `GET  /api/usecases/by-project/{projectId}` → `GetUseCasesByProjectIdQuery`
-- [ ] `GET  /api/usecases/{id}`                   → `GetUseCaseByIdQuery`
-- [ ] `POST /api/usecases`                         → `CreateUseCaseCommand`
-- [ ] `PATCH /api/usecases/{id}/priority`          → `UpdateUseCasePriorityCommand`
+- [x] `GET  /api/usecases/by-project/{projectId}` → `GetUseCasesByProjectIdQuery`
+- [x] `GET  /api/usecases/{id}`                   → `GetUseCaseByIdQuery`
+- [x] `POST /api/usecases`                         → `CreateUseCaseCommand`
+- [x] `PATCH /api/usecases/{id}/priority`          → `UpdateUseCasePriorityCommand`
 
 ### URSEndpoints — `/api/urs`
-- [ ] `GET  /api/urs/by-usecase/{useCaseId}` → `GetURSsByUseCaseIdQuery`
-- [ ] `GET  /api/urs/{id}`                   → `GetURSByIdQuery`
-- [ ] `POST /api/urs`                         → `CreateURSCommand`
-- [ ] `PATCH /api/urs/{id}/human-edit`        → `ApplyHumanEditToURSCommand`
+- [x] `GET  /api/urs/by-usecase/{useCaseId}` → `GetURSsByUseCaseIdQuery`
+- [x] `GET  /api/urs/{id}`                   → `GetURSByIdQuery`
+- [x] `POST /api/urs`                         → `CreateURSCommand`
+- [x] `PATCH /api/urs/{id}/human-edit`        → `ApplyHumanEditToURSCommand`
 
 ### SRSEndpoints — `/api/srs`
-- [ ] `GET  /api/srs/by-urs/{ursId}` → `GetSRSsByURSIdQuery`
-- [ ] `GET  /api/srs/{id}`           → `GetSRSByIdQuery`
-- [ ] `POST /api/srs`                 → `CreateSRSCommand`
-- [ ] `PATCH /api/srs/{id}/human-edit` → `ApplyHumanEditToSRSCommand`
+- [x] `GET  /api/srs/by-urs/{ursId}` → `GetSRSsByURSIdQuery`
+- [x] `GET  /api/srs/{id}`           → `GetSRSByIdQuery`
+- [x] `POST /api/srs`                 → `CreateSRSCommand`
+- [x] `PATCH /api/srs/{id}/human-edit` → `ApplyHumanEditToSRSCommand`
 
 ### WorkTaskEndpoints — `/api/worktasks`
-- [ ] `GET  /api/worktasks/{id}`                           → `GetWorkTaskByIdQuery`
-- [ ] `GET  /api/worktasks/by-srs/{srsId}`                → `GetWorkTasksBySRSIdQuery`
-- [ ] `GET  /api/worktasks/by-sprint/{sprintId}`          → `GetWorkTasksBySprintIdQuery`
-- [ ] `GET  /api/worktasks/by-status/{status}`            → `GetWorkTasksByStatusQuery`
-- [ ] `POST /api/worktasks`                                → `CreateWorkTaskCommand`
-- [ ] `POST /api/worktasks/{id}/assign-sprint`            → `AssignWorkTaskToSprintCommand`
-- [ ] `POST /api/worktasks/{id}/start`                    → `StartWorkTaskCommand`
-- [ ] `POST /api/worktasks/{id}/send-to-review`           → `SendWorkTaskToReviewCommand`
-- [ ] `POST /api/worktasks/{id}/approve`                  → `ApproveWorkTaskCommand`
-- [ ] `POST /api/worktasks/{id}/pass-testing`             → `PassWorkTaskTestingCommand`
-- [ ] `POST /api/worktasks/{id}/complete`                 → `CompleteWorkTaskCommand`
-- [ ] `POST /api/worktasks/{id}/reject`                   → `RejectWorkTaskCommand`
+- [x] `GET  /api/worktasks/{id}`                           → `GetWorkTaskByIdQuery`
+- [x] `GET  /api/worktasks/by-srs/{srsId}`                → `GetWorkTasksBySRSIdQuery`
+- [x] `GET  /api/worktasks/by-sprint/{sprintId}`          → `GetWorkTasksBySprintIdQuery`
+- [x] `GET  /api/worktasks/by-status/{status}`            → `GetWorkTasksByStatusQuery`
+- [x] `POST /api/worktasks`                                → `CreateWorkTaskCommand`
+- [x] `POST /api/worktasks/{id}/assign-sprint`            → `AssignWorkTaskToSprintCommand`
+- [x] `POST /api/worktasks/{id}/start`                    → `StartWorkTaskCommand`
+- [x] `POST /api/worktasks/{id}/send-to-review`           → `SendWorkTaskToReviewCommand`
+- [x] `POST /api/worktasks/{id}/approve`                  → `ApproveWorkTaskCommand`
+- [x] `POST /api/worktasks/{id}/pass-testing`             → `PassWorkTaskTestingCommand`
+- [x] `POST /api/worktasks/{id}/complete`                 → `CompleteWorkTaskCommand`
+- [x] `POST /api/worktasks/{id}/reject`                   → `RejectWorkTaskCommand`
 
 ### RevisionGateEndpoints — `/api/revision-gates`
-- [ ] `GET  /api/revision-gates/{id}`                         → `GetRevisionGateByIdQuery`
-- [ ] `GET  /api/revision-gates/by-project/{projectId}`      → `GetRevisionGatesByProjectIdQuery`
-- [ ] `GET  /api/revision-gates/open/by-project/{projectId}` → `GetOpenRevisionGateQuery`
-- [ ] `POST /api/revision-gates`                              → `OpenRevisionGateCommand`
-- [ ] `POST /api/revision-gates/{id}/accept`                  → `AcceptRevisionGateCommand`
-- [ ] `POST /api/revision-gates/{id}/edit-and-accept`         → `EditAndAcceptRevisionGateCommand`
-- [ ] `POST /api/revision-gates/{id}/reject`                  → `RejectRevisionGateCommand`
+- [x] `GET  /api/revision-gates/{id}`                         → `GetRevisionGateByIdQuery`
+- [x] `GET  /api/revision-gates/by-project/{projectId}`      → `GetRevisionGatesByProjectIdQuery`
+- [x] `GET  /api/revision-gates/open/by-project/{projectId}` → `GetOpenRevisionGateQuery`
+- [x] `POST /api/revision-gates`                              → `OpenRevisionGateCommand`
+- [x] `POST /api/revision-gates/{id}/accept`                  → `AcceptRevisionGateCommand`
+- [x] `POST /api/revision-gates/{id}/edit-and-accept`         → `EditAndAcceptRevisionGateCommand`
+- [x] `POST /api/revision-gates/{id}/reject`                  → `RejectRevisionGateCommand`
 
 ### AgentSlotEndpoints — `/api/agent-slots`
-- [ ] `GET  /api/agent-slots/by-project/{projectId}` → `GetAgentSlotsByProjectIdQuery`
-- [ ] `POST /api/agent-slots`                          → `CreateAgentSlotCommand`
-- [ ] `PATCH /api/agent-slots/{id}/count`              → `UpdateAgentSlotCountCommand`
+- [x] `GET  /api/agent-slots/by-project/{projectId}` → `GetAgentSlotsByProjectIdQuery`
+- [x] `POST /api/agent-slots`                          → `CreateAgentSlotCommand`
+- [x] `PATCH /api/agent-slots/{id}/count`              → `UpdateAgentSlotCountCommand`
 
 ### AgentInstanceEndpoints — `/api/agent-instances`
-- [ ] `GET  /api/agent-instances/{id}`                     → `GetAgentInstanceByIdQuery`
-- [ ] `GET  /api/agent-instances/by-project/{projectId}`  → `GetAgentInstancesByProjectIdQuery`
-- [ ] `GET  /api/agent-instances/by-status/{status}`      → `GetAgentInstancesByStatusQuery`
-- [ ] `POST /api/agent-instances`                          → `CreateAgentInstanceCommand`
-- [ ] `POST /api/agent-instances/{id}/start-work`         → `StartAgentWorkCommand`
-- [ ] `POST /api/agent-instances/{id}/finish-work`        → `FinishAgentWorkCommand`
-- [ ] `POST /api/agent-instances/{id}/block`              → `BlockAgentCommand`
-- [ ] `POST /api/agent-instances/{id}/mark-finished`      → `MarkAgentFinishedCommand`
+- [x] `GET  /api/agent-instances/{id}`                     → `GetAgentInstanceByIdQuery`
+- [x] `GET  /api/agent-instances/by-project/{projectId}`  → `GetAgentInstancesByProjectIdQuery`
+- [x] `GET  /api/agent-instances/by-status/{status}`      → `GetAgentInstancesByStatusQuery`
+- [x] `POST /api/agent-instances`                          → `CreateAgentInstanceCommand`
+- [x] `POST /api/agent-instances/{id}/start-work`         → `StartAgentWorkCommand`
+- [x] `POST /api/agent-instances/{id}/finish-work`        → `FinishAgentWorkCommand`
+- [x] `POST /api/agent-instances/{id}/block`              → `BlockAgentCommand`
+- [x] `POST /api/agent-instances/{id}/mark-finished`      → `MarkAgentFinishedCommand`
 
 ### TaskAttemptEndpoints — `/api/task-attempts`
-- [ ] `GET  /api/task-attempts/{id}`                       → `GetTaskAttemptByIdQuery`
-- [ ] `GET  /api/task-attempts/by-task/{workTaskId}`      → `GetTaskAttemptsByWorkTaskIdQuery`
-- [ ] `POST /api/task-attempts`                            → `CreateTaskAttemptCommand`
+- [x] `GET  /api/task-attempts/{id}`                       → `GetTaskAttemptByIdQuery`
+- [x] `GET  /api/task-attempts/by-task/{workTaskId}`      → `GetTaskAttemptsByWorkTaskIdQuery`
+- [x] `POST /api/task-attempts`                            → `CreateTaskAttemptCommand`
   → response: `Results.Ok(new { id = result.Value })`
-- [ ] `POST /api/task-attempts/{id}/complete`             → `CompleteTaskAttemptCommand`
-- [ ] `POST /api/task-attempts/{id}/approve`              → `ApproveTaskAttemptCommand`
-- [ ] `POST /api/task-attempts/{id}/reject`               → `RejectTaskAttemptCommand`
+- [x] `POST /api/task-attempts/{id}/complete`             → `CompleteTaskAttemptCommand`
+- [x] `POST /api/task-attempts/{id}/approve`              → `ApproveTaskAttemptCommand`
+- [x] `POST /api/task-attempts/{id}/reject`               → `RejectTaskAttemptCommand`
 
-- [ ] Register all new `MapXxxEndpoints()` calls in `Program.cs`
-- [ ] Run `dotnet build` — zero warnings, zero errors
+- [x] Register all new `MapXxxEndpoints()` calls in `Program.cs`
+- [x] Run `dotnet build` — zero warnings, zero errors
 
 ---
 
