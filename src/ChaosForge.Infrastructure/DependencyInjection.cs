@@ -50,6 +50,8 @@ public static class DependencyInjection
 
         services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
 
+        services.AddSignalR();
+
         services.AddGroqLlmProvider(configuration);
         services.AddLlamaSharpLlmProvider(configuration);
         services.AddAgentWorkers(configuration);
