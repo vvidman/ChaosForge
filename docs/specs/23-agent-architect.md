@@ -2,7 +2,7 @@
 category: specs
 title: "Architect Agent Worker"
 branch: "agent-arch"
-status: ready
+status: done
 date: "2026-04-12"
 related_domain: [URS, SRS, WorkTask, RevisionGate, AgentInstance]
 related_adr: [003-background-service-workers, 004-illmprovider-abstraction]
@@ -69,17 +69,17 @@ Depends on: spec 21 (AgentWorkerBase), spec 22 (BA pattern established).
 
 ## Implementation Scope — What must be done
 
-- [ ] Create `Infrastructure/Agents/ArchitectWorker.cs` (`sealed`, extends `AgentWorkerBase`)
-- [ ] Override `Role => AgentRole.Architect`
-- [ ] Define two system prompt constants (SRS generation, WorkTask decomposition)
-- [ ] Implement SRS generation pass (one LLM call per URS, `CreateSRSCommand`)
-- [ ] Implement WorkTask decomposition pass (one LLM call per SRS, JSON parse,
+- [x] Create `Infrastructure/Agents/ArchitectWorker.cs` (`sealed`, extends `AgentWorkerBase`)
+- [x] Override `Role => AgentRole.Architect`
+- [x] Define two system prompt constants (SRS generation, WorkTask decomposition)
+- [x] Implement SRS generation pass (one LLM call per URS, `CreateSRSCommand`)
+- [x] Implement WorkTask decomposition pass (one LLM call per SRS, JSON parse,
   `CreateWorkTaskCommand` per parsed task)
-- [ ] Handle JSON parse failures: log raw LLM output + skip SRS, continue with next
-- [ ] Implement prior `HumanEditNote` injection into SRS prompt
-- [ ] Implement prior rejection context injection
-- [ ] Register: `services.AddHostedService<ArchitectWorker>()`
-- [ ] Run `dotnet build` — zero warnings, zero errors
+- [x] Handle JSON parse failures: log raw LLM output + skip SRS, continue with next
+- [x] Implement prior `HumanEditNote` injection into SRS prompt
+- [x] Implement prior rejection context injection
+- [x] Register: `services.AddHostedService<ArchitectWorker>()`
+- [x] Run `dotnet build` — zero warnings, zero errors
 
 ---
 

@@ -98,6 +98,7 @@ public static class DependencyInjection
     {
         services.Configure<AgentWorkerOptions>(configuration.GetSection("Agents"));
         services.AddHostedService<BusinessAnalystWorker>();
+        services.AddHostedService<ArchitectWorker>();
 
         return services;
     }
