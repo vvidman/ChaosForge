@@ -2,7 +2,7 @@
 category: specs
 title: "Agent Worker Base Infrastructure"
 branch: "agent-base"
-status: ready
+status: done
 date: "2026-04-12"
 related_domain: [AgentInstance, TaskAttempt]
 related_adr: [003-background-service-workers, 004-illmprovider-abstraction]
@@ -58,7 +58,7 @@ This spec produces no runnable agent — it only produces the scaffolding.
 
 ## Implementation Scope — What must be done
 
-- [ ] Create `Application/Agents/IAgentWorker.cs`:
+- [x] Create `Application/Agents/IAgentWorker.cs`:
   ```csharp
   public interface IAgentWorker
   {
@@ -66,7 +66,7 @@ This spec produces no runnable agent — it only produces the scaffolding.
   }
   ```
 
-- [ ] Create `Infrastructure/Agents/AgentWorkerOptions.cs`:
+- [x] Create `Infrastructure/Agents/AgentWorkerOptions.cs`:
   ```csharp
   public sealed class AgentWorkerOptions
   {
@@ -74,7 +74,7 @@ This spec produces no runnable agent — it only produces the scaffolding.
   }
   ```
 
-- [ ] Create `Infrastructure/Agents/AgentWorkerBase.cs` (`abstract`, extends `BackgroundService`):
+- [x] Create `Infrastructure/Agents/AgentWorkerBase.cs` (`abstract`, extends `BackgroundService`):
   - Constructor injects: `IServiceScopeFactory`, `IOptions<AgentWorkerOptions>`,
     `ILogger<AgentWorkerBase>`
   - `ExecuteAsync` override: loop until cancellation, open scope per iteration,
@@ -85,17 +85,17 @@ This spec produces no runnable agent — it only produces the scaffolding.
     — queries `IAgentInstanceRepository.GetByProjectIdAsync` and returns first `Idle` instance
     matching `Role`, or null if none available or project phase is wrong
 
-- [ ] Create `Infrastructure/Agents/AgentPromptBuilder.cs` (`static class`):
+- [x] Create `Infrastructure/Agents/AgentPromptBuilder.cs` (`static class`):
   - `static string BuildWithPriorAttempt(string basePrompt, TaskAttempt? priorAttempt)`
     — if `priorAttempt` is null: return `basePrompt` unchanged
     — if not null: append section with prior output and rejection note
   - `static string FormatRejectionContext(TaskAttempt attempt)` — formats the prior attempt
     output and note into a readable prompt section
 
-- [ ] Add `"Agents": { "PollingIntervalMs": 3000 }` to `appsettings.json`
-- [ ] Register `AgentWorkerOptions` in `Infrastructure/DependencyInjection.cs`:
+- [x] Add `"Agents": { "PollingIntervalMs": 3000 }` to `appsettings.json`
+- [x] Register `AgentWorkerOptions` in `Infrastructure/DependencyInjection.cs`:
   `services.Configure<AgentWorkerOptions>(configuration.GetSection("Agents"))`
-- [ ] Run `dotnet build` — zero warnings, zero errors
+- [x] Run `dotnet build` — zero warnings, zero errors
 
 ---
 
@@ -120,3 +120,26 @@ This spec produces no runnable agent — it only produces the scaffolding.
 ## Open Questions
 
 - None.
+
+## Clarification
+
+Clarification on ResolveIdleInstanceAsync for spec 21:
+
+Do NOT use GetByStatusAsync(Idle) — this queries across all projects and causes
+cross-project contamination.
+
+Use the following two-step approach:
+
+  Step 1: IProjectRepository.GetAllAsync() → filter where Status == the phase
+          active for this.Role (e.g. RequirementsPhase for BusinessAnalyst)
+
+  Step 2: For each matching project, call
+          IAgentInstanceRepository.GetByProjectIdAsync(project.Id) → filter
+          where Role == this.Role && Status == Idle
+
+Return the first matching AgentInstance found, or null if none.
+
+This means ResolveIdleInstanceAsync also implicitly validates the project phase —
+the worker only picks up work when the project is in the correct phase.
+The Role → active phase mapping must be defined as a protected abstract property
+or method on AgentWorkerBase, overridden by each concrete worker.
