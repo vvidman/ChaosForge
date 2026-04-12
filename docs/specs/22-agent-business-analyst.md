@@ -2,7 +2,7 @@
 category: specs
 title: "BusinessAnalyst Agent Worker"
 branch: "agent-ba"
-status: ready
+status: done
 date: "2026-04-12"
 related_domain: [UseCase, URS, RevisionGate, AgentInstance]
 related_adr: [003-background-service-workers, 004-illmprovider-abstraction]
@@ -63,18 +63,18 @@ Depends on: spec 21 (AgentWorkerBase).
 
 ## Implementation Scope — What must be done
 
-- [ ] Create `Infrastructure/Agents/BusinessAnalystWorker.cs` (`sealed`, extends `AgentWorkerBase`)
-- [ ] Override `Role => AgentRole.BusinessAnalyst`
-- [ ] Implement `ExecuteWorkAsync` with the flow described above
-- [ ] Define BA system prompt constant:
+- [x] Create `Infrastructure/Agents/BusinessAnalystWorker.cs` (`sealed`, extends `AgentWorkerBase`)
+- [x] Override `Role => AgentRole.BusinessAnalyst`
+- [x] Implement `ExecuteWorkAsync` with the flow described above
+- [x] Define BA system prompt constant:
   ```
   You are a Business Analyst. Your task is to produce a User Requirements Specification (URS)
   for the given use case. Write clearly and precisely. Focus on what the system must do,
   not how it does it. Output plain text only.
   ```
-- [ ] Register as `HostedService` in `Infrastructure/DependencyInjection.cs`:
+- [x] Register as `HostedService` in `Infrastructure/DependencyInjection.cs`:
   `services.AddHostedService<BusinessAnalystWorker>()`
-- [ ] Run `dotnet build` — zero warnings, zero errors
+- [x] Run `dotnet build` — zero warnings, zero errors
 
 ---
 

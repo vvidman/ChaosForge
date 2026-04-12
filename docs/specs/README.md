@@ -92,7 +92,7 @@ documents:
     date: "2026-04-12"
   - file: 22-agent-business-analyst.md
     title: "BusinessAnalyst Agent Worker"
-    status: ready
+    status: done
     date: "2026-04-12"
   - file: 23-agent-architect.md
     title: "Architect Agent Worker"
@@ -172,7 +172,7 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 | ILlmProvider Abstraction and Groq Client | done | 2026-04-07 |
 | LlamaSharp Local LLM Provider | done | 2026-04-07 |
 | Agent Worker Base Infrastructure | done | 2026-04-12 |
-| BusinessAnalyst Agent Worker | ready | 2026-04-12 |
+| BusinessAnalyst Agent Worker | done | 2026-04-12 |
 | Architect Agent Worker | ready | 2026-04-12 |
 | ScrumMaster Agent Worker | ready | 2026-04-12 |
 | Development Cycle Agent Workers | ready | 2026-04-12 |

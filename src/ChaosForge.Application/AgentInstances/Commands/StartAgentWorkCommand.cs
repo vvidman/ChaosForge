@@ -29,7 +29,8 @@ public sealed class StartAgentWorkCommandValidator : AbstractValidator<StartAgen
     public StartAgentWorkCommandValidator()
     {
         RuleFor(x => x.AgentInstanceId).NotEmpty().WithMessage("AgentInstanceId must not be empty.");
-        RuleFor(x => x.TaskId).NotEmpty().WithMessage("TaskId must not be empty.");
+        // TaskId may be Guid.Empty for phase-level agents (e.g. BusinessAnalyst) that have no
+        // associated WorkTask. Design gap: tracked for future phase-level AgentTask concept.
     }
 }
 
