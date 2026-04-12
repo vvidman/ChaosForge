@@ -2,7 +2,7 @@
 category: specs
 title: "ButterflyService — EditAndAccept Downstream Propagation"
 branch: "butterfly-svc"
-status: ready
+status: done
 date: "2026-04-12"
 related_domain: [URS, SRS, WorkTask, RevisionGate]
 related_adr: [005-revision-gate-entity]
@@ -85,12 +85,12 @@ cascades into potentially regenerating SRS items, WorkTasks, or sprint assignmen
 
 ## Implementation Scope — What must be done
 
-- [ ] Create `Application/WorkTasks/Commands/DeleteWorkTaskCommand.cs`:
+- [x] Create `Application/WorkTasks/Commands/DeleteWorkTaskCommand.cs`:
   - Command: `DeleteWorkTaskCommand(Guid WorkTaskId)`
   - Validator: not empty
   - Handler: `GetByIdAsync` → if not found return Failure → `Delete(task)` → `SaveChangesAsync`
 
-- [ ] Create `Application/WorkTasks/Commands/ClearWorkTaskSprintCommand.cs`:
+- [x] Create `Application/WorkTasks/Commands/ClearWorkTaskSprintCommand.cs`:
   - Command: `ClearWorkTaskSprintCommand(Guid WorkTaskId)`
   - Handler: `GetByIdAsync` → sets `SprintId = null` via new domain method `ClearSprint()`
   - **Domain change required**: add `ClearSprint()` to `WorkTask` entity:
@@ -101,20 +101,20 @@ cascades into potentially regenerating SRS items, WorkTasks, or sprint assignmen
     }
     ```
 
-- [ ] Create `Application/Orchestration/IButterflyService.cs`
+- [x] Create `Application/Orchestration/IButterflyService.cs`
 
-- [ ] Create `Application/Orchestration/ButterflyService.cs` (`internal sealed`):
+- [x] Create `Application/Orchestration/ButterflyService.cs` (`internal sealed`):
   - Implement AfterBA propagation (write HumanEditNote to all URS)
   - Implement AfterArchitect propagation (write HumanEditNote to all SRS, delete Backlog tasks)
   - Implement AfterScrumMaster propagation (clear sprint from all assigned tasks)
 
-- [ ] Register `IButterflyService` in `Application/DependencyInjection.cs`:
+- [x] Register `IButterflyService` in `Application/DependencyInjection.cs`:
   `services.AddScoped<IButterflyService, ButterflyService>()`
 
-- [ ] Update `RevisionGateResolvedHandler` (spec 26) to inject `IButterflyService` and call
+- [x] Update `RevisionGateResolvedHandler` (spec 26) to inject `IButterflyService` and call
   `PropagateAsync` when `Action == EditAndAccept`
 
-- [ ] Run `dotnet build` — zero warnings, zero errors
+- [x] Run `dotnet build` — zero warnings, zero errors
 
 ---
 

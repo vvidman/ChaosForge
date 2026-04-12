@@ -189,6 +189,15 @@ public sealed class WorkTask : EntityBase<Guid>
     }
 
     /// <summary>
+    /// Clears the sprint assignment for this task.
+    /// Valid in any status — the ScrumMaster will re-assign on the next run.
+    /// </summary>
+    public void ClearSprint()
+    {
+        SprintId = null;
+    }
+
+    /// <summary>
     /// Rejects the task, returning it to <see cref="WorkTaskStatus.Backlog"/> and clearing the sprint assignment.
     /// Valid from <see cref="WorkTaskStatus.InReview"/> or <see cref="WorkTaskStatus.InTesting"/>.
     /// </summary>
