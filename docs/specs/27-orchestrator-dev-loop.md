@@ -2,7 +2,7 @@
 category: specs
 title: "Development Loop Orchestration Handlers"
 branch: "orch-devloop"
-status: ready
+status: done
 date: "2026-04-12"
 related_domain: [WorkTask, TaskAttempt, AgentInstance]
 related_adr: [003-background-service-workers, 006-task-attempt-per-cycle]
@@ -60,18 +60,18 @@ implements the notification handlers for `TaskAttemptResolvedEvent` and
 
 ## Implementation Scope — What must be done
 
-- [ ] Create `Application/Orchestration/TaskAttemptResolvedHandler.cs`:
+- [x] Create `Application/Orchestration/TaskAttemptResolvedHandler.cs`:
   - Implements `INotificationHandler<TaskAttemptResolvedEvent>`
   - Logs approval or rejection
   - No state mutation (see Architecture Decisions)
 
-- [ ] Create `Application/Orchestration/WorkTaskStatusChangedHandler.cs`:
+- [x] Create `Application/Orchestration/WorkTaskStatusChangedHandler.cs`:
   - Implements `INotificationHandler<WorkTaskStatusChangedEvent>`
   - Logs the transition
   - On `NewStatus == Done`: fetch project, guard phase check, query all non-Done statuses,
     if all empty → `TransitionProjectCommand` to `Completed`
 
-- [ ] Run `dotnet build` — zero warnings, zero errors
+- [x] Run `dotnet build` — zero warnings, zero errors
 
 ---
 
