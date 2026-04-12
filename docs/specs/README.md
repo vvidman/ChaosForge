@@ -1,6 +1,6 @@
 ---
 category: specs
-last_updated: "2026-04-07"
+last_updated: "2026-04-12"
 documents:
   - file: domain-entities.md
     title: "Domain Entities"
@@ -86,6 +86,50 @@ documents:
     title: "LlamaSharp Local LLM Provider"
     status: done
     date: "2026-04-07"
+  - file: 21-agent-worker-base.md
+    title: "Agent Worker Base Infrastructure"
+    status: ready
+    date: "2026-04-12"
+  - file: 22-agent-business-analyst.md
+    title: "BusinessAnalyst Agent Worker"
+    status: ready
+    date: "2026-04-12"
+  - file: 23-agent-architect.md
+    title: "Architect Agent Worker"
+    status: ready
+    date: "2026-04-12"
+  - file: 24-agent-scrum-master.md
+    title: "ScrumMaster Agent Worker"
+    status: ready
+    date: "2026-04-12"
+  - file: 25-agent-development-cycle.md
+    title: "Development Cycle Agent Workers"
+    status: ready
+    date: "2026-04-12"
+  - file: 26-orchestrator-phase.md
+    title: "Phase Orchestrator — Domain Event Notification Handlers"
+    status: ready
+    date: "2026-04-12"
+  - file: 27-orchestrator-dev-loop.md
+    title: "Development Loop Orchestration Handlers"
+    status: ready
+    date: "2026-04-12"
+  - file: 28-butterfly-service.md
+    title: "ButterflyService — EditAndAccept Downstream Propagation"
+    status: ready
+    date: "2026-04-12"
+  - file: 29-signalr-hub.md
+    title: "SignalR Hub and Infrastructure"
+    status: ready
+    date: "2026-04-12"
+  - file: 30-signalr-notification-handlers.md
+    title: "SignalR Notification Handlers — Domain Events to Frontend"
+    status: ready
+    date: "2026-04-12"
+  - file: 31-agent-instance-activation.md
+    title: "Agent Instance Activation Handler"
+    status: ready
+    date: "2026-04-12"
 ---
 
 # Feature Specifications
@@ -127,6 +171,17 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 | Domain Event Dispatcher | done | 2026-04-07 |
 | ILlmProvider Abstraction and Groq Client | done | 2026-04-07 |
 | LlamaSharp Local LLM Provider | done | 2026-04-07 |
+| Agent Worker Base Infrastructure | ready | 2026-04-12 |
+| BusinessAnalyst Agent Worker | ready | 2026-04-12 |
+| Architect Agent Worker | ready | 2026-04-12 |
+| ScrumMaster Agent Worker | ready | 2026-04-12 |
+| Development Cycle Agent Workers | ready | 2026-04-12 |
+| Phase Orchestrator — Domain Event Notification Handlers | ready | 2026-04-12 |
+| Development Loop Orchestration Handlers | ready | 2026-04-12 |
+| ButterflyService — EditAndAccept Downstream Propagation | ready | 2026-04-12 |
+| SignalR Hub and Infrastructure | ready | 2026-04-12 |
+| SignalR Notification Handlers — Domain Events to Frontend | ready | 2026-04-12 |
+| Agent Instance Activation Handler | ready | 2026-04-12 |
 
 ---
 
