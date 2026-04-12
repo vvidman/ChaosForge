@@ -2,7 +2,7 @@
 category: specs
 title: "Development Cycle Agent Workers"
 branch: "agent-dev"
-status: ready
+status: done
 date: "2026-04-12"
 related_domain: [WorkTask, TaskAttempt, AgentInstance]
 related_adr: [003-background-service-workers, 004-illmprovider-abstraction, 006-task-attempt-per-cycle]
@@ -76,30 +76,30 @@ Depends on: spec 21 (AgentWorkerBase).
 
 ## Implementation Scope — What must be done
 
-- [ ] Create `Infrastructure/Agents/DeveloperWorker.cs` (`sealed`, extends `AgentWorkerBase`):
+- [x] Create `Infrastructure/Agents/DeveloperWorker.cs` (`sealed`, extends `AgentWorkerBase`):
   - Picks `Backlog` tasks with non-null `SprintId`
   - After LLM output saved: `StartWorkTaskCommand` → `SendWorkTaskToReviewCommand`
   - System prompt: instruct LLM to implement the task description, output Markdown code
 
-- [ ] Create `Infrastructure/Agents/ReviewerWorker.cs` (`sealed`, extends `AgentWorkerBase`):
+- [x] Create `Infrastructure/Agents/ReviewerWorker.cs` (`sealed`, extends `AgentWorkerBase`):
   - Picks `InReview` tasks
   - Always approves in this spec: `ApproveTaskAttemptCommand` → `ApproveWorkTaskCommand`
   - System prompt: code review instructions
 
-- [ ] Create `Infrastructure/Agents/TesterWorker.cs` (`sealed`, extends `AgentWorkerBase`):
+- [x] Create `Infrastructure/Agents/TesterWorker.cs` (`sealed`, extends `AgentWorkerBase`):
   - Picks `InTesting` tasks
   - Always passes in this spec: `ApproveTaskAttemptCommand` → `PassWorkTaskTestingCommand`
   - System prompt: test case generation instructions
 
-- [ ] Create `Infrastructure/Agents/TechnicalWriterWorker.cs` (`sealed`, extends `AgentWorkerBase`):
+- [x] Create `Infrastructure/Agents/TechnicalWriterWorker.cs` (`sealed`, extends `AgentWorkerBase`):
   - Picks `InDocumentation` tasks
   - After output saved: `CompleteWorkTaskCommand`
   - System prompt: documentation writing instructions
 
-- [ ] Each worker: prior attempt fetch — query `GetTaskAttemptsByWorkTaskIdQuery`, filter by
+- [x] Each worker: prior attempt fetch — query `GetTaskAttemptsByWorkTaskIdQuery`, filter by
   matching `AttemptType`, take most recent with `Result = Rejected`, pass to `AgentPromptBuilder`
 
-- [ ] Register all four as hosted services in `Infrastructure/DependencyInjection.cs`:
+- [x] Register all four as hosted services in `Infrastructure/DependencyInjection.cs`:
   ```csharp
   services.AddHostedService<DeveloperWorker>();
   services.AddHostedService<ReviewerWorker>();
@@ -107,7 +107,7 @@ Depends on: spec 21 (AgentWorkerBase).
   services.AddHostedService<TechnicalWriterWorker>();
   ```
 
-- [ ] Run `dotnet build` — zero warnings, zero errors
+- [x] Run `dotnet build` — zero warnings, zero errors
 
 ---
 
