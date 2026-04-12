@@ -2,7 +2,7 @@
 category: specs
 title: "ScrumMaster Agent Worker"
 branch: "agent-sm"
-status: ready
+status: done
 date: "2026-04-12"
 related_domain: [WorkTask, AgentInstance, RevisionGate]
 related_adr: [003-background-service-workers, 004-illmprovider-abstraction]
@@ -65,15 +65,15 @@ Development phase begins. Depends on: spec 21 (AgentWorkerBase).
 
 ## Implementation Scope — What must be done
 
-- [ ] Create `Infrastructure/Agents/ScrumMasterWorker.cs` (`sealed`, extends `AgentWorkerBase`)
-- [ ] Override `Role => AgentRole.ScrumMaster`
-- [ ] Define SM system prompt constant (task prioritization, sprint planning)
-- [ ] Implement backlog fetch → JSON serialization for LLM prompt
-- [ ] Implement LLM response JSON parse → extract task IDs
-- [ ] Implement fail-safe: unparseable → assign all tasks
-- [ ] Implement `AssignWorkTaskToSprintCommand` loop
-- [ ] Register: `services.AddHostedService<ScrumMasterWorker>()`
-- [ ] Run `dotnet build` — zero warnings, zero errors
+- [x] Create `Infrastructure/Agents/ScrumMasterWorker.cs` (`sealed`, extends `AgentWorkerBase`)
+- [x] Override `Role => AgentRole.ScrumMaster`
+- [x] Define SM system prompt constant (task prioritization, sprint planning)
+- [x] Implement backlog fetch → JSON serialization for LLM prompt
+- [x] Implement LLM response JSON parse → extract task IDs
+- [x] Implement fail-safe: unparseable → assign all tasks
+- [x] Implement `AssignWorkTaskToSprintCommand` loop
+- [x] Register: `services.AddHostedService<ScrumMasterWorker>()`
+- [x] Run `dotnet build` — zero warnings, zero errors
 
 ---
 
