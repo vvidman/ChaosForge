@@ -96,7 +96,7 @@ documents:
     date: "2026-04-12"
   - file: 23-agent-architect.md
     title: "Architect Agent Worker"
-    status: ready
+    status: done
     date: "2026-04-12"
   - file: 24-agent-scrum-master.md
     title: "ScrumMaster Agent Worker"
@@ -173,7 +173,7 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 | LlamaSharp Local LLM Provider | done | 2026-04-07 |
 | Agent Worker Base Infrastructure | done | 2026-04-12 |
 | BusinessAnalyst Agent Worker | done | 2026-04-12 |
-| Architect Agent Worker | ready | 2026-04-12 |
+| Architect Agent Worker | done | 2026-04-12 |
 | ScrumMaster Agent Worker | ready | 2026-04-12 |
 | Development Cycle Agent Workers | ready | 2026-04-12 |
 | Phase Orchestrator — Domain Event Notification Handlers | ready | 2026-04-12 |
