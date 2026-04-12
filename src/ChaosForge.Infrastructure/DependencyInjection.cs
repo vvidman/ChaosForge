@@ -100,6 +100,10 @@ public static class DependencyInjection
         services.AddHostedService<BusinessAnalystWorker>();
         services.AddHostedService<ArchitectWorker>();
         services.AddHostedService<ScrumMasterWorker>();
+        services.AddHostedService<DeveloperWorker>();
+        services.AddHostedService<ReviewerWorker>();
+        services.AddHostedService<TesterWorker>();
+        services.AddHostedService<TechnicalWriterWorker>();
 
         return services;
     }
