@@ -112,7 +112,7 @@ documents:
     date: "2026-04-12"
   - file: 27-orchestrator-dev-loop.md
     title: "Development Loop Orchestration Handlers"
-    status: ready
+    status: done
     date: "2026-04-12"
   - file: 28-butterfly-service.md
     title: "ButterflyService — EditAndAccept Downstream Propagation"
@@ -177,7 +177,7 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 | ScrumMaster Agent Worker | done | 2026-04-12 |
 | Development Cycle Agent Workers | done | 2026-04-12 |
 | Phase Orchestrator — Domain Event Notification Handlers | done | 2026-04-12 |
-| Development Loop Orchestration Handlers | ready | 2026-04-12 |
+| Development Loop Orchestration Handlers | done | 2026-04-12 |
 | ButterflyService — EditAndAccept Downstream Propagation | ready | 2026-04-12 |
 | SignalR Hub and Infrastructure | ready | 2026-04-12 |
 | SignalR Notification Handlers — Domain Events to Frontend | ready | 2026-04-12 |
