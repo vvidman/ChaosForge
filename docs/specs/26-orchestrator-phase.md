@@ -2,7 +2,7 @@
 category: specs
 title: "Phase Orchestrator — Domain Event Notification Handlers"
 branch: "orch-phase"
-status: ready
+status: done
 date: "2026-04-12"
 related_domain: [Project, RevisionGate, AgentInstance]
 related_adr: [003-background-service-workers, 009-signalr-events]
@@ -90,22 +90,22 @@ that just ended.
 
 ## Implementation Scope — What must be done
 
-- [ ] Create `Application/Orchestration/RevisionGateResolvedHandler.cs`:
+- [x] Create `Application/Orchestration/RevisionGateResolvedHandler.cs`:
   - Implements `INotificationHandler<RevisionGateResolvedEvent>`
   - Injects `IMediator`, `IRevisionGateRepository`, `IButterflyService`
   - On Reject: log and return
   - On Accept/EditAndAccept: if EditAndAccept → call `IButterflyService.PropagateAsync`
   - Always on Accept/EditAndAccept: send `TransitionProjectCommand` for the next phase
 
-- [ ] Create `Application/Orchestration/ProjectStatusChangedHandler.cs`:
+- [x] Create `Application/Orchestration/ProjectStatusChangedHandler.cs`:
   - Implements `INotificationHandler<ProjectStatusChangedEvent>`
   - Injects `IMediator`, `IAgentInstanceRepository`
   - Fetches all instances for `ProjectId`
   - Sends `MarkAgentFinishedCommand` for every instance with a role not in the new
     phase's active set and status not already `Finished`
 
-- [ ] Run `dotnet build` — zero warnings, zero errors
-- [ ] Run `dotnet test` — all existing tests pass
+- [x] Run `dotnet build` — zero warnings, zero errors
+- [x] Run `dotnet test` — all existing tests pass
 
 ---
 
