@@ -44,4 +44,12 @@ public interface IWorkTaskRepository : IRepository<WorkTask, Guid>
     /// <param name="status">The status to filter by.</param>
     /// <param name="cancellationToken">Token to cancel the operation.</param>
     Task<IReadOnlyList<WorkTask>> GetByStatusAsync(WorkTaskStatus status, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns all work tasks that belong to the specified project,
+    /// resolved through the SRS → URS → UseCase chain.
+    /// </summary>
+    /// <param name="projectId">The identifier of the project.</param>
+    /// <param name="cancellationToken">Token to cancel the operation.</param>
+    Task<IReadOnlyList<WorkTask>> GetByProjectIdAsync(Guid projectId, CancellationToken cancellationToken = default);
 }

@@ -38,6 +38,10 @@ documents:
     title: "SignalR for real-time agent event delivery"
     status: accepted
     date: "2026-03-29"
+  - file: 010-revision-gate-type-naming.md
+    title: "RevisionGateType naming: phase-centric over agent-centric"
+    status: accepted
+    date: "2026-04-12"	
 ---
 
 # Architecture Decision Records
@@ -65,10 +69,11 @@ principle, the ADR wins.
 | 007 | LlamaSharp for local inference over Ollama HTTP | accepted | 2026-03-29 |
 | 008 | SQLite with EF Core for persistence | accepted | 2026-03-29 |
 | 009 | SignalR for real-time agent event delivery | accepted | 2026-03-29 |
+| 010 | RevisionGateType naming: phase-centric over agent-centric | accepted | 2026-04-12 |
 
 ---
 
 ## Adding a New ADR
-Copy `_template.md` to a new file with an incremented number and short slug: `010-short-description.md`.
+Copy `_template.md` to a new file with an incremented number and short slug: `011-short-description.md`.
 Update the `documents` table and frontmatter list in this README.
 Add `related_principles` to the frontmatter referencing the relevant architecture category documents.
