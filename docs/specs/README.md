@@ -128,7 +128,7 @@ documents:
     date: "2026-04-12"
   - file: 31-agent-instance-activation.md
     title: "Agent Instance Activation Handler"
-    status: ready
+    status: done
     date: "2026-04-12"
 ---
 
@@ -181,7 +181,7 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 | ButterflyService — EditAndAccept Downstream Propagation | done | 2026-04-12 |
 | SignalR Hub and Infrastructure | done | 2026-04-12 |
 | SignalR Notification Handlers — Domain Events to Frontend | done | 2026-04-12 |
-| Agent Instance Activation Handler | ready | 2026-04-12 |
+| Agent Instance Activation Handler | done | 2026-04-12 |
 
 ---
 
