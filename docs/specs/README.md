@@ -116,19 +116,19 @@ documents:
     date: "2026-04-12"
   - file: 28-butterfly-service.md
     title: "ButterflyService — EditAndAccept Downstream Propagation"
-    status: ready
+    status: done
     date: "2026-04-12"
   - file: 29-signalr-hub.md
     title: "SignalR Hub and Infrastructure"
-    status: ready
+    status: done
     date: "2026-04-12"
   - file: 30-signalr-notification-handlers.md
     title: "SignalR Notification Handlers — Domain Events to Frontend"
-    status: ready
+    status: done
     date: "2026-04-12"
   - file: 31-agent-instance-activation.md
     title: "Agent Instance Activation Handler"
-    status: ready
+    status: done
     date: "2026-04-12"
 ---
 
@@ -178,10 +178,10 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 | Development Cycle Agent Workers | done | 2026-04-12 |
 | Phase Orchestrator — Domain Event Notification Handlers | done | 2026-04-12 |
 | Development Loop Orchestration Handlers | done | 2026-04-12 |
-| ButterflyService — EditAndAccept Downstream Propagation | ready | 2026-04-12 |
-| SignalR Hub and Infrastructure | ready | 2026-04-12 |
-| SignalR Notification Handlers — Domain Events to Frontend | ready | 2026-04-12 |
-| Agent Instance Activation Handler | ready | 2026-04-12 |
+| ButterflyService — EditAndAccept Downstream Propagation | done | 2026-04-12 |
+| SignalR Hub and Infrastructure | done | 2026-04-12 |
+| SignalR Notification Handlers — Domain Events to Frontend | done | 2026-04-12 |
+| Agent Instance Activation Handler | done | 2026-04-12 |
 
 ---
 

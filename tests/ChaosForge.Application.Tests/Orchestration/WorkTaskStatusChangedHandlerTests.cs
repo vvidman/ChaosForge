@@ -17,7 +17,6 @@
 using ChaosForge.Application.Common;
 using ChaosForge.Application.Orchestration;
 using ChaosForge.Application.Projects.Commands;
-using ChaosForge.Application.WorkTasks.Queries;
 using ChaosForge.Domain.Entities;
 using ChaosForge.Domain.Enums;
 using ChaosForge.Domain.Events;
@@ -33,9 +32,10 @@ public sealed class WorkTaskStatusChangedHandlerTests
 {
     private readonly IMediator _mediator = Substitute.For<IMediator>();
     private readonly IProjectRepository _projectRepository = Substitute.For<IProjectRepository>();
+    private readonly IWorkTaskRepository _workTaskRepository = Substitute.For<IWorkTaskRepository>();
 
     private WorkTaskStatusChangedHandler CreateHandler() =>
-        new(_mediator, _projectRepository, NullLogger<WorkTaskStatusChangedHandler>.Instance);
+        new(_mediator, _projectRepository, _workTaskRepository, NullLogger<WorkTaskStatusChangedHandler>.Instance);
 
     private static Project CreateDevelopmentProject()
     {
@@ -48,21 +48,62 @@ public sealed class WorkTaskStatusChangedHandlerTests
         return project;
     }
 
-    private void SetupAllStatusesEmpty()
+    private static WorkTask CreateWorkTask(WorkTaskStatus status)
     {
-        IReadOnlyList<WorkTaskDto> empty = Array.Empty<WorkTaskDto>();
-        _mediator.Send(Arg.Any<GetWorkTasksByStatusQuery>(), Arg.Any<CancellationToken>())
-            .Returns(Result<IReadOnlyList<WorkTaskDto>>.Success(empty));
+        var srsId = Guid.NewGuid();
+        var task = new WorkTask(srsId, "Task", "Description", 3);
+
+        if (status == WorkTaskStatus.Backlog)
+        {
+            return task;
+        }
+
+        task.AssignToSprint(Guid.NewGuid());
+        task.Start(); // Backlog → InProgress
+
+        if (status == WorkTaskStatus.InProgress)
+        {
+            return task;
+        }
+
+        task.SendToReview(); // InProgress → InReview
+
+        if (status == WorkTaskStatus.InReview)
+        {
+            return task;
+        }
+
+        task.Approve(); // InReview → InTesting
+
+        if (status == WorkTaskStatus.InTesting)
+        {
+            return task;
+        }
+
+        task.PassTesting(); // InTesting → InDocumentation
+
+        if (status == WorkTaskStatus.InDocumentation)
+        {
+            return task;
+        }
+
+        task.Complete(); // InDocumentation → Done
+
+        return task;
     }
 
     [Fact]
-    public async Task Handle_WhenLastTaskTransitionsToDone_AllStatusesEmpty_SendsCompletionCommand()
+    public async Task Handle_WhenLastTaskTransitionsToDone_AllTasksDone_SendsCompletionCommand()
     {
         // Arrange
         var project = CreateDevelopmentProject();
         _projectRepository.GetAllAsync(Arg.Any<CancellationToken>())
             .Returns(new List<Project> { project });
-        SetupAllStatusesEmpty();
+
+        IReadOnlyList<WorkTask> allDone = [CreateWorkTask(WorkTaskStatus.Done)];
+        _workTaskRepository.GetByProjectIdAsync(project.Id, Arg.Any<CancellationToken>())
+            .Returns(allDone);
+
         _mediator.Send(Arg.Any<TransitionProjectCommand>(), Arg.Any<CancellationToken>())
             .Returns(Result.Success());
 
@@ -90,16 +131,13 @@ public sealed class WorkTaskStatusChangedHandlerTests
         _projectRepository.GetAllAsync(Arg.Any<CancellationToken>())
             .Returns(new List<Project> { project });
 
-        IReadOnlyList<WorkTaskDto> empty = Array.Empty<WorkTaskDto>();
-        IReadOnlyList<WorkTaskDto> oneTask =
+        IReadOnlyList<WorkTask> mixed =
         [
-            new WorkTaskDto(Guid.NewGuid(), Guid.NewGuid(), null, "Task", "Desc", WorkTaskStatus.InProgress, 3, DateTime.UtcNow),
+            CreateWorkTask(WorkTaskStatus.Done),
+            CreateWorkTask(WorkTaskStatus.InProgress),
         ];
-
-        _mediator.Send(Arg.Is<GetWorkTasksByStatusQuery>(q => q.Status == WorkTaskStatus.Backlog), Arg.Any<CancellationToken>())
-            .Returns(Result<IReadOnlyList<WorkTaskDto>>.Success(empty));
-        _mediator.Send(Arg.Is<GetWorkTasksByStatusQuery>(q => q.Status == WorkTaskStatus.InProgress), Arg.Any<CancellationToken>())
-            .Returns(Result<IReadOnlyList<WorkTaskDto>>.Success(oneTask));
+        _workTaskRepository.GetByProjectIdAsync(project.Id, Arg.Any<CancellationToken>())
+            .Returns(mixed);
 
         var notification = new WorkTaskStatusChangedEvent(
             Guid.NewGuid(),
@@ -143,7 +181,11 @@ public sealed class WorkTaskStatusChangedHandlerTests
         var project = CreateDevelopmentProject();
         _projectRepository.GetAllAsync(Arg.Any<CancellationToken>())
             .Returns(new List<Project> { project });
-        SetupAllStatusesEmpty();
+
+        IReadOnlyList<WorkTask> allDone = [CreateWorkTask(WorkTaskStatus.Done)];
+        _workTaskRepository.GetByProjectIdAsync(project.Id, Arg.Any<CancellationToken>())
+            .Returns(allDone);
+
         _mediator.Send(Arg.Any<TransitionProjectCommand>(), Arg.Any<CancellationToken>())
             .Returns(Result.Failure("Cannot transition project from Development to Completed. Only forward sequential transitions are allowed."));
 
@@ -158,5 +200,28 @@ public sealed class WorkTaskStatusChangedHandlerTests
 
         // Assert
         await act.Should().NotThrowAsync();
+    }
+
+    [Fact]
+    public async Task Handle_WhenNoDevelopmentProject_DoesNotQueryWorkTasks()
+    {
+        // Arrange
+        _projectRepository.GetAllAsync(Arg.Any<CancellationToken>())
+            .Returns(new List<Project>());
+
+        var notification = new WorkTaskStatusChangedEvent(
+            Guid.NewGuid(),
+            WorkTaskStatus.InDocumentation,
+            WorkTaskStatus.Done);
+        var handler = CreateHandler();
+
+        // Act
+        await handler.Handle(notification, CancellationToken.None);
+
+        // Assert
+        await _workTaskRepository.DidNotReceive().GetByProjectIdAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
+        await _mediator.DidNotReceive().Send(
+            Arg.Any<TransitionProjectCommand>(),
+            Arg.Any<CancellationToken>());
     }
 }

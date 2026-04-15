@@ -15,6 +15,7 @@
 */
 
 using System.Net.Http.Headers;
+using System.Text.Json.Serialization;
 using ChaosForge.Application.Abstractions;
 using ChaosForge.Domain.Events;
 using ChaosForge.Domain.Repositories;
@@ -23,6 +24,7 @@ using ChaosForge.Infrastructure.Events;
 using ChaosForge.Infrastructure.LLM;
 using ChaosForge.Infrastructure.Persistence;
 using ChaosForge.Infrastructure.Persistence.Repositories;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -49,6 +51,14 @@ public static class DependencyInjection
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<AppDbContext>());
 
         services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
+
+        services.AddSignalR().AddJsonProtocol(options =>
+        {
+            options.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        });
+
+        services.AddMediatR(cfg =>
+            cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
 
         services.AddGroqLlmProvider(configuration);
         services.AddLlamaSharpLlmProvider(configuration);

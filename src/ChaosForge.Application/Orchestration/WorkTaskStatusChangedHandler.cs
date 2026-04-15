@@ -15,7 +15,6 @@
 */
 
 using ChaosForge.Application.Projects.Commands;
-using ChaosForge.Application.WorkTasks.Queries;
 using ChaosForge.Domain.Enums;
 using ChaosForge.Domain.Events;
 using ChaosForge.Domain.Repositories;
@@ -27,18 +26,10 @@ namespace ChaosForge.Application.Orchestration;
 internal sealed class WorkTaskStatusChangedHandler(
     IMediator mediator,
     IProjectRepository projectRepository,
+    IWorkTaskRepository workTaskRepository,
     ILogger<WorkTaskStatusChangedHandler> logger)
     : INotificationHandler<WorkTaskStatusChangedEvent>
 {
-    private static readonly WorkTaskStatus[] NonDoneStatuses =
-    [
-        WorkTaskStatus.Backlog,
-        WorkTaskStatus.InProgress,
-        WorkTaskStatus.InReview,
-        WorkTaskStatus.InTesting,
-        WorkTaskStatus.InDocumentation,
-    ];
-
     public async Task Handle(WorkTaskStatusChangedEvent notification, CancellationToken cancellationToken)
     {
         logger.LogInformation(
@@ -64,14 +55,11 @@ internal sealed class WorkTaskStatusChangedHandler(
             return;
         }
 
-        foreach (var status in NonDoneStatuses)
-        {
-            var result = await mediator.Send(new GetWorkTasksByStatusQuery(status), cancellationToken);
+        var projectTasks = await workTaskRepository.GetByProjectIdAsync(developmentProject.Id, cancellationToken);
 
-            if (result.IsSuccess && result.Value is { Count: > 0 })
-            {
-                return;
-            }
+        if (projectTasks.Any(t => t.Status is not WorkTaskStatus.Done))
+        {
+            return;
         }
 
         logger.LogInformation(

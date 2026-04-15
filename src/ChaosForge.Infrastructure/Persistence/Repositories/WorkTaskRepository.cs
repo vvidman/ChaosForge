@@ -47,4 +47,15 @@ internal sealed class WorkTaskRepository(AppDbContext context)
             .Where(t => t.SRSId == srsId)
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<IReadOnlyList<WorkTask>> GetByProjectIdAsync(Guid projectId, CancellationToken cancellationToken = default)
+    {
+        return await _context.WorkTasks
+            .AsNoTracking()
+            .Where(t => _context.SRSs
+                .Join(_context.URSs, srs => srs.URSId, urs => urs.Id, (srs, urs) => new { srs.Id, urs.UseCaseId })
+                .Join(_context.UseCases, su => su.UseCaseId, uc => uc.Id, (su, uc) => new { SRSId = su.Id, uc.ProjectId })
+                .Any(su => su.SRSId == t.SRSId && su.ProjectId == projectId))
+            .ToListAsync(cancellationToken);
+    }
 }

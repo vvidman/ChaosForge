@@ -215,6 +215,33 @@ public sealed class WorkTaskTests
         act.Should().Throw<DomainException>();
     }
 
+    [Fact]
+    public void ClearSprint_WhenSprintAssigned_SetsSprintIdToNull()
+    {
+        // Arrange
+        var task = new WorkTask(Guid.NewGuid(), "Title", "Description", 3);
+        task.AssignToSprint(SomeSprintId);
+
+        // Act
+        task.ClearSprint();
+
+        // Assert
+        task.SprintId.Should().BeNull();
+    }
+
+    [Fact]
+    public void ClearSprint_WhenNoSprintAssigned_RemainsNull()
+    {
+        // Arrange
+        var task = new WorkTask(Guid.NewGuid(), "Title", "Description", 3);
+
+        // Act
+        task.ClearSprint();
+
+        // Assert
+        task.SprintId.Should().BeNull();
+    }
+
     // Helpers
 
     private static WorkTask TaskInProgress()

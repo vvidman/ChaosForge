@@ -2,7 +2,7 @@
 category: specs
 title: "Agent Instance Activation Handler"
 branch: "agent-activate"
-status: ready
+status: done
 date: "2026-04-12"
 related_domain: [AgentInstance, AgentSlot, Project]
 related_adr: [003-background-service-workers]
@@ -69,18 +69,18 @@ Depends on: spec 26 (event infrastructure), spec 16 (`CreateAgentInstanceCommand
 
 ## Implementation Scope — What must be done
 
-- [ ] Create `Application/Orchestration/AgentInstanceActivationHandler.cs`:
+- [x] Create `Application/Orchestration/AgentInstanceActivationHandler.cs`:
   - Implements `INotificationHandler<ProjectStatusChangedEvent>`
   - Injects `IMediator`, `IAgentSlotRepository`, `IAgentInstanceRepository`
   - Implements activation logic as described above
   - Logs a warning when no `AgentSlot` is found for an expected active role
   - Persona name generation: `$"{role}-{Guid.NewGuid().ToString("N")[..8]}"`
 
-- [ ] Verify no duplicate instance creation: run unit test with pre-existing `Idle` instances
+- [x] Verify no duplicate instance creation: run unit test with pre-existing `Idle` instances
   — confirms count check prevents over-creation
 
-- [ ] Run `dotnet build` — zero warnings, zero errors
-- [ ] Run `dotnet test` — all existing tests pass
+- [x] Run `dotnet build` — zero warnings, zero errors
+- [x] Run `dotnet test` — all existing tests pass
 
 ---
 
