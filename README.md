@@ -1,344 +1,214 @@
-# 🦋 ChaosForge
+# ChaosForge
 
-> **A multi-agent AI software development team simulator** — where software is forged from chaos.
-
-[![.NET](https://img.shields.io/badge/.NET-10.0-512BD4?style=flat-square&logo=dotnet)](https://dotnet.microsoft.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
-[![Status: WIP](https://img.shields.io/badge/Status-Work%20In%20Progress-orange?style=flat-square)]()
-[![PRs: Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square)]()
+A multi-agent AI software development team simulator built in .NET 10. A human defines a project with Use Cases; seven AI agents (BA, Architect, Scrum Master, Developer, Tester, Reviewer, Technical Writer) execute a full Scrum-like workflow autonomously, with the human acting as judge at three mandatory revision gates.
 
 ---
 
-## ⚠️ Work in Progress
+## Why This Exists
 
-**ChaosForge is a hobby and learning project.** It is actively under development and not production-ready. APIs will change, features will break, and entire architectural decisions may be revisited. If you find the concept interesting, feel free to explore, experiment, or contribute — but please set your expectations accordingly.
-
----
-
-## 📖 What is ChaosForge?
-
-ChaosForge simulates a full AI-powered software development team working through a Scrum-like process. You define a project and its Use Cases — the AI agents do the rest.
-
-A **Business Analyst** turns your Use Cases into structured requirements. An **Architect** breaks those down into technical specifications and tasks. A **Scrum Master** plans the sprints. **Developers**, **Testers**, **Reviewers**, and a **Technical Writer** execute in parallel, reacting to each other's outputs.
-
-You, the human, act as the **judge**: at key revision gates you can accept, edit, or reject any agent output before the workflow proceeds.
-
-The name refers to the **butterfly effect**: a single edited requirement can cascade into entirely different specifications, tasks, and sprint plans. Small changes, unpredictable consequences — chaos, by design.
+Most agent frameworks treat the LLM as a single actor or a flat network of peers. ChaosForge models a structured team with defined roles, a sequential workflow, and explicit human checkpoints — closer to how software is actually built. The name refers to the butterfly effect: a single human edit at a revision gate propagates downstream and can cascade into entirely different specifications, tasks, and sprint plans.
 
 ---
 
-## ✨ Key Concepts
+## Architecture Overview
+
+```mermaid
+flowchart TD
+    Human([Human])
+
+    subgraph Workflow
+        UC[UseCase] -->|BA Worker| URS[URS]
+        URS --> RG1{Requirements Gate}
+        RG1 -->|Accept / Edit & Accept| SRS
+        RG1 -->|Reject| UC
+
+        SRS[SRS + WorkTasks] -->|Architect Worker| WTs[Task Backlog]
+        WTs --> RG2{Architecture Gate}
+        RG2 -->|Accept / Edit & Accept| Sprint
+        RG2 -->|Reject| SRS
+
+        Sprint[Sprint Plan] -->|SM Worker| RG3{SprintPlanning Gate}
+        RG3 -->|Accept / Edit & Accept| Dev
+        RG3 -->|Reject| WTs
+
+        Dev[Development Loop] -->|Developer| Review[InReview]
+        Review -->|Reviewer| Test[InTesting]
+        Test -->|Tester| Docs[InDocumentation]
+        Docs -->|TechWriter| Done([Done])
+        Review -->|Rejected| Dev
+        Test -->|Rejected| Dev
+    end
+
+    subgraph Backend[".NET Backend (Clean Architecture)"]
+        API[ASP.NET Core API] -->|MediatR| App[Application — CQRS]
+        App -->|Repositories| Infra[Infrastructure — EF Core + SQLite]
+        App -->|IDomainEventDispatcher| Dispatcher
+        Dispatcher -->|SignalR| React[React Frontend]
+        Dispatcher -->|Orchestration handlers| Workers[Agent BackgroundServices]
+        Workers -->|ILLMProvider| Groq[Groq — complex roles]
+        Workers -->|ILLMProvider| Llama[LlamaSharp — repetitive roles]
+    end
+
+    Human -->|HTTP| API
+    Human -->|Gate decisions| API
+    React -->|Live events| Human
+```
+
+---
+
+## Key Design Decisions
+
+- **Clean Architecture with a zero-dependency Domain layer.** Domain has no NuGet references. All external interfaces (`ILLMProvider`, `IProjectRepository`, `IDomainEventDispatcher`) are declared in Domain or Application and implemented in Infrastructure. Layer violations are detectable by project reference analysis alone. → [ADR-001](docs/adr/001-clean-architecture.md)
+
+- **ILLMProvider abstraction decouples agents from LLM backends.** Application handlers call `ILLMProvider` via constructor injection and never reference LlamaSharp, Groq, or any SDK namespace. Role-to-provider mapping is resolved once in `AddInfrastructureServices()`. Adding a new provider requires no changes outside Infrastructure. → [ADR-004](docs/adr/004-illmprovider-abstraction.md)
+
+- **RevisionGate is a first-class domain entity, not a flag.** It stores the original agent output, the human-edited version, the decision, and the rejection reason — enabling full audit trails and clean retry cycles. `EditAndAccept` raises a domain event consumed by `ButterflyService`, which propagates changes downstream without special-casing in callers. → [ADR-005](docs/adr/005-revision-gate-entity.md)
+
+- **TaskAttempt per dev/review/test cycle enables prompt-level learning from rejection.** Every cycle creates an immutable `TaskAttempt`. When a new cycle starts on a rejected task, the previous attempt's output and rejection note are injected into the prompt — agents receive context without maintaining in-memory state. → [ADR-006](docs/adr/006-task-attempt-per-cycle.md)
+
+- **LlamaSharp over Ollama for local inference.** LlamaSharp runs llama.cpp in-process via P/Invoke — no external daemon, no HTTP overhead, no Docker container. `dotnet run` is sufficient to start the entire system including local LLM inference. → [ADR-007](docs/adr/007-llamasharp-vs-ollama.md)
+
+- **Agent workers are BackgroundServices with no transport awareness.** Workers dispatch MediatR commands and emit domain events only. SignalR is wired via `IDomainEventDispatcher` in Infrastructure — swapping the real-time transport requires a single new implementation, no changes to agents. → [ADR-003](docs/adr/003-background-service-workers.md), [ADR-009](docs/adr/009-signalr-events.md)
+
+---
+
+## Domain Model
 
 | Concept | Description |
 |---|---|
-| **Use Case** | The unit of work defined by the human. Describes what the software should do. |
-| **URS** | User Requirements Specification. Generated by the BA agent from a Use Case. |
-| **SRS** | Software Requirements Specification. Generated by the Architect from a URS. |
-| **WorkTask** | An atomic development unit derived from an SRS, executed by Developer agents. |
-| **RevisionGate** | A human checkpoint after BA, Architect, and Scrum Master phases. |
-| **TaskAttempt** | Every development/review/test cycle is a separate record — full audit trail. |
-| **AgentSlot** | Configuration: which roles exist and in what quantity. |
-| **AgentInstance** | A running agent instance executing work at a given moment. |
+| **UseCase** | Unit of work defined by the human. Entry point for the entire pipeline. |
+| **URS** | User Requirements Specification — BA agent output from a UseCase. |
+| **SRS** | Software Requirements Specification — Architect agent output from a URS. |
+| **WorkTask** | Atomic development unit derived from an SRS. Executed by Developer agents. |
+| **TaskAttempt** | Immutable record of one dev/review/test cycle. Full audit trail; input to next cycle. |
+| **RevisionGate** | Human checkpoint (Requirements / Architecture / SprintPlanning). Stores agent output, human edit, decision, and rejection reason. |
+| **AgentSlot** | Project-level config: which roles are active and how many instances. |
+| **AgentInstance** | A running agent with identity and lifecycle (Idle / Working / Blocked / Finished). |
+
+**Project state machine:** `Setup → RequirementsPhase → ArchitecturePhase → SprintPlanning → Development → Completed`
+
+**WorkTask state machine:** `Backlog → InProgress → InReview → InTesting → InDocumentation → Done` (Reviewer/Tester rejection returns to Backlog with notes)
 
 ---
 
-## 🔄 Workflow Overview
+## Agent Roles
 
-```
-[Human] Define Project + Use Cases
-          │
-          ▼
-[BA Agent] Use Cases → URS
-          │
-          ▼
-    ⛔ Revision Gate #1  ──── Reject ──► (back to BA)
-          │ Accept / Edit & Accept
-          ▼
-[Architect Agent] URS → SRS → WorkTasks
-          │
-          ▼
-    ⛔ Revision Gate #2  ──── Reject ──► (back to BA or Architect)
-          │ Accept / Edit & Accept
-          ▼
-[Scrum Master Agent] Backlog Prioritization + Sprint Plan
-          │
-          ▼
-    ⛔ Revision Gate #3  ──── Reject ──► (back to any earlier phase)
-          │ Accept / Edit & Accept
-          ▼
-[Parallel Development Phase]
-  Developer ──► InReview
-                  ├── Rejected ──► Backlog (with feedback)
-                  └── Accepted ──► InTesting
-                                      ├── Rejected ──► Backlog (with feedback)
-                                      └── Passed  ──► InDocumentation
-                                                          └── Done ✅
-```
-
-### Revision Gate Actions
-
-| Action | Behavior |
-|---|---|
-| ✅ **Accept** | Workflow proceeds with the agent's original output. |
-| ✏️ **Edit & Accept** | Human modifies the output. The edited version continues downstream — this is the **butterfly effect** in action. |
-| ❌ **Reject** | Agent re-runs with the original input and the rejection reason visible. |
-
----
-
-## 👥 Agent Roles
-
-| Role | Min | Max | Responsibility |
+| Role | Cardinality | Phase | Input → Output |
 |---|---|---|---|
-| **Business Analyst** | 1 | 1 *(singleton)* | Transforms Use Cases into URS documents |
-| **Architect** | 1 | 1 *(singleton)* | Produces SRS documents and task breakdowns |
-| **Scrum Master** | 1 | 1 *(singleton)* | Prioritizes backlog, generates sprint plan |
-| **Developer** | 1 | N | Implements WorkTasks, iterates on feedback |
-| **Tester** | 1 | N | Analyzes code, generates test cases |
-| **Reviewer** | 1 | N | Reviews code quality, accepts or rejects |
-| **Technical Writer** | 1 | N | Generates technical documentation |
+| Business Analyst | 1 (singleton) | RequirementsPhase | UseCases → URS |
+| Architect | 1 (singleton) | ArchitecturePhase | URS → SRS + WorkTasks |
+| Scrum Master | 1 (singleton) | SprintPlanning | Backlog → Sprint plan |
+| Developer | 1..N | Development | Task → implementation |
+| Tester | 1..N | Development | Code → test cases |
+| Reviewer | 1..N | Development | Code → accept / reject |
+| Technical Writer | 1..N | Development | Code → documentation |
 
-> The BA, Architect, and Scrum Master singleton constraints are **enforced at the domain level**, not just in the UI.
-
----
-
-## 🏗️ Architecture
-
-ChaosForge is built following **Clean Architecture** and **SOLID** principles, with a **CQRS** pattern in the Application layer.
-
-### Solution Structure
-
-```
-ChaosForge.sln
-├── src/
-│   ├── ChaosForge.Domain          # Entities, domain events, interfaces
-│   ├── ChaosForge.Application     # CQRS Commands/Queries, use cases
-│   ├── ChaosForge.Infrastructure  # EF Core, LlamaSharp, Groq, BackgroundService
-│   ├── ChaosForge.API             # ASP.NET Core controllers, SignalR Hub
-│   └── ChaosForge.Web             # React frontend
-└── tests/
-    ├── ChaosForge.Domain.Tests
-    └── ChaosForge.Application.Tests
-```
-
-### Layer Responsibilities
-
-**Domain** — The heart of the system. Contains all entities, enumerations, and domain rules. Has zero external dependencies. Business invariants (e.g., singleton role enforcement) live here.
-
-**Application** — Orchestrates use cases via CQRS. Commands mutate state; Queries read it. Depends only on Domain. No infrastructure concerns leak in.
-
-**Infrastructure** — Implements interfaces declared in Domain and Application. EF Core persistence, LLM providers, background services, and real-time event publishing all live here.
-
-**API** — Thin HTTP and WebSocket surface. Controllers delegate to Application commands/queries immediately. SignalR Hub broadcasts agent activity in real time.
-
-### Domain Model
-
-```
-Project
-  ├── UseCase[]
-  │     └── URS[]
-  │           └── SRS[]
-  │                 └── WorkTask[]
-  │                       └── TaskAttempt[]
-  ├── AgentSlot[]
-  ├── AgentInstance[]
-  └── RevisionGate[]
-```
-
-All entities share a common `EntityBase<TId>` base with `Id` and `CreatedAt`.
+Singleton constraints (BA, Architect, Scrum Master) are enforced at the domain level.
 
 ---
 
-## 🤖 LLM Provider Strategy
-
-ChaosForge uses a **provider abstraction layer** so LLM sources are swappable per role:
+## LLM Provider Strategy
 
 ```
 ILLMProvider
-├── LlamaSharpProvider        # Local CPU-only inference
-├── GroqProvider              # Free online, large models
-└── OpenAICompatibleProvider  # OpenRouter or any compatible API
+├── GroqLlmProvider          — Groq API, Llama 3.3 70B (complex reasoning roles)
+├── LlamaSharpLlmProvider    — CPU-only in-process GGUF inference (repetitive roles)
+└── OpenAICompatibleProvider — any OpenAI-compatible endpoint (fallback)
 ```
 
-### Recommended Role Mapping
-
-| Role | Provider | Model | Reason |
-|---|---|---|---|
-| Business Analyst | Groq | Llama 3.3 70B | Complex requirement analysis |
-| Architect | Groq | Llama 3.3 70B | Technical planning, deep reasoning |
-| Scrum Master | Groq | Llama 3.3 70B | Sprint prioritization, estimation |
-| Developer | LlamaSharp | Phi-4 mini / Qwen2.5 3B | Repetitive code generation, speed |
-| Tester | LlamaSharp | Phi-4 mini | Code analysis, test generation |
-| Reviewer | LlamaSharp | Phi-4 mini | Code review, scoring |
-| Technical Writer | LlamaSharp | Qwen2.5 3B | Documentation generation |
-
----
-
-## 🛠️ Technology Stack
-
-| Layer | Technology | Reason |
+| Roles | Provider | Rationale |
 |---|---|---|
-| Backend | .NET 10 + ASP.NET Core | Familiar stack, mature ecosystem |
-| Frontend | React | Flexible, ideal for real-time UI |
-| Real-time | SignalR | Live agent activity streaming |
-| Database | EF Core + SQLite | Simple, local, fits hobby project scope |
-| Local LLM | LlamaSharp | CPU-only inference on dev laptop |
-| Cloud LLM | Groq API (free tier) | Large models, fast, zero cost |
-| Architecture | Clean Architecture + CQRS | SOLID principles, testable, extensible |
+| BA, Architect, Scrum Master | Groq (free tier) | Deep reasoning, structured output — latency acceptable |
+| Developer, Tester, Reviewer, Technical Writer | LlamaSharp | Repetitive cycles, CPU-feasible, offline-capable |
 
 ---
 
-## 🚀 Getting Started
+## Tech Stack
 
-> **Prerequisites:** .NET 10 SDK, Node.js 20+, a Groq API key (free at [console.groq.com](https://console.groq.com))
+- **Backend:** .NET 10, ASP.NET Core Web API
+- **Frontend:** React, Vite, TypeScript
+- **Real-time:** ASP.NET Core SignalR
+- **ORM/DB:** EF Core + SQLite — zero external infrastructure
+- **Local LLM:** LlamaSharp (llama.cpp bindings, CPU-only, GGUF models)
+- **Cloud LLM:** Groq API free tier (Llama 3.3 70B)
+- **CQRS dispatch:** MediatR with FluentValidation pipeline behaviors
+- **Testing:** xUnit, FluentAssertions, NSubstitute
 
-### 1. Clone the repository
+---
+
+## Project Status
+
+**Backend: complete.** All 31 feature specs implemented and merged (as of 2026-04-12):
+- Domain entities, events, and repository interfaces
+- Full CQRS command/query layer (MediatR + FluentValidation)
+- EF Core + SQLite persistence with migrations
+- Groq and LlamaSharp LLM providers
+- All seven agent workers as BackgroundServices
+- Phase orchestration and development loop handlers
+- ButterflyService (EditAndAccept downstream propagation)
+- SignalR hub with domain event notification handlers
+
+**Next milestone:** React frontend — Sprint Board, Revision Gate panel, live agent monitor.
+
+---
+
+## Getting Started
+
+**Prerequisites:** .NET 10 SDK, Node.js 20+, Groq API key (free at [console.groq.com](https://console.groq.com)), a GGUF model file for LlamaSharp.
 
 ```bash
 git clone https://github.com/vvidman/ChaosForge.git
 cd ChaosForge
 ```
 
-### 2. Configure environment
-
 ```bash
 cp src/ChaosForge.API/appsettings.Development.example.json \
    src/ChaosForge.API/appsettings.Development.json
 ```
 
-Edit the file and set your Groq API key and any LlamaSharp model paths:
+Edit the file:
 
 ```json
 {
   "LLMProviders": {
-    "Groq": {
-      "ApiKey": "YOUR_GROQ_API_KEY"
-    },
-    "LlamaSharp": {
-      "ModelPath": "/path/to/your/model.gguf"
-    }
+    "Groq": { "ApiKey": "YOUR_GROQ_API_KEY" },
+    "LlamaSharp": { "ModelPath": "/path/to/model.gguf" }
   }
 }
 ```
 
-### 3. Apply database migrations
-
 ```bash
 dotnet ef database update --project src/ChaosForge.Infrastructure \
-                           --startup-project src/ChaosForge.API
-```
+                          --startup-project src/ChaosForge.API
 
-### 4. Run the backend
-
-```bash
 dotnet run --project src/ChaosForge.API
 ```
 
-### 5. Run the frontend
-
-```bash
-cd src/ChaosForge.Web
-npm install
-npm run dev
-```
-
-The API will be available at `https://localhost:5001` and the UI at `http://localhost:5173`.
+API available at `https://localhost:5001`.
 
 ---
 
-## 🖥️ Hardware Considerations
+## Contributing
 
-ChaosForge is designed around realistic hobbyist hardware constraints.
-
-| Component | Spec | Role |
-|---|---|---|
-| Dev laptop | 16 GB RAM, no GPU | Runs .NET API, React dev server, LlamaSharp |
-| TerraMaster F2-212 NAS | ARM Cortex-A55, 1 GB RAM | Storage only — SQLite DB + generated files |
-
-> **Note:** The NAS has insufficient RAM for LLM inference. It functions as a network storage backend only. LlamaSharp inference runs on the laptop CPU.
-
----
-
-## 📡 Real-Time UI Features
-
-- **Sprint Board** — Kanban view: Backlog / In Progress / In Review / In Testing / Done
-- **Backlog Manager** — URS → SRS → Task hierarchy with full traceability
-- **Live Agent Monitor** — Who is doing what, pushed via SignalR
-- **Human Revision Panel** — Accept / Edit & Accept / Reject at each gate
-- **Project Configurator** — Role setup, Use Case definition, agent count
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome — especially given the experimental nature of the project. Here's how to get involved:
-
-### Ground Rules
-
-- Follow **Clean Architecture** boundaries strictly. No domain logic in Infrastructure, no EF Core in Application.
+- Follow Clean Architecture boundaries strictly: no domain logic in Infrastructure, no EF Core in Application.
 - Every public type in Domain and Application must be covered by unit tests.
-- SOLID principles are non-negotiable. If a PR introduces a God class or leaky abstraction, it will be discussed and likely rejected.
-- Keep PRs focused. One concern per pull request.
+- PRs must be focused — one concern per pull request. Open an issue before submitting anything non-trivial.
 
-### Opening an Issue
-
-Before submitting a PR for anything non-trivial, open an issue to discuss the approach. The architecture is still evolving and it saves wasted effort.
-
-### Commit Style
-
-Follow [Conventional Commits](https://www.conventionalcommits.org/):
+**Commit style** — [Conventional Commits](https://www.conventionalcommits.org/):
 
 ```
 feat(domain): add TaskAttempt retry count cap
 fix(infra): handle Groq rate limit with exponential backoff
-docs: update agent role table in README
 ```
 
-### Pull Request Checklist
-
-- [ ] All existing tests pass (`dotnet test`)
+**PR checklist:**
+- [ ] `dotnet test` passes
 - [ ] New behavior covered by tests
-- [ ] No new compiler warnings introduced
+- [ ] No new compiler warnings
 - [ ] `appsettings.Development.example.json` updated if new config keys added
 
 ---
 
-## 🗺️ Roadmap
+## License
 
-- [x] Domain entity design
-- [x] Clean Architecture solution structure
-- [ ] Domain layer implementation
-- [ ] Application layer (CQRS commands/queries)
-- [ ] EF Core + SQLite infrastructure
-- [ ] LlamaSharp provider
-- [ ] Groq provider
-- [ ] Agent BackgroundService worker
-- [ ] ASP.NET Core API endpoints
-- [ ] SignalR Hub
-- [ ] React UI — Sprint Board
-- [ ] React UI — Revision Gate panel
-- [ ] Prompt engineering per role
-- [ ] Project report generation
-
----
-
-## ❓ Open Questions
-
-These are actively unresolved design decisions:
-
-- What exactly does the Tester agent validate in generated code?
-- How are story points estimated — Architect or Scrum Master?
-- Can multiple Developers work on the same SRS concurrently?
-- How should Groq rate limits be handled — queue or retry with backoff?
-- What is the format and content of the final project report?
-
-If you have opinions on any of these, open a discussion.
-
----
-
-## 📄 License
-
-Apache License Version 2.0, — see [LICENSE](LICENSE) for details.
-
----
-
-*ChaosForge — where software is forged from chaos* 🦋
+Apache License 2.0 — see [LICENSE](LICENSE) for details.
