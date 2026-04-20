@@ -37,9 +37,6 @@ namespace ChaosForge.Infrastructure.Tests.Agents;
 public sealed class DeveloperWorkerTests
 {
     private readonly IMediator _mediator = Substitute.For<IMediator>();
-    private readonly IUseCaseRepository _useCaseRepo = Substitute.For<IUseCaseRepository>();
-    private readonly IURSRepository _ursRepo = Substitute.For<IURSRepository>();
-    private readonly ISRSRepository _srsRepo = Substitute.For<ISRSRepository>();
     private readonly IWorkTaskRepository _workTaskRepo = Substitute.For<IWorkTaskRepository>();
     private readonly ITaskAttemptRepository _taskAttemptRepo = Substitute.For<ITaskAttemptRepository>();
     private readonly ILlmProviderSelector _llmSelector = Substitute.For<ILlmProviderSelector>();
@@ -58,9 +55,6 @@ public sealed class DeveloperWorkerTests
 
         var provider = Substitute.For<IServiceProvider>();
         provider.GetService(typeof(IMediator)).Returns(_mediator);
-        provider.GetService(typeof(IUseCaseRepository)).Returns(_useCaseRepo);
-        provider.GetService(typeof(IURSRepository)).Returns(_ursRepo);
-        provider.GetService(typeof(ISRSRepository)).Returns(_srsRepo);
         provider.GetService(typeof(IWorkTaskRepository)).Returns(_workTaskRepo);
         provider.GetService(typeof(ITaskAttemptRepository)).Returns(_taskAttemptRepo);
         provider.GetService(typeof(ILlmProviderSelector)).Returns(_llmSelector);
@@ -74,22 +68,13 @@ public sealed class DeveloperWorkerTests
 
     // --- Shared helpers ---
 
-    private (Guid projectId, AgentInstance instance, UseCase useCase, URS urs, SRS srs) SetUpProjectHierarchy()
+    private (Guid projectId, AgentInstance instance, Guid srsId) SetUpProjectHierarchy()
     {
         var projectId = Guid.NewGuid();
         var instance = new AgentInstance(projectId, AgentRole.Developer, "Dev");
-        var useCase = new UseCase(projectId, "Login", "User logs in", 1);
-        var urs = new URS(useCase.Id, "Login URS", "User must be able to log in");
-        var srs = new SRS(urs.Id, "Login SRS", "Technical description");
+        var srsId = Guid.NewGuid();
 
-        _useCaseRepo.GetByProjectIdAsync(projectId, Arg.Any<CancellationToken>())
-            .Returns(new List<UseCase> { useCase }.AsReadOnly());
-        _ursRepo.GetByUseCaseIdAsync(useCase.Id, Arg.Any<CancellationToken>())
-            .Returns(new List<URS> { urs }.AsReadOnly());
-        _srsRepo.GetByURSIdAsync(urs.Id, Arg.Any<CancellationToken>())
-            .Returns(new List<SRS> { srs }.AsReadOnly());
-
-        return (projectId, instance, useCase, urs, srs);
+        return (projectId, instance, srsId);
     }
 
     // --- Tests ---
@@ -98,9 +83,9 @@ public sealed class DeveloperWorkerTests
     public async Task ExecuteWorkAsync_WhenNoEligibleTask_SkipsCycle()
     {
         // Arrange
-        var (projectId, instance, _, _, srs) = SetUpProjectHierarchy();
+        var (projectId, instance, _) = SetUpProjectHierarchy();
 
-        _workTaskRepo.GetBySRSIdAsync(srs.Id, Arg.Any<CancellationToken>())
+        _workTaskRepo.GetByProjectIdAsync(projectId, Arg.Any<CancellationToken>())
             .Returns(new List<WorkTask>().AsReadOnly());
 
         // Act
@@ -120,12 +105,12 @@ public sealed class DeveloperWorkerTests
     public async Task ExecuteWorkAsync_WhenTaskHasNullSprintId_SkipsItAndIdlesCycle()
     {
         // Arrange
-        var (projectId, instance, _, _, srs) = SetUpProjectHierarchy();
+        var (projectId, instance, srsId) = SetUpProjectHierarchy();
 
         // A Backlog task with no sprint assigned — Developer must skip it
-        var taskNoSprint = new WorkTask(srs.Id, "Unassigned Task", "Not in a sprint", 2);
+        var taskNoSprint = new WorkTask(srsId, "Unassigned Task", "Not in a sprint", 2);
 
-        _workTaskRepo.GetBySRSIdAsync(srs.Id, Arg.Any<CancellationToken>())
+        _workTaskRepo.GetByProjectIdAsync(projectId, Arg.Any<CancellationToken>())
             .Returns(new List<WorkTask> { taskNoSprint }.AsReadOnly());
 
         // Act
@@ -141,12 +126,12 @@ public sealed class DeveloperWorkerTests
     public async Task ExecuteWorkAsync_HappyPath_ExecutesCorrectCommandSequence()
     {
         // Arrange
-        var (projectId, instance, _, _, srs) = SetUpProjectHierarchy();
+        var (projectId, instance, srsId) = SetUpProjectHierarchy();
 
-        var task = new WorkTask(srs.Id, "Implement Login", "Wire up auth endpoint", 3);
+        var task = new WorkTask(srsId, "Implement Login", "Wire up auth endpoint", 3);
         task.AssignToSprint(Guid.NewGuid());
 
-        _workTaskRepo.GetBySRSIdAsync(srs.Id, Arg.Any<CancellationToken>())
+        _workTaskRepo.GetByProjectIdAsync(projectId, Arg.Any<CancellationToken>())
             .Returns(new List<WorkTask> { task }.AsReadOnly());
 
         _taskAttemptRepo.GetByWorkTaskIdAsync(task.Id, Arg.Any<CancellationToken>())
@@ -202,12 +187,12 @@ public sealed class DeveloperWorkerTests
     public async Task ExecuteWorkAsync_WhenPriorRejectedReviewAttemptExists_PromptContainsRejectionContext()
     {
         // Arrange
-        var (projectId, instance, _, _, srs) = SetUpProjectHierarchy();
+        var (projectId, instance, srsId) = SetUpProjectHierarchy();
 
-        var task = new WorkTask(srs.Id, "Implement Login", "Wire up auth endpoint", 3);
+        var task = new WorkTask(srsId, "Implement Login", "Wire up auth endpoint", 3);
         task.AssignToSprint(Guid.NewGuid());
 
-        _workTaskRepo.GetBySRSIdAsync(srs.Id, Arg.Any<CancellationToken>())
+        _workTaskRepo.GetByProjectIdAsync(projectId, Arg.Any<CancellationToken>())
             .Returns(new List<WorkTask> { task }.AsReadOnly());
 
         // Create a prior rejected Review attempt — the developer sees why the previous
@@ -244,12 +229,12 @@ public sealed class DeveloperWorkerTests
     public async Task ExecuteWorkAsync_WhenLlmThrows_ReleasesAgentAndLeavesTaskInCurrentStatus()
     {
         // Arrange
-        var (projectId, instance, _, _, srs) = SetUpProjectHierarchy();
+        var (projectId, instance, srsId) = SetUpProjectHierarchy();
 
-        var task = new WorkTask(srs.Id, "Implement Login", "Wire up auth endpoint", 3);
+        var task = new WorkTask(srsId, "Implement Login", "Wire up auth endpoint", 3);
         task.AssignToSprint(Guid.NewGuid());
 
-        _workTaskRepo.GetBySRSIdAsync(srs.Id, Arg.Any<CancellationToken>())
+        _workTaskRepo.GetByProjectIdAsync(projectId, Arg.Any<CancellationToken>())
             .Returns(new List<WorkTask> { task }.AsReadOnly());
 
         _taskAttemptRepo.GetByWorkTaskIdAsync(task.Id, Arg.Any<CancellationToken>())
