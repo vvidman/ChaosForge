@@ -174,6 +174,14 @@ documents:
     title: "Global UX Polish — Loading, Errors, Animations, Accessibility"
     status: done
     date: "2026-05-17"
+  - file: 43-docker.md
+    title: "Docker and docker-compose"
+    status: ready
+    date: "2026-04-21"
+  - file: 44-config-prod.md
+    title: "Configuration Management and Production Readiness"
+    status: ready
+    date: "2026-04-21"
 ---
 
 # Feature Specifications
@@ -236,8 +244,9 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 | Sprint Board Tab | done | 2026-04-21 |
 | Agent Monitor Tab | done | 2026-04-21 |
 | Task Attempt History Tab | done | 2026-04-21 |
-| Requirements Pipeline Tab | done | 2026-04-21 |
 | Global UX Polish — Loading, Errors, Animations, Accessibility | done | 2026-05-17 |
+| Docker and docker-compose | ready | 2026-04-21 |
+| Configuration Management and Production Readiness | ready | 2026-04-21 |
 
 ---
 
