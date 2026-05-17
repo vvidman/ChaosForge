@@ -134,6 +134,10 @@ documents:
     title: "Frontend Toolchain and Design System"
     status: done
     date: "2026-04-21"
+  - file: 33-fe-api-hooks.md
+    title: "API Client Layer and React Query Hooks"
+    status: done
+    date: "2026-04-21"
 ---
 
 # Feature Specifications
