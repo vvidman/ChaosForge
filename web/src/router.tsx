@@ -8,6 +8,7 @@ import SprintPage from '@/pages/project/SprintPage'
 import AgentsPage from '@/pages/project/AgentsPage'
 import HistoryPage from '@/pages/project/HistoryPage'
 import GatePage from '@/pages/project/GatePage'
+import { ErrorBoundary } from '@/components/error/ErrorBoundary'
 
 export const router = createBrowserRouter([
   {
@@ -15,23 +16,26 @@ export const router = createBrowserRouter([
     element: <AppLayout />,
     children: [
       { index: true, element: <Navigate to="/projects" replace /> },
-      { path: 'projects', element: <ProjectListPage /> },
+      {
+        path: 'projects',
+        element: <ErrorBoundary><ProjectListPage /></ErrorBoundary>,
+      },
       {
         path: 'projects/:id',
-        element: <ProjectDetailLayout />,
+        element: <ErrorBoundary><ProjectDetailLayout /></ErrorBoundary>,
         children: [
           { index: true, element: <Navigate to="overview" replace /> },
-          { path: 'overview', element: <OverviewPage /> },
-          { path: 'requirements', element: <RequirementsPage /> },
-          { path: 'sprint', element: <SprintPage /> },
-          { path: 'agents', element: <AgentsPage /> },
-          { path: 'history', element: <HistoryPage /> },
+          { path: 'overview', element: <ErrorBoundary><OverviewPage /></ErrorBoundary> },
+          { path: 'requirements', element: <ErrorBoundary><RequirementsPage /></ErrorBoundary> },
+          { path: 'sprint', element: <ErrorBoundary><SprintPage /></ErrorBoundary> },
+          { path: 'agents', element: <ErrorBoundary><AgentsPage /></ErrorBoundary> },
+          { path: 'history', element: <ErrorBoundary><HistoryPage /></ErrorBoundary> },
         ],
       },
     ],
   },
   {
     path: '/projects/:id/gate',
-    element: <GatePage />,
+    element: <ErrorBoundary><GatePage /></ErrorBoundary>,
   },
 ])

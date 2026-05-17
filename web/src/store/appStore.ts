@@ -22,16 +22,19 @@ interface AppState {
   status: ConnectionStatus
   notifications: AppNotification[]
   agentEvents: AgentEvent[]
+  sidebarCollapsed: boolean
   setStatus: (status: ConnectionStatus) => void
   push: (n: Omit<AppNotification, 'id'>) => void
   dismiss: (id: string) => void
   pushAgentEvent: (e: Omit<AgentEvent, 'id'>) => void
+  setSidebarCollapsed: (collapsed: boolean) => void
 }
 
 export const useAppStore = create<AppState>((set) => ({
   status: 'disconnected',
   notifications: [],
   agentEvents: [],
+  sidebarCollapsed: false,
   setStatus: (status) => set({ status }),
   push: (n) =>
     set((state) => {
@@ -47,4 +50,5 @@ export const useAppStore = create<AppState>((set) => ({
       const next = [...state.agentEvents, { ...e, id: crypto.randomUUID() }]
       return { agentEvents: next.length > MAX_AGENT_EVENTS ? next.slice(next.length - MAX_AGENT_EVENTS) : next }
     }),
+  setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
 }))

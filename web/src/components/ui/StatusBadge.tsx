@@ -12,7 +12,11 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
   const config = statusConfig[status]
 
   return (
-    <Badge className={cn(config.className, className)}>
+    <Badge
+      role="status"
+      aria-label={config.label}
+      className={cn('transition-colors duration-300', config.className, className)}
+    >
       {config.label}
     </Badge>
   )

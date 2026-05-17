@@ -1,5 +1,6 @@
 import type { Config } from 'tailwindcss'
 import typography from '@tailwindcss/typography'
+import plugin from 'tailwindcss/plugin'
 
 export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
@@ -33,5 +34,17 @@ export default {
       },
     },
   },
-  plugins: [typography],
+  plugins: [
+    typography,
+    plugin(({ addBase }) => {
+      addBase({
+        '@media (prefers-reduced-motion: reduce)': {
+          '*': {
+            'animation-duration': '0.01ms !important',
+            'transition-duration': '0.01ms !important',
+          },
+        },
+      })
+    }),
+  ],
 } satisfies Config

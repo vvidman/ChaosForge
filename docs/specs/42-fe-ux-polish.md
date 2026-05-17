@@ -2,7 +2,7 @@
 category: specs
 title: "Global UX Polish — Loading, Errors, Animations, Accessibility"
 branch: "fe-ux-polish"
-status: ready
+status: done
 date: "2026-04-21"
 related_domain: []
 related_adr: []
@@ -102,21 +102,21 @@ Wrap `<Outlet />` in `AppLayout` with a fade-in transition on route change:
 
 ## Implementation Scope — What must be done
 
-- [ ] Create `src/components/ui/SkeletonCard.tsx`
-- [ ] Create `src/components/ui/SkeletonTable.tsx`
-- [ ] Create `src/components/ui/SkeletonTimeline.tsx`
-- [ ] Create `src/components/ui/SkeletonKanbanColumn.tsx`
-- [ ] Create `src/components/error/ErrorBoundary.tsx` (class component)
-- [ ] Create `src/components/error/ErrorFallback.tsx` (fallback UI)
-- [ ] Wrap each page route in `ErrorBoundary` in `src/router.tsx`
-- [ ] Create `src/components/layout/PageTransition.tsx`
-- [ ] Wrap `<Outlet />` in `AppLayout` with `PageTransition`
-- [ ] Implement sidebar collapse toggle (button in sidebar footer, state in Zustand)
-- [ ] Apply `transition-colors` to `StatusBadge`
-- [ ] Apply `focus-visible:ring-2` to all interactive elements
-- [ ] Add `aria-label` to all icon-only buttons project-wide
-- [ ] Add `aria-busy` + `aria-label` to all skeleton components
-- [ ] Add `prefers-reduced-motion` guard to Tailwind config:
+- [x] Create `src/components/ui/SkeletonCard.tsx`
+- [x] Create `src/components/ui/SkeletonTable.tsx`
+- [x] Create `src/components/ui/SkeletonTimeline.tsx`
+- [x] Create `src/components/ui/SkeletonKanbanColumn.tsx`
+- [x] Create `src/components/error/ErrorBoundary.tsx` (class component)
+- [x] Create `src/components/error/ErrorFallback.tsx` (fallback UI)
+- [x] Wrap each page route in `ErrorBoundary` in `src/router.tsx`
+- [x] Create `src/components/layout/PageTransition.tsx`
+- [x] Wrap `<Outlet />` in `AppLayout` with `PageTransition`
+- [x] Implement sidebar collapse toggle (button in sidebar footer, state in Zustand)
+- [x] Apply `transition-colors` to `StatusBadge`
+- [x] Apply `focus-visible:ring-2` to all interactive elements
+- [x] Add `aria-label` to all icon-only buttons project-wide
+- [x] Add `aria-busy` + `aria-label` to all skeleton components
+- [x] Add `prefers-reduced-motion` guard to Tailwind config:
   ```javascript
   // tailwind.config.ts
   plugins: [
@@ -130,7 +130,7 @@ Wrap `<Outlet />` in `AppLayout` with a fade-in transition on route change:
     }),
   ]
   ```
-- [ ] `npm run build` — zero TypeScript errors
+- [x] `npm run build` — zero TypeScript errors
 
 ---
 
