@@ -18,8 +18,9 @@ interface SignalRContextValue {
 const SignalRContext = createContext<SignalRContextValue | null>(null)
 
 type PushFn = ReturnType<typeof useAppStore.getState>['push']
+type PushAgentEventFn = ReturnType<typeof useAppStore.getState>['pushAgentEvent']
 
-function dispatchEvent(event: SignalREvent, push: PushFn) {
+function dispatchEvent(event: SignalREvent, push: PushFn, pushAgentEvent: PushAgentEventFn) {
   const { type, payload } = event
   const projectId = payload['projectId'] as string | undefined
   const workTaskId = payload['workTaskId'] as string | undefined
@@ -33,12 +34,22 @@ function dispatchEvent(event: SignalREvent, push: PushFn) {
     case 'WorkTaskStatusChanged':
       queryClient.invalidateQueries({ queryKey: ['work-tasks'] })
       push({ message: 'Task status changed', variant: 'info' })
+      pushAgentEvent({
+        timestamp: new Date().toISOString(),
+        type: 'WorkTaskStatusChanged',
+        description: `Task status → ${(payload['status'] as string) ?? 'unknown'}`,
+      })
       break
 
     case 'AgentStatusChanged':
       if (projectId)
         queryClient.invalidateQueries({ queryKey: ['agent-instances', 'by-project', projectId] })
       push({ message: 'Agent status changed', variant: 'info' })
+      pushAgentEvent({
+        timestamp: new Date().toISOString(),
+        type: 'AgentStatusChanged',
+        description: `Agent ${(payload['role'] as string) ?? ''} ${(payload['personaName'] as string) ?? ''} → ${(payload['status'] as string) ?? ''}`,
+      })
       break
 
     case 'RevisionGateResolved':
@@ -66,6 +77,7 @@ function dispatchEvent(event: SignalREvent, push: PushFn) {
 export function SignalRProvider({ children }: { children: ReactNode }) {
   const setStatus = useAppStore((s) => s.setStatus)
   const push = useAppStore((s) => s.push)
+  const pushAgentEvent = useAppStore((s) => s.pushAgentEvent)
 
   useEffect(() => {
     const connection = new HubConnectionBuilder()
@@ -89,7 +101,7 @@ export function SignalRProvider({ children }: { children: ReactNode }) {
       if (import.meta.env.DEV) console.log('[SignalR] disconnected')
     })
 
-    connection.on('ReceiveEvent', (event: SignalREvent) => dispatchEvent(event, push))
+    connection.on('ReceiveEvent', (event: SignalREvent) => dispatchEvent(event, push, pushAgentEvent))
 
     updateStatus('connecting')
     connection
@@ -103,7 +115,7 @@ export function SignalRProvider({ children }: { children: ReactNode }) {
     return () => {
       connection.stop()
     }
-  }, [setStatus, push])
+  }, [setStatus, push, pushAgentEvent])
 
   const status = useAppStore((s) => s.status)
 
