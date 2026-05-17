@@ -3,6 +3,7 @@ import { NavLink, Outlet } from 'react-router-dom'
 import { FolderKanban, Zap, Bot, History, ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAppStore } from '@/store/appStore'
+import { ToastContainer } from '@/components/ui/ToastContainer'
 
 const navItems = [
   { to: '/projects', icon: FolderKanban, label: 'Projects' },
@@ -13,7 +14,7 @@ const navItems = [
 
 export default function AppLayout() {
   const [collapsed, setCollapsed] = useState(false)
-  const connectionStatus = useAppStore((s) => s.connectionStatus)
+  const connectionStatus = useAppStore((s) => s.status)
 
   return (
     <div className="flex h-screen bg-surface overflow-hidden">
@@ -70,7 +71,7 @@ export default function AppLayout() {
               className={cn('h-2 w-2 rounded-full', {
                 'bg-status-done': connectionStatus === 'connected',
                 'bg-status-idle': connectionStatus === 'disconnected',
-                'bg-status-pending animate-pulse': connectionStatus === 'reconnecting',
+                'bg-status-pending animate-pulse': connectionStatus === 'connecting',
               })}
             />
             <span className="capitalize">{connectionStatus}</span>
@@ -82,6 +83,7 @@ export default function AppLayout() {
           <Outlet />
         </main>
       </div>
+      <ToastContainer />
     </div>
   )
 }

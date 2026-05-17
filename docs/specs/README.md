@@ -138,6 +138,10 @@ documents:
     title: "API Client Layer and React Query Hooks"
     status: done
     date: "2026-04-21"
+  - file: 34-fe-signalr.md
+    title: "SignalR Client and Real-Time State"
+    status: done
+    date: "2026-04-21"
 ---
 
 # Feature Specifications
@@ -191,6 +195,8 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 | SignalR Notification Handlers — Domain Events to Frontend | done | 2026-04-12 |
 | Agent Instance Activation Handler | done | 2026-04-12 |
 | Frontend Toolchain and Design System | done | 2026-04-21 |
+| API Client Layer and React Query Hooks | done | 2026-04-21 |
+| SignalR Client and Real-Time State | done | 2026-04-21 |
 
 ---
 
