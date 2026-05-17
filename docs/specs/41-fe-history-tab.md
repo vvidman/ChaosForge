@@ -2,7 +2,7 @@
 category: specs
 title: "Task Attempt History Tab"
 branch: "fe-history"
-status: ready
+status: done
 date: "2026-04-21"
 related_domain: [TaskAttempt, WorkTask]
 related_adr: [006-task-attempt-per-cycle]
@@ -84,18 +84,18 @@ view. Depends on: specs 32–34, 36, 39 (linked from task card context menu).
 
 ## Implementation Scope — What must be done
 
-- [ ] Create `src/pages/project/HistoryPage.tsx` with master-detail layout
-- [ ] Create `src/components/history/TaskListPanel.tsx` with search + status filter
-- [ ] Create `src/components/history/TaskListRow.tsx`
-- [ ] Create `src/components/history/AttemptTimeline.tsx`
-- [ ] Create `src/components/history/AttemptCard.tsx` with expandable output
-- [ ] Create `src/components/history/AttemptTypeBadge.tsx`
-- [ ] Create `src/components/history/AttemptResultBadge.tsx`
-- [ ] Handle `?task=:taskId` query param for pre-selection
-- [ ] Wire real-time refetch on `TaskAttemptCompleted` and `TaskAttemptResolved` events
+- [x] Create `src/pages/project/HistoryPage.tsx` with master-detail layout
+- [x] Create `src/components/history/TaskListPanel.tsx` with search + status filter
+- [x] Create `src/components/history/TaskListRow.tsx`
+- [x] Create `src/components/history/AttemptTimeline.tsx`
+- [x] Create `src/components/history/AttemptCard.tsx` with expandable output
+- [x] Create `src/components/history/AttemptTypeBadge.tsx`
+- [x] Create `src/components/history/AttemptResultBadge.tsx`
+- [x] Handle `?task=:taskId` query param for pre-selection
+- [x] Wire real-time refetch on `TaskAttemptCompleted` and `TaskAttemptResolved` events
   for the selected task (extend SignalR dispatch in spec 34)
-- [ ] Wire route `/projects/:id/history` to `HistoryPage`
-- [ ] `npm run build` — zero TypeScript errors
+- [x] Wire route `/projects/:id/history` to `HistoryPage`
+- [x] `npm run build` — zero TypeScript errors
 
 ---
 

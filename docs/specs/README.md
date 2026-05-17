@@ -154,6 +154,22 @@ documents:
     title: "Revision Gate Judge Interface"
     status: done
     date: "2026-04-21"
+  - file: 38-fe-requirements-tab.md
+    title: "Requirements Pipeline Tab"
+    status: done
+    date: "2026-04-21"
+  - file: 39-fe-sprint-board.md
+    title: "Sprint Board Tab"
+    status: done
+    date: "2026-04-21"
+  - file: 40-fe-agent-monitor.md
+    title: "Agent Monitor Tab"
+    status: done
+    date: "2026-04-21"
+  - file: 41-fe-history-tab.md
+    title: "Task Attempt History Tab"
+    status: done
+    date: "2026-04-21"
 ---
 
 # Feature Specifications
@@ -212,6 +228,11 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 | Project List and Create Page | done | 2026-04-21 |
 | Project Detail Shell and Overview Tab | done | 2026-04-21 |
 | Revision Gate Judge Interface | done | 2026-04-21 |
+| Requirements Pipeline Tab | done | 2026-04-21 |
+| Sprint Board Tab | done | 2026-04-21 |
+| Agent Monitor Tab | done | 2026-04-21 |
+| Task Attempt History Tab | done | 2026-04-21 |
+| Requirements Pipeline Tab | done | 2026-04-21 |
 
 ---
 
