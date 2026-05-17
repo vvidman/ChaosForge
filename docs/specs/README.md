@@ -130,6 +130,10 @@ documents:
     title: "Agent Instance Activation Handler"
     status: done
     date: "2026-04-12"
+  - file: 32-fe-toolchain.md
+    title: "Frontend Toolchain and Design System"
+    status: done
+    date: "2026-04-21"
 ---
 
 # Feature Specifications
@@ -182,6 +186,7 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 | SignalR Hub and Infrastructure | done | 2026-04-12 |
 | SignalR Notification Handlers — Domain Events to Frontend | done | 2026-04-12 |
 | Agent Instance Activation Handler | done | 2026-04-12 |
+| Frontend Toolchain and Design System | done | 2026-04-21 |
 
 ---
 
