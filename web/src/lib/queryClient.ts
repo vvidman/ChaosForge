@@ -11,7 +11,7 @@ export const queryClient = new QueryClient({
     mutations: {
       onError: (error) => {
         const message = error instanceof ApiError ? error.message : 'An unexpected error occurred'
-        useAppStore.getState().pushNotification(message)
+        useAppStore.getState().push({ message, variant: 'error' })
       },
     },
   },
@@ -19,5 +19,5 @@ export const queryClient = new QueryClient({
 
 queryClient.getQueryCache().config.onError = (error) => {
   const message = error instanceof ApiError ? error.message : 'An unexpected error occurred'
-  useAppStore.getState().pushNotification(message)
+  useAppStore.getState().push({ message, variant: 'error' })
 }

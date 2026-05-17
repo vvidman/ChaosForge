@@ -1,34 +1,34 @@
 import { create } from 'zustand'
 
-export type ConnectionStatus = 'connected' | 'disconnected' | 'reconnecting'
+export type ConnectionStatus = 'connecting' | 'connected' | 'disconnected'
 
 export interface AppNotification {
   id: string
   message: string
-  timestamp: number
+  variant: 'info' | 'success' | 'error'
 }
 
+const MAX_NOTIFICATIONS = 5
+
 interface AppState {
-  connectionStatus: ConnectionStatus
-  notificationQueue: AppNotification[]
-  setConnectionStatus: (status: ConnectionStatus) => void
-  pushNotification: (message: string) => void
-  dismissNotification: (id: string) => void
+  status: ConnectionStatus
+  notifications: AppNotification[]
+  setStatus: (status: ConnectionStatus) => void
+  push: (n: Omit<AppNotification, 'id'>) => void
+  dismiss: (id: string) => void
 }
 
 export const useAppStore = create<AppState>((set) => ({
-  connectionStatus: 'disconnected',
-  notificationQueue: [],
-  setConnectionStatus: (status) => set({ connectionStatus: status }),
-  pushNotification: (message) =>
+  status: 'disconnected',
+  notifications: [],
+  setStatus: (status) => set({ status }),
+  push: (n) =>
+    set((state) => {
+      const next = [...state.notifications, { ...n, id: crypto.randomUUID() }]
+      return { notifications: next.length > MAX_NOTIFICATIONS ? next.slice(next.length - MAX_NOTIFICATIONS) : next }
+    }),
+  dismiss: (id) =>
     set((state) => ({
-      notificationQueue: [
-        ...state.notificationQueue,
-        { id: crypto.randomUUID(), message, timestamp: Date.now() },
-      ],
-    })),
-  dismissNotification: (id) =>
-    set((state) => ({
-      notificationQueue: state.notificationQueue.filter((n) => n.id !== id),
+      notifications: state.notifications.filter((n) => n.id !== id),
     })),
 }))
