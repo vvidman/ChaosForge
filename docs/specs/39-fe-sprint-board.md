@@ -2,7 +2,7 @@
 category: specs
 title: "Sprint Board Tab"
 branch: "fe-sprint-board"
-status: ready
+status: done
 date: "2026-04-21"
 related_domain: [WorkTask, TaskAttempt]
 related_adr: [006-task-attempt-per-cycle]
@@ -80,15 +80,15 @@ data-dense and visually active view in the application. Depends on: specs 32–3
 
 ## Implementation Scope — What must be done
 
-- [ ] Create `src/pages/project/SprintPage.tsx`
-- [ ] Create `src/components/sprint/KanbanBoard.tsx` — column layout
-- [ ] Create `src/components/sprint/KanbanColumn.tsx` — header + card list
-- [ ] Create `src/components/sprint/TaskCard.tsx` — card with context menu
-- [ ] Create `src/components/sprint/RejectTaskDialog.tsx`
-- [ ] Create `src/components/sprint/BoardHeader.tsx` — sprint stats
-- [ ] Implement column animation on status change (CSS transition)
-- [ ] Wire route `/projects/:id/sprint` to `SprintPage`
-- [ ] `npm run build` — zero TypeScript errors
+- [x] Create `src/pages/project/SprintPage.tsx`
+- [x] Create `src/components/sprint/KanbanBoard.tsx` — column layout
+- [x] Create `src/components/sprint/KanbanColumn.tsx` — header + card list
+- [x] Create `src/components/sprint/TaskCard.tsx` — card with context menu
+- [x] Create `src/components/sprint/RejectTaskDialog.tsx`
+- [x] Create `src/components/sprint/BoardHeader.tsx` — sprint stats
+- [x] Implement column animation on status change (CSS transition)
+- [x] Wire route `/projects/:id/sprint` to `SprintPage`
+- [x] `npm run build` — zero TypeScript errors
 
 ---
 
