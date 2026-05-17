@@ -2,7 +2,7 @@
 category: specs
 title: "Requirements Pipeline Tab"
 branch: "fe-req-tab"
-status: ready
+status: done
 date: "2026-04-21"
 related_domain: [UseCase, URS, SRS]
 related_adr: []
@@ -69,17 +69,17 @@ Depends on: specs 32–34, 36.
 
 ## Implementation Scope — What must be done
 
-- [ ] Install `@dnd-kit/core` and `@dnd-kit/sortable`
-- [ ] Create `src/pages/project/RequirementsPage.tsx`
-- [ ] Create `src/components/requirements/UseCaseList.tsx` with add form and drag-to-sort
-- [ ] Create `src/components/requirements/UseCaseCard.tsx`
-- [ ] Create `src/components/requirements/URSPanel.tsx` with human edit inline editor
-- [ ] Create `src/components/requirements/SRSPanel.tsx` with human edit + WorkTask list
-- [ ] Create `src/components/requirements/InlineEditor.tsx` — reusable textarea + note
+- [x] Install `@dnd-kit/core` and `@dnd-kit/sortable`
+- [x] Create `src/pages/project/RequirementsPage.tsx`
+- [x] Create `src/components/requirements/UseCaseList.tsx` with add form and drag-to-sort
+- [x] Create `src/components/requirements/UseCaseCard.tsx`
+- [x] Create `src/components/requirements/URSPanel.tsx` with human edit inline editor
+- [x] Create `src/components/requirements/SRSPanel.tsx` with human edit + WorkTask list
+- [x] Create `src/components/requirements/InlineEditor.tsx` — reusable textarea + note
   + Save/Cancel for both URS and SRS edit flows
-- [ ] Create `src/components/requirements/WaitingForAgent.tsx` — spinner + label
-- [ ] Wire route `/projects/:id/requirements` to `RequirementsPage`
-- [ ] `npm run build` — zero TypeScript errors
+- [x] Create `src/components/requirements/WaitingForAgent.tsx` — spinner + label
+- [x] Wire route `/projects/:id/requirements` to `RequirementsPage`
+- [x] `npm run build` — zero TypeScript errors
 
 ---
 

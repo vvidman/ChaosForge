@@ -2,7 +2,7 @@
 category: specs
 title: "Agent Monitor Tab"
 branch: "fe-agent-mon"
-status: ready
+status: done
 date: "2026-04-21"
 related_domain: [AgentInstance, AgentSlot]
 related_adr: [003-background-service-workers]
@@ -79,16 +79,16 @@ Depends on: specs 32–34, 36.
 
 ## Implementation Scope — What must be done
 
-- [ ] Create `src/pages/project/AgentsPage.tsx`
-- [ ] Create `src/components/agents/AgentCard.tsx` with animated status dot
-- [ ] Create `src/components/agents/AgentGrid.tsx` with role grouping
-- [ ] Create `src/components/agents/EventLog.tsx` — in-memory scrolling event feed,
+- [x] Create `src/pages/project/AgentsPage.tsx`
+- [x] Create `src/components/agents/AgentCard.tsx` with animated status dot
+- [x] Create `src/components/agents/AgentGrid.tsx` with role grouping
+- [x] Create `src/components/agents/EventLog.tsx` — in-memory scrolling event feed,
   updated via a Zustand slice that SignalR handler pushes to
-- [ ] Create `src/components/agents/PhaseIndicatorBanner.tsx`
-- [ ] Add `AgentStatusChanged` events to the in-memory EventLog Zustand slice
+- [x] Create `src/components/agents/PhaseIndicatorBanner.tsx`
+- [x] Add `AgentStatusChanged` events to the in-memory EventLog Zustand slice
   (extend spec 34's Zustand store)
-- [ ] Wire route `/projects/:id/agents` to `AgentsPage`
-- [ ] `npm run build` — zero TypeScript errors
+- [x] Wire route `/projects/:id/agents` to `AgentsPage`
+- [x] `npm run build` — zero TypeScript errors
 
 ---
 
