@@ -50,3 +50,8 @@ export async function completeTask(id: string): Promise<void> {
 export async function rejectTask(id: string): Promise<void> {
   await api.post(`/api/worktasks/${id}/reject`)
 }
+
+export async function getWorkTasksByProject(projectId: string): Promise<WorkTaskDto[]> {
+  const { data } = await api.get<WorkTaskDto[]>(`/api/worktasks/by-project/${projectId}`)
+  return data
+}
