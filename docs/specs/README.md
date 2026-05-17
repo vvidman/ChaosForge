@@ -142,6 +142,18 @@ documents:
     title: "SignalR Client and Real-Time State"
     status: done
     date: "2026-04-21"
+  - file: 35-fe-project-list.md
+    title: "Project List and Create Page"
+    status: done
+    date: "2026-04-21"
+  - file: 36-fe-project-detail.md
+    title: "Project Detail Shell and Overview Tab"
+    status: done
+    date: "2026-04-21"
+  - file: 37-fe-gate-judge.md
+    title: "Revision Gate Judge Interface"
+    status: done
+    date: "2026-04-21"
 ---
 
 # Feature Specifications
@@ -197,6 +209,9 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 | Frontend Toolchain and Design System | done | 2026-04-21 |
 | API Client Layer and React Query Hooks | done | 2026-04-21 |
 | SignalR Client and Real-Time State | done | 2026-04-21 |
+| Project List and Create Page | done | 2026-04-21 |
+| Project Detail Shell and Overview Tab | done | 2026-04-21 |
+| Revision Gate Judge Interface | done | 2026-04-21 |
 
 ---
 
