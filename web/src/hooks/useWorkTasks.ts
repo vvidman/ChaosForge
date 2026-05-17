@@ -6,6 +6,7 @@ import {
   completeTask,
   createWorkTask,
   getWorkTask,
+  getWorkTasksByProject,
   getWorkTasksBySRS,
   passTesting,
   rejectTask,
@@ -15,12 +16,21 @@ import {
 } from '@/api/worktasks'
 
 const workTasksBySRSKey = (srsId: string) => ['work-tasks', 'by-srs', srsId] as const
+const workTasksByProjectKey = (projectId: string) => ['work-tasks', 'by-project', projectId] as const
 const workTaskKey = (id: string) => ['work-tasks', id] as const
 
 export function useWorkTasksBySRS(srsId: string, enabled = true) {
   return useQuery({
     queryKey: workTasksBySRSKey(srsId),
     queryFn: () => getWorkTasksBySRS(srsId),
+    enabled,
+  })
+}
+
+export function useWorkTasksByProject(projectId: string, enabled = true) {
+  return useQuery({
+    queryKey: workTasksByProjectKey(projectId),
+    queryFn: () => getWorkTasksByProject(projectId),
     enabled,
   })
 }
