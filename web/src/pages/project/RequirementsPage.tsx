@@ -57,7 +57,7 @@ export default function RequirementsPage() {
   }
 
   function handleHumanEditSRS(srsId: string, editedDescription: string, note: string) {
-    editSrsMutation.mutate({ id: srsId, editedDescription: editedDescription, note })
+    editSrsMutation.mutate({ id: srsId, editedDescription, note })
   }
 
   return (
