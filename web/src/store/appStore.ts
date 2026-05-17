@@ -8,19 +8,30 @@ export interface AppNotification {
   variant: 'info' | 'success' | 'error'
 }
 
+export interface AgentEvent {
+  id: string
+  timestamp: string
+  type: 'AgentStatusChanged' | 'WorkTaskStatusChanged'
+  description: string
+}
+
 const MAX_NOTIFICATIONS = 5
+const MAX_AGENT_EVENTS = 50
 
 interface AppState {
   status: ConnectionStatus
   notifications: AppNotification[]
+  agentEvents: AgentEvent[]
   setStatus: (status: ConnectionStatus) => void
   push: (n: Omit<AppNotification, 'id'>) => void
   dismiss: (id: string) => void
+  pushAgentEvent: (e: Omit<AgentEvent, 'id'>) => void
 }
 
 export const useAppStore = create<AppState>((set) => ({
   status: 'disconnected',
   notifications: [],
+  agentEvents: [],
   setStatus: (status) => set({ status }),
   push: (n) =>
     set((state) => {
@@ -31,4 +42,9 @@ export const useAppStore = create<AppState>((set) => ({
     set((state) => ({
       notifications: state.notifications.filter((n) => n.id !== id),
     })),
+  pushAgentEvent: (e) =>
+    set((state) => {
+      const next = [...state.agentEvents, { ...e, id: crypto.randomUUID() }]
+      return { agentEvents: next.length > MAX_AGENT_EVENTS ? next.slice(next.length - MAX_AGENT_EVENTS) : next }
+    }),
 }))
