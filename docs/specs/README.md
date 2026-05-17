@@ -1,6 +1,6 @@
 ---
 category: specs
-last_updated: "2026-04-12"
+last_updated: "2026-05-17"
 documents:
   - file: domain-entities.md
     title: "Domain Entities"
@@ -170,6 +170,10 @@ documents:
     title: "Task Attempt History Tab"
     status: done
     date: "2026-04-21"
+  - file: 42-fe-ux-polish.md
+    title: "Global UX Polish — Loading, Errors, Animations, Accessibility"
+    status: done
+    date: "2026-05-17"
 ---
 
 # Feature Specifications
@@ -233,6 +237,7 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 | Agent Monitor Tab | done | 2026-04-21 |
 | Task Attempt History Tab | done | 2026-04-21 |
 | Requirements Pipeline Tab | done | 2026-04-21 |
+| Global UX Polish — Loading, Errors, Animations, Accessibility | done | 2026-05-17 |
 
 ---
 

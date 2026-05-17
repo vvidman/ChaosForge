@@ -1,9 +1,9 @@
-import { useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { FolderKanban, Zap, Bot, History, ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAppStore } from '@/store/appStore'
 import { ToastContainer } from '@/components/ui/ToastContainer'
+import { PageTransition } from '@/components/layout/PageTransition'
 
 const navItems = [
   { to: '/projects', icon: FolderKanban, label: 'Projects' },
@@ -13,7 +13,8 @@ const navItems = [
 ]
 
 export default function AppLayout() {
-  const [collapsed, setCollapsed] = useState(false)
+  const collapsed = useAppStore((s) => s.sidebarCollapsed)
+  const setSidebarCollapsed = useAppStore((s) => s.setSidebarCollapsed)
   const connectionStatus = useAppStore((s) => s.status)
 
   return (
@@ -31,8 +32,8 @@ export default function AppLayout() {
             <span className="text-forge-500 font-bold text-lg tracking-tight">ChaosForge</span>
           )}
           <button
-            onClick={() => setCollapsed((c) => !c)}
-            className="text-gray-400 hover:text-white transition-colors ml-auto"
+            onClick={() => setSidebarCollapsed(!collapsed)}
+            className="text-gray-400 hover:text-white transition-colors focus-visible:ring-2 focus-visible:ring-forge-500 focus-visible:outline-none rounded ml-auto"
             aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
@@ -48,6 +49,7 @@ export default function AppLayout() {
               className={({ isActive }) =>
                 cn(
                   'flex items-center gap-3 rounded-md px-2 py-2 text-sm font-medium transition-colors',
+                  'focus-visible:ring-2 focus-visible:ring-forge-500 focus-visible:outline-none',
                   isActive
                     ? 'bg-forge-500/10 text-forge-500'
                     : 'text-gray-400 hover:bg-surface-hover hover:text-white'
@@ -80,7 +82,9 @@ export default function AppLayout() {
 
         {/* Content */}
         <main className="flex-1 overflow-auto p-6">
-          <Outlet />
+          <PageTransition>
+            <Outlet />
+          </PageTransition>
         </main>
       </div>
       <ToastContainer />

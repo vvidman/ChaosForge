@@ -1,10 +1,10 @@
 import { useParams } from 'react-router-dom'
-import { Loader2 } from 'lucide-react'
 import { useProject } from '@/hooks/useProjects'
 import { useAgentInstancesByProject } from '@/hooks/useAgentInstances'
 import { AgentGrid } from '@/components/agents/AgentGrid'
 import { EventLog } from '@/components/agents/EventLog'
 import { PhaseIndicatorBanner } from '@/components/agents/PhaseIndicatorBanner'
+import { SkeletonCard } from '@/components/ui/SkeletonCard'
 
 export default function AgentsPage() {
   const { id } = useParams<{ id: string }>()
@@ -13,9 +13,10 @@ export default function AgentsPage() {
 
   if (projectLoading || agentsLoading) {
     return (
-      <div className="flex items-center gap-2 text-gray-400 py-8">
-        <Loader2 size={18} className="animate-spin" />
-        <span>Loading agents…</span>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <SkeletonCard />
+        <SkeletonCard />
+        <SkeletonCard />
       </div>
     )
   }
