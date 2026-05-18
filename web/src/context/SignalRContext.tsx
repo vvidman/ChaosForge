@@ -30,15 +30,20 @@ function dispatchEvent(event: SignalREvent, push: PushFn, pushAgentEvent: PushAg
       if (projectId) queryClient.invalidateQueries({ queryKey: ['projects', projectId] })
       break
 
-    case 'WorkTaskStatusChanged':
-      queryClient.invalidateQueries({ queryKey: ['work-tasks'] })
-      push({ message: 'Task status changed', variant: 'info' })
+    case 'WorkTaskStatusChanged': {
+      const wTaskId = payload['workTaskId'] as string | undefined
+      if (wTaskId) {
+        queryClient.invalidateQueries({ queryKey: ['work-tasks', wTaskId] })
+      }
+      queryClient.invalidateQueries({ queryKey: ['work-tasks', 'by-project'] })
+      push({ message: `Task → ${(payload['newStatus'] as string) ?? ''}`, variant: 'info' })
       pushAgentEvent({
         timestamp: new Date().toISOString(),
         type: 'WorkTaskStatusChanged',
-        description: `Task status → ${(payload['status'] as string) ?? 'unknown'}`,
+        description: `Task status → ${(payload['newStatus'] as string) ?? 'unknown'}`,
       })
       break
+    }
 
     case 'AgentStatusChanged':
       if (projectId)
