@@ -174,6 +174,10 @@ documents:
     title: "Global UX Polish — Loading, Errors, Animations, Accessibility"
     status: done
     date: "2026-05-17"
+  - file: cr-fix-01-worktask-by-project-endpoint.md
+    title: "CR Fix: WorkTask by-project API endpoint"
+    status: done
+    date: "2026-04-25"
   - file: 43-docker.md
     title: "Docker and docker-compose"
     status: ready
@@ -245,6 +249,7 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 | Agent Monitor Tab | done | 2026-04-21 |
 | Task Attempt History Tab | done | 2026-04-21 |
 | Global UX Polish — Loading, Errors, Animations, Accessibility | done | 2026-05-17 |
+| CR Fix: WorkTask by-project API endpoint | done | 2026-04-25 |
 | Docker and docker-compose | ready | 2026-04-21 |
 | Configuration Management and Production Readiness | ready | 2026-04-21 |
 

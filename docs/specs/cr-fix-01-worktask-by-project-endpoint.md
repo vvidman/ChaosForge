@@ -2,7 +2,7 @@
 category: specs
 title: "CR Fix: WorkTask by-project API endpoint"
 branch: "fix-worktask-by-project"
-status: ready
+status: done
 date: "2026-04-25"
 related_domain: [WorkTask]
 related_adr: []
@@ -45,7 +45,7 @@ were ever wired up. The frontend will get 404 errors on both pages until this is
 
 ## Implementation Scope — What must be done
 
-- [ ] Create `Application/WorkTasks/Queries/GetWorkTasksByProjectIdQuery.cs`:
+- [x] Create `Application/WorkTasks/Queries/GetWorkTasksByProjectIdQuery.cs`:
   ```csharp
   public record GetWorkTasksByProjectIdQuery(Guid ProjectId)
       : IRequest<Result<IReadOnlyList<WorkTaskDto>>>;
@@ -64,7 +64,7 @@ were ever wired up. The frontend will get 404 errors on both pages until this is
   ```
   Map all `WorkTaskDto` fields identically to the existing `GetWorkTasksBySRSIdQuery`.
 
-- [ ] Add route to `WorkTaskEndpoints.cs`:
+- [x] Add route to `WorkTaskEndpoints.cs`:
   ```csharp
   group.MapGet("/by-project/{projectId:guid}", async (Guid projectId, IMediator mediator) =>
   {
@@ -75,8 +75,8 @@ were ever wired up. The frontend will get 404 errors on both pages until this is
   });
   ```
 
-- [ ] Run `dotnet build` — zero warnings, zero errors
-- [ ] Run `dotnet test` — all tests pass
+- [x] Run `dotnet build` — zero warnings, zero errors
+- [x] Run `dotnet test` — all tests pass
 
 ---
 
