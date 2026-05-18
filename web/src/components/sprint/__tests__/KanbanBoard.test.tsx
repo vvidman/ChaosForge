@@ -20,7 +20,7 @@ function groupTasksByStatus(tasks: WorkTaskDto[]): Record<WorkTaskStatus, WorkTa
   )
 
   for (const task of tasks) {
-    const col = task.sprintId === null ? 'Backlog' : task.status
+    const col = task.status
     grouped[col].push(task)
   }
 
@@ -59,16 +59,20 @@ describe('KanbanBoard – groupTasksByStatus', () => {
     expect(grouped.InDocumentation).toHaveLength(0)
   })
 
-  it('places tasks with null sprintId into Backlog regardless of status', () => {
-    const tasks: WorkTaskDto[] = [
-      makeTask({ id: '1', sprintId: null, status: 'InProgress' }),
-      makeTask({ id: '2', sprintId: null, status: 'Done' }),
-    ]
+  it('groups a task with sprintId null and status Backlog into the Backlog column', () => {
+    const tasks: WorkTaskDto[] = [makeTask({ id: '1', sprintId: null, status: 'Backlog' })]
     const grouped = groupTasksByStatus(tasks)
 
-    expect(grouped.Backlog).toHaveLength(2)
-    expect(grouped.InProgress).toHaveLength(0)
-    expect(grouped.Done).toHaveLength(0)
+    expect(grouped.Backlog).toHaveLength(1)
+    expect(grouped.Backlog[0].id).toBe('1')
+  })
+
+  it('groups a task with sprintId set and status InReview into the InReview column', () => {
+    const tasks: WorkTaskDto[] = [makeTask({ id: '2', sprintId: 'sprint-42', status: 'InReview' })]
+    const grouped = groupTasksByStatus(tasks)
+
+    expect(grouped.InReview).toHaveLength(1)
+    expect(grouped.InReview[0].id).toBe('2')
   })
 
   it('returns empty arrays for all columns when no tasks', () => {

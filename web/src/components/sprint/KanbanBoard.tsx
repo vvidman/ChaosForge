@@ -25,7 +25,7 @@ export function KanbanBoard({ tasks }: KanbanBoardProps) {
   )
 
   for (const task of tasks) {
-    const col = task.sprintId === null ? 'Backlog' : task.status
+    const col = task.status
     grouped[col].push(task)
   }
 
