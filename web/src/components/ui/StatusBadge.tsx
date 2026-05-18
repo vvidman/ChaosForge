@@ -1,15 +1,14 @@
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
-import type { ProjectStatus } from '@/api/types'
 import { statusConfig } from '@/components/ui/statusConfig'
 
 interface StatusBadgeProps {
-  status: ProjectStatus
+  status: string
   className?: string
 }
 
 export function StatusBadge({ status, className }: StatusBadgeProps) {
-  const config = statusConfig[status]
+  const config = statusConfig[status] ?? { label: status, className: 'border-surface-border text-gray-400' }
 
   return (
     <Badge

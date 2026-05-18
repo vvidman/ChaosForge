@@ -48,3 +48,44 @@ describe('StatusBadge – statusConfig', () => {
     }
   })
 })
+
+describe('StatusBadge – WorkTaskStatus entries', () => {
+  it('Working uses working color class', () => {
+    expect(statusConfig.Working.className).toContain('status-working')
+    expect(statusConfig.Working.label).toBe('Working')
+  })
+
+  it('Blocked uses blocked color class', () => {
+    expect(statusConfig.Blocked.className).toContain('status-blocked')
+    expect(statusConfig.Blocked.label).toBe('Blocked')
+  })
+
+  it('Done uses done color class', () => {
+    expect(statusConfig.Done.className).toContain('status-done')
+    expect(statusConfig.Done.label).toBe('Done')
+  })
+
+  it('Pending uses pending color class', () => {
+    expect(statusConfig.Pending.className).toContain('status-pending')
+    expect(statusConfig.Pending.label).toBe('Pending')
+  })
+})
+
+describe('StatusBadge – AgentInstanceStatus entries', () => {
+  it('Idle uses idle color class', () => {
+    expect(statusConfig.Idle.className).toContain('status-idle')
+    expect(statusConfig.Idle.label).toBe('Idle')
+  })
+
+  it('Finished uses done color class', () => {
+    expect(statusConfig.Finished.className).toContain('status-done')
+    expect(statusConfig.Finished.label).toBe('Finished')
+  })
+})
+
+describe('StatusBadge – fallback for unknown status', () => {
+  it('returns undefined for unknown key (caller applies fallback)', () => {
+    const config = statusConfig['SomeUnknownStatus']
+    expect(config).toBeUndefined()
+  })
+})
