@@ -20,8 +20,8 @@ describe('ErrorBoundary – reset', () => {
     const boundary = new ErrorBoundary({ children: null })
     boundary.state = { error: new Error('stale') }
 
-    let captured: Record<string, unknown> | null = null
-    boundary.setState = (s: Record<string, unknown>) => { captured = s }
+    let captured: { error: Error | null } | null = null
+    boundary.setState = ((s: { error: Error | null }) => { captured = s }) as unknown as typeof boundary.setState
 
     boundary.reset()
     expect(captured).toEqual({ error: null })

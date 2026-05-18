@@ -3,8 +3,7 @@ import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr'
 import { queryClient } from '@/lib/queryClient'
 import { useAppStore, type ConnectionStatus } from '@/store/appStore'
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5143'
-const HUB_URL = `${BASE_URL}/hubs/chaosforge`
+const HUB_URL = import.meta.env.VITE_HUB_URL ?? 'http://localhost:5143/hubs/chaosforge'
 
 interface SignalREvent {
   type: string
