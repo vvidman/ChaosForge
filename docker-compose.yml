@@ -1,0 +1,20 @@
+services:
+  chaosforge:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - chaosforge-data:/data
+      - ${LLAMA_MODEL_DIR:-/tmp}:/models:ro
+    environment:
+      - ConnectionStrings__DefaultConnection=Data Source=/data/chaosforge.db
+      - Groq__ApiKey=${GROQ_API_KEY:-}
+      - Groq__Model=${GROQ_MODEL:-llama-3.3-70b-versatile}
+      - LlamaSharp__ModelPath=${LLAMA_MODEL_PATH:-}
+      - LlamaSharp__MaxTokens=${LLAMA_MAX_TOKENS:-512}
+      - Agents__PollingIntervalMs=${POLLING_INTERVAL_MS:-3000}
+
+volumes:
+  chaosforge-data:

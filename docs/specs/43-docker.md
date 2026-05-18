@@ -2,7 +2,7 @@
 category: specs
 title: "Docker and docker-compose"
 branch: "docker"
-status: ready
+status: done
 date: "2026-04-25"
 related_domain: []
 related_adr: []
@@ -128,8 +128,8 @@ POLLING_INTERVAL_MS=3000
 
 ### Frontend: tailwindcss-animate
 
-- [ ] In `ChaosForge/web/`: `npm install tailwindcss-animate`
-- [ ] Register in `web/tailwind.config.ts`:
+- [x] In `ChaosForge/web/`: `npm install tailwindcss-animate`
+- [x] Register in `web/tailwind.config.ts`:
   ```typescript
   plugins: [
     require('@tailwindcss/typography'),
@@ -140,7 +140,7 @@ POLLING_INTERVAL_MS=3000
 
 ### Program.cs: static files wiring
 
-- [ ] Update `src/ChaosForge.API/Program.cs` to serve the React SPA.
+- [x] Update `src/ChaosForge.API/Program.cs` to serve the React SPA.
   The order of middleware and route registration is critical:
 
   ```csharp
@@ -162,14 +162,14 @@ POLLING_INTERVAL_MS=3000
 
 ### Docker files
 
-- [ ] Create `Dockerfile` in `ChaosForge/` using the multi-stage structure above
-- [ ] Create `docker-compose.yml` in `ChaosForge/`
-- [ ] Create `.env.docker.example` in `ChaosForge/`
-- [ ] Update `ChaosForge/.gitignore` to exclude `.env.docker`
+- [x] Create `Dockerfile` in `ChaosForge/` using the multi-stage structure above
+- [x] Create `docker-compose.yml` in `ChaosForge/`
+- [x] Create `.env.docker.example` in `ChaosForge/`
+- [x] Update `ChaosForge/.gitignore` to exclude `.env.docker`
 
 ### Documentation
 
-- [ ] Create `docs/toolchain/docker.md` explaining:
+- [x] Create `docs/toolchain/docker.md` explaining:
   - Prerequisites (Docker, optional: LlamaSharp model file)
   - How to set GROQ_API_KEY (copy `.env.docker.example` → `.env.docker`, fill in key)
   - How to mount a LlamaSharp model file
@@ -177,11 +177,11 @@ POLLING_INTERVAL_MS=3000
 
 ### Verification
 
-- [ ] `npm run build` in `web/` succeeds — zero errors, `animate-in` classes present
+- [x] `npm run build` in `web/` succeeds — zero errors, `animate-in` classes present
 - [ ] `docker compose build` succeeds
 - [ ] `docker compose up` starts, API responds on `http://localhost:8080/api/projects`
 - [ ] Navigate to `http://localhost:8080` in browser — React app loads
-- [ ] `dotnet build` — zero warnings, zero errors
+- [x] `dotnet build` — zero warnings, zero errors
 
 ---
 

@@ -63,6 +63,7 @@ appsettings.Development.json
 appsettings.Local.json
 *.pfx
 *.publishsettings
+.env.docker
 
 ## [ Operációs rendszer ]
 .DS_Store

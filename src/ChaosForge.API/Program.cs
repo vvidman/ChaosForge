@@ -35,6 +35,8 @@ if (builder.Environment.IsDevelopment())
 
 var app = builder.Build();
 
+app.UseStaticFiles();
+
 app.UseExceptionHandler(exceptionHandlerApp =>
 {
     exceptionHandlerApp.Run(async context =>
@@ -84,5 +86,7 @@ app.MapAgentInstanceEndpoints();
 app.MapTaskAttemptEndpoints();
 
 app.MapHub<ChaosForgeHub>("/hubs/chaosforge");
+
+app.MapFallbackToFile("index.html");
 
 app.Run();

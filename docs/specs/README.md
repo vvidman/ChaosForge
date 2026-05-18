@@ -178,9 +178,29 @@ documents:
     title: "CR Fix: WorkTask by-project API endpoint"
     status: done
     date: "2026-04-25"
+  - file: cr-fix-02-env-var-naming.md
+    title: "CR Fix: Env var naming inconsistency in SignalRContext"
+    status: done
+    date: "2026-04-25"
+  - file: cr-fix-05-misc-stale.md
+    title: "CR Fix: RevisionGatePage stale placeholder and hook typo"
+    status: done
+    date: "2026-04-25"
+  - file: cr-fix-03-kanban-grouping.md
+    title: "CR Fix: KanbanBoard incorrect grouping logic"
+    status: done
+    date: "2026-04-25"
+  - file: cr-fix-04-status-badge-generic.md
+    title: "CR Fix: StatusBadge only handles ProjectStatus"
+    status: done
+    date: "2026-04-25"
+  - file: cr-fix-06-signalr-invalidation.md
+    title: "CR Fix: SignalR WorkTaskStatusChanged cache invalidation too broad"
+    status: done
+    date: "2026-04-25"
   - file: 43-docker.md
     title: "Docker and docker-compose"
-    status: ready
+    status: done
     date: "2026-04-21"
   - file: 44-config-prod.md
     title: "Configuration Management and Production Readiness"
@@ -250,7 +270,12 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 | Task Attempt History Tab | done | 2026-04-21 |
 | Global UX Polish — Loading, Errors, Animations, Accessibility | done | 2026-05-17 |
 | CR Fix: WorkTask by-project API endpoint | done | 2026-04-25 |
-| Docker and docker-compose | ready | 2026-04-21 |
+| CR Fix: Env var naming inconsistency in SignalRContext | done | 2026-04-25 |
+| CR Fix: RevisionGatePage stale placeholder and hook typo | done | 2026-04-25 |
+| CR Fix: KanbanBoard incorrect grouping logic | done | 2026-04-25 |
+| CR Fix: StatusBadge only handles ProjectStatus | done | 2026-04-25 |
+| CR Fix: SignalR WorkTaskStatusChanged cache invalidation too broad | done | 2026-04-25 |
+| Docker and docker-compose | done | 2026-04-21 |
 | Configuration Management and Production Readiness | ready | 2026-04-21 |
 
 ---

@@ -1,6 +1,6 @@
 ---
 category: toolchain
-last_updated: "2026-03-29"
+last_updated: "2026-05-18"
 documents:
   - file: llamasharp.md
     covers: ["LlamaSharp", "GGUF", "local model", "CPU inference", "model path", "context size", "llama.cpp"]
@@ -8,6 +8,8 @@ documents:
     covers: ["Groq", "API key", "cloud LLM", "rate limit", "llama-3.3-70b", "quota", "429"]
   - file: ef-migrations.md
     covers: ["EF Core", "migrations", "dotnet ef", "schema", "database update", "migration add", "IDesignTimeDbContextFactory", "SQLite"]
+  - file: docker.md
+    covers: ["Docker", "docker-compose", "container", "static files", "Groq API key", "LlamaSharp model", "production build"]
 ---
 
 # Toolchain
@@ -32,6 +34,10 @@ Load when: setting up Groq for the first time, switching models, or hitting rate
 Full migration workflow: add, apply, revert, and script generation. Naming conventions,
 design-time factory setup, and test database initialization.
 Load when: adding a new entity or field, reverting a migration, or debugging migration errors.
+
+### `docker.md`
+Full-stack Docker setup: build, run, environment variable configuration (Groq key, LlamaSharp model mount), and volume management.
+Load when: running the app in Docker, setting up CI/CD, or troubleshooting container startup.
 
 ---
 
