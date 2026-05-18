@@ -2,7 +2,7 @@
 category: specs
 title: "Configuration Management and Production Readiness"
 branch: "config-prod"
-status: ready
+status: done
 date: "2026-04-25"
 related_domain: []
 related_adr: []
@@ -124,7 +124,7 @@ visible.
 
 ## Implementation Scope — What must be done
 
-- [ ] Create `Infrastructure/LLM/DisabledLlmProvider.cs`:
+- [x] Create `Infrastructure/LLM/DisabledLlmProvider.cs`:
   ```csharp
   internal sealed class DisabledLlmProvider : ILlmProvider
   {
@@ -137,22 +137,22 @@ visible.
   }
   ```
 
-- [ ] Update `Infrastructure/DependencyInjection.AddLlamaSharpLlmProvider`:
+- [x] Update `Infrastructure/DependencyInjection.AddLlamaSharpLlmProvider`:
   - Check `LlamaSharp:ModelPath` before registering anything (see code above)
   - If path is missing or file does not exist: register `DisabledLlmProvider` keyed as
     `"llama"`, do NOT register `LlamaSharpLlmProvider`
   - Log startup warning via `Console.WriteLine` (acceptable for a hobby project)
   - If path is valid: register `LlamaSharpLlmProvider` as before
 
-- [ ] Remove the `ModelPath` null/empty guard from `LlamaSharpLlmProvider` constructor
+- [x] Remove the `ModelPath` null/empty guard from `LlamaSharpLlmProvider` constructor
   — it is no longer the right place for this check
 
-- [ ] Add connection string guard to `Program.cs` (see code above), placed immediately
+- [x] Add connection string guard to `Program.cs` (see code above), placed immediately
   after `builder.Services.AddInfrastructure(builder.Configuration)`
 
-- [ ] Update `Program.cs` CORS configuration to read `Cors:AllowedOrigins` (see code above)
+- [x] Update `Program.cs` CORS configuration to read `Cors:AllowedOrigins` (see code above)
 
-- [ ] Create `src/ChaosForge.API/appsettings.Production.json`:
+- [x] Create `src/ChaosForge.API/appsettings.Production.json`:
   ```json
   {
     "Logging": {
@@ -168,7 +168,7 @@ visible.
   }
   ```
 
-- [ ] Create `docs/toolchain/configuration.md` with a table of all config keys:
+- [x] Create `docs/toolchain/configuration.md` with a table of all config keys:
 
   | Key | Type | Required | Default | Notes |
   |---|---|---|---|---|
@@ -180,7 +180,7 @@ visible.
   | `Agents:PollingIntervalMs` | int | No | `3000` | Agent poll interval in ms |
   | `Cors:AllowedOrigins` | string[] | No | `[]` | Empty = allow all origins |
 
-- [ ] `dotnet build` — zero warnings, zero errors
+- [x] `dotnet build` — zero warnings, zero errors
 - [ ] Verify: app starts with empty `LlamaSharp:ModelPath` — logs warning, continues
 - [ ] Verify: app fails to start with missing `ConnectionStrings:DefaultConnection` —
   shows the descriptive error message

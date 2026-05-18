@@ -14,10 +14,21 @@
    limitations under the License.
 */
 
-// LlamaSharpLlmProvider requires a real GGUF model file to construct.
-// ModelPath validation has moved to DependencyInjection.AddLlamaSharpLlmProvider —
-// tested via DisabledLlmProviderTests and integration tests.
+using ChaosForge.Infrastructure.LLM;
+using FluentAssertions;
 
 namespace ChaosForge.Infrastructure.Tests.LLM;
 
-public sealed class LlamaSharpLlmProviderTests;
+public sealed class DisabledLlmProviderTests
+{
+    [Fact]
+    public async Task CompleteAsync_AlwaysThrows_InvalidOperationException()
+    {
+        var provider = new DisabledLlmProvider();
+
+        var act = async () => await provider.CompleteAsync("system", "user");
+
+        await act.Should().ThrowAsync<InvalidOperationException>()
+            .WithMessage("*LlamaSharp*not configured*");
+    }
+}

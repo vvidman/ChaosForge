@@ -14,10 +14,16 @@
    limitations under the License.
 */
 
-// LlamaSharpLlmProvider requires a real GGUF model file to construct.
-// ModelPath validation has moved to DependencyInjection.AddLlamaSharpLlmProvider —
-// tested via DisabledLlmProviderTests and integration tests.
+using ChaosForge.Application.Abstractions;
 
-namespace ChaosForge.Infrastructure.Tests.LLM;
+namespace ChaosForge.Infrastructure.LLM;
 
-public sealed class LlamaSharpLlmProviderTests;
+internal sealed class DisabledLlmProvider : ILlmProvider
+{
+    public Task<string> CompleteAsync(
+        string systemPrompt,
+        string userPrompt,
+        CancellationToken cancellationToken = default)
+        => throw new InvalidOperationException(
+            "LlamaSharp is not configured. Set LlamaSharp:ModelPath to a valid GGUF model file.");
+}

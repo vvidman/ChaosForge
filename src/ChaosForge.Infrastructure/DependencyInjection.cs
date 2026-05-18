@@ -94,8 +94,20 @@ public static class DependencyInjection
     {
         services.Configure<LlamaSharpOptions>(configuration.GetSection("LlamaSharp"));
 
-        services.AddSingleton<LlamaSharpLlmProvider>();
-        services.AddKeyedSingleton<ILlmProvider>("llama", (sp, _) => sp.GetRequiredService<LlamaSharpLlmProvider>());
+        var modelPath = configuration["LlamaSharp:ModelPath"];
+        var modelExists = !string.IsNullOrWhiteSpace(modelPath) && File.Exists(modelPath);
+
+        if (!modelExists)
+        {
+            services.AddKeyedSingleton<ILlmProvider>("llama", (_, _) => new DisabledLlmProvider());
+            Console.WriteLine("[WARN] LlamaSharp model not found — local inference disabled.");
+        }
+        else
+        {
+            services.AddSingleton<LlamaSharpLlmProvider>();
+            services.AddKeyedSingleton<ILlmProvider>("llama",
+                (sp, _) => sp.GetRequiredService<LlamaSharpLlmProvider>());
+        }
 
         services.AddScoped<ILlmProviderSelector, LlmProviderSelector>();
 

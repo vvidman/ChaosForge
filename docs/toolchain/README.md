@@ -10,6 +10,8 @@ documents:
     covers: ["EF Core", "migrations", "dotnet ef", "schema", "database update", "migration add", "IDesignTimeDbContextFactory", "SQLite"]
   - file: docker.md
     covers: ["Docker", "docker-compose", "container", "static files", "Groq API key", "LlamaSharp model", "production build"]
+  - file: configuration.md
+    covers: ["configuration", "appsettings", "environment variables", "ConnectionStrings", "Groq", "LlamaSharp", "CORS", "AllowedOrigins", "PollingIntervalMs"]
 ---
 
 # Toolchain
@@ -38,6 +40,10 @@ Load when: adding a new entity or field, reverting a migration, or debugging mig
 ### `docker.md`
 Full-stack Docker setup: build, run, environment variable configuration (Groq key, LlamaSharp model mount), and volume management.
 Load when: running the app in Docker, setting up CI/CD, or troubleshooting container startup.
+
+### `configuration.md`
+Full config key reference table: types, defaults, required/optional, env var mapping, and startup behaviour.
+Load when: setting up the app for the first time, debugging a startup error, or configuring CORS for production.
 
 ---
 

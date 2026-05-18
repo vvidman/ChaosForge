@@ -31,19 +31,6 @@ internal sealed class LlamaSharpLlmProvider : ILlmProvider, IDisposable
     public LlamaSharpLlmProvider(IOptions<LlamaSharpOptions> options)
     {
         var opts = options.Value;
-
-        if (string.IsNullOrWhiteSpace(opts.ModelPath))
-        {
-            throw new InvalidOperationException(
-                "LlamaSharp:ModelPath is not configured. Provide a valid path to a GGUF model file.");
-        }
-
-        if (!File.Exists(opts.ModelPath))
-        {
-            throw new InvalidOperationException(
-                $"LlamaSharp model file not found at '{opts.ModelPath}'.");
-        }
-
         _maxTokens = opts.MaxTokens;
         _modelParams = new ModelParams(opts.ModelPath);
         _weights = LLamaWeights.LoadFromFile(_modelParams);

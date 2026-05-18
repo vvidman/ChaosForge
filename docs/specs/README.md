@@ -204,7 +204,7 @@ documents:
     date: "2026-04-21"
   - file: 44-config-prod.md
     title: "Configuration Management and Production Readiness"
-    status: ready
+    status: done
     date: "2026-04-21"
 ---
 
@@ -276,7 +276,7 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 | CR Fix: StatusBadge only handles ProjectStatus | done | 2026-04-25 |
 | CR Fix: SignalR WorkTaskStatusChanged cache invalidation too broad | done | 2026-04-25 |
 | Docker and docker-compose | done | 2026-04-21 |
-| Configuration Management and Production Readiness | ready | 2026-04-21 |
+| Configuration Management and Production Readiness | done | 2026-04-21 |
 
 ---
 
