@@ -80,11 +80,11 @@ documents:
     date: "2026-04-07"
   - file: 19-llm-provider-groq.md
     title: "ILlmProvider Abstraction and Groq Client"
-    status: done
+    status: superseded
     date: "2026-04-07"
   - file: 20-llm-provider-llamasharp.md
     title: "LlamaSharp Local LLM Provider"
-    status: done
+    status: superseded
     date: "2026-04-07"
   - file: 21-agent-worker-base.md
     title: "Agent Worker Base Infrastructure"
@@ -206,6 +206,10 @@ documents:
     title: "Configuration Management and Production Readiness"
     status: done
     date: "2026-04-21"
+  - file: 45-llm-provider-inferrouter.md
+    title: "InferRouter LLM Provider"
+    status: done
+    date: "2026-07-07"
 ---
 
 # Feature Specifications
@@ -221,6 +225,7 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 - `ready` — approved and ready for implementation
 - `in-progress` — implementation has started
 - `done` — feature is implemented and merged
+- `superseded` — replaced by a newer spec; kept for historical reference
 
 ## Documents
 
@@ -245,8 +250,8 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 | AgentSlot, AgentInstance and TaskAttempt Commands | done | 2026-04-07 |
 | Remaining API Endpoints | done | 2026-04-07 |
 | Domain Event Dispatcher | done | 2026-04-07 |
-| ILlmProvider Abstraction and Groq Client | done | 2026-04-07 |
-| LlamaSharp Local LLM Provider | done | 2026-04-07 |
+| ILlmProvider Abstraction and Groq Client | superseded | 2026-04-07 |
+| LlamaSharp Local LLM Provider | superseded | 2026-04-07 |
 | Agent Worker Base Infrastructure | done | 2026-04-12 |
 | BusinessAnalyst Agent Worker | done | 2026-04-12 |
 | Architect Agent Worker | done | 2026-04-12 |
@@ -277,6 +282,7 @@ Once a feature is fully implemented and merged, its spec is kept for historical 
 | CR Fix: SignalR WorkTaskStatusChanged cache invalidation too broad | done | 2026-04-25 |
 | Docker and docker-compose | done | 2026-04-21 |
 | Configuration Management and Production Readiness | done | 2026-04-21 |
+| InferRouter LLM Provider | done | 2026-07-07 |
 
 ---
 

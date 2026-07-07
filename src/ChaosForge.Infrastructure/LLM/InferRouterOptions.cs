@@ -14,16 +14,9 @@
    limitations under the License.
 */
 
-using ChaosForge.Application.Abstractions;
-
 namespace ChaosForge.Infrastructure.LLM;
 
-internal sealed class DisabledLlmProvider : ILlmProvider
+public sealed class InferRouterOptions
 {
-    public Task<string> CompleteAsync(
-        string systemPrompt,
-        string userPrompt,
-        CancellationToken cancellationToken = default)
-        => throw new InvalidOperationException(
-            "LlamaSharp is not configured. Set LlamaSharp:ModelPath to a valid GGUF model file.");
+    public string BaseUrl { get; init; } = string.Empty;
 }

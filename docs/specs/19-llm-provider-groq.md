@@ -2,13 +2,15 @@
 category: specs
 title: "ILlmProvider Abstraction and Groq Client"
 branch: "llm-groq"
-status: done
+status: superseded
 date: "2026-04-07"
 related_domain: []
-related_adr: [004-illmprovider-abstraction, 007-llamasharp-vs-ollama]
+related_adr: [004-illmprovider-abstraction, 007-llamasharp-vs-ollama, 011-inferrouter-integration]
 ---
 
 # Feature Spec — ILlmProvider Abstraction and Groq Client
+
+> Superseded by [spec 45](45-llm-provider-inferrouter.md) and [ADR-011](../adr/011-inferrouter-integration.md) — `GroqLlmProvider` was replaced by `InferRouterLlmProvider`.
 
 <!-- Reference this file in the implementation agent with: implement @docs/specs/19-llm-provider-groq.md -->
 

@@ -24,26 +24,26 @@ namespace ChaosForge.Infrastructure.Tests.LLM;
 
 public sealed class LlmProviderSelectorTests
 {
-    private readonly ILlmProvider _groqProvider = Substitute.For<ILlmProvider>();
-    private readonly ILlmProvider _llamaProvider = Substitute.For<ILlmProvider>();
+    private readonly ILlmProvider _cloudProvider = Substitute.For<ILlmProvider>();
+    private readonly ILlmProvider _localProvider = Substitute.For<ILlmProvider>();
     private readonly LlmProviderSelector _selector;
 
     public LlmProviderSelectorTests()
     {
-        _selector = new LlmProviderSelector(_groqProvider, _llamaProvider);
+        _selector = new LlmProviderSelector(_cloudProvider, _localProvider);
     }
 
     [Theory]
     [InlineData(AgentRole.BusinessAnalyst)]
     [InlineData(AgentRole.Architect)]
     [InlineData(AgentRole.ScrumMaster)]
-    public void GetProviderForRole_WithGroqRole_ReturnsGroqProvider(AgentRole role)
+    public void GetProviderForRole_WithCloudPreferredRole_ReturnsCloudProvider(AgentRole role)
     {
         // Act
         var result = _selector.GetProviderForRole(role);
 
         // Assert
-        result.Should().BeSameAs(_groqProvider);
+        result.Should().BeSameAs(_cloudProvider);
     }
 
     [Theory]
@@ -51,12 +51,12 @@ public sealed class LlmProviderSelectorTests
     [InlineData(AgentRole.Tester)]
     [InlineData(AgentRole.Reviewer)]
     [InlineData(AgentRole.TechnicalWriter)]
-    public void GetProviderForRole_WithLlamaRole_ReturnsLlamaProvider(AgentRole role)
+    public void GetProviderForRole_WithLocalPreferredRole_ReturnsLocalProvider(AgentRole role)
     {
         // Act
         var result = _selector.GetProviderForRole(role);
 
         // Assert
-        result.Should().BeSameAs(_llamaProvider);
+        result.Should().BeSameAs(_localProvider);
     }
 }
