@@ -14,7 +14,6 @@
    limitations under the License.
 */
 
-using System.Net.Http.Headers;
 using System.Text.Json.Serialization;
 using ChaosForge.Application.Abstractions;
 using ChaosForge.Domain.Events;
@@ -28,6 +27,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace ChaosForge.Infrastructure;
 
@@ -60,54 +60,35 @@ public static class DependencyInjection
         services.AddMediatR(cfg =>
             cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
 
-        services.AddGroqLlmProvider(configuration);
-        services.AddLlamaSharpLlmProvider(configuration);
+        services.AddInferRouterLlmProvider(configuration);
         services.AddAgentWorkers(configuration);
 
         return services;
     }
 
-    private static IServiceCollection AddGroqLlmProvider(
+    private const string InferRouterHttpClientName = "InferRouter";
+
+    private static IServiceCollection AddInferRouterLlmProvider(
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.Configure<GroqOptions>(configuration.GetSection("Groq"));
+        services.Configure<InferRouterOptions>(configuration.GetSection("InferRouter"));
 
-        var apiKey = configuration["Groq:ApiKey"] ?? string.Empty;
-
-        services.AddHttpClient<GroqLlmProvider>(client =>
+        services.AddHttpClient(InferRouterHttpClientName, (sp, client) =>
         {
-            client.BaseAddress = new Uri("https://api.groq.com");
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", apiKey);
+            var options = sp.GetRequiredService<IOptions<InferRouterOptions>>().Value;
+            client.BaseAddress = new Uri(options.BaseUrl);
         });
 
-        services.AddScoped<ILlmProvider>(sp => sp.GetRequiredService<GroqLlmProvider>());
-        services.AddKeyedScoped<ILlmProvider>("groq", (sp, _) => sp.GetRequiredService<GroqLlmProvider>());
+        services.AddKeyedScoped<ILlmProvider>("cloud-preferred", (sp, _) =>
+            new InferRouterLlmProvider(
+                sp.GetRequiredService<IHttpClientFactory>().CreateClient(InferRouterHttpClientName),
+                preferredProviderName: "groq"));
 
-        return services;
-    }
-
-    private static IServiceCollection AddLlamaSharpLlmProvider(
-        this IServiceCollection services,
-        IConfiguration configuration)
-    {
-        services.Configure<LlamaSharpOptions>(configuration.GetSection("LlamaSharp"));
-
-        var modelPath = configuration["LlamaSharp:ModelPath"];
-        var modelExists = !string.IsNullOrWhiteSpace(modelPath) && File.Exists(modelPath);
-
-        if (!modelExists)
-        {
-            services.AddKeyedSingleton<ILlmProvider>("llama", (_, _) => new DisabledLlmProvider());
-            Console.WriteLine("[WARN] LlamaSharp model not found — local inference disabled.");
-        }
-        else
-        {
-            services.AddSingleton<LlamaSharpLlmProvider>();
-            services.AddKeyedSingleton<ILlmProvider>("llama",
-                (sp, _) => sp.GetRequiredService<LlamaSharpLlmProvider>());
-        }
+        services.AddKeyedScoped<ILlmProvider>("local-preferred", (sp, _) =>
+            new InferRouterLlmProvider(
+                sp.GetRequiredService<IHttpClientFactory>().CreateClient(InferRouterHttpClientName),
+                preferredProviderName: "local-llama"));
 
         services.AddScoped<ILlmProviderSelector, LlmProviderSelector>();
 

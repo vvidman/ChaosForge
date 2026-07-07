@@ -22,27 +22,27 @@ namespace ChaosForge.Infrastructure.LLM;
 
 internal sealed class LlmProviderSelector : ILlmProviderSelector
 {
-    private readonly ILlmProvider _groq;
-    private readonly ILlmProvider _llama;
+    private readonly ILlmProvider _cloudPreferred;
+    private readonly ILlmProvider _localPreferred;
 
     public LlmProviderSelector(
-        [FromKeyedServices("groq")] ILlmProvider groq,
-        [FromKeyedServices("llama")] ILlmProvider llama)
+        [FromKeyedServices("cloud-preferred")] ILlmProvider cloudPreferred,
+        [FromKeyedServices("local-preferred")] ILlmProvider localPreferred)
     {
-        _groq = groq;
-        _llama = llama;
+        _cloudPreferred = cloudPreferred;
+        _localPreferred = localPreferred;
     }
 
     public ILlmProvider GetProviderForRole(AgentRole role) =>
         role switch
         {
-            AgentRole.BusinessAnalyst => _groq,
-            AgentRole.Architect => _groq,
-            AgentRole.ScrumMaster => _groq,
-            AgentRole.Developer => _llama,
-            AgentRole.Tester => _llama,
-            AgentRole.Reviewer => _llama,
-            AgentRole.TechnicalWriter => _llama,
+            AgentRole.BusinessAnalyst => _cloudPreferred,
+            AgentRole.Architect => _cloudPreferred,
+            AgentRole.ScrumMaster => _cloudPreferred,
+            AgentRole.Developer => _localPreferred,
+            AgentRole.Tester => _localPreferred,
+            AgentRole.Reviewer => _localPreferred,
+            AgentRole.TechnicalWriter => _localPreferred,
             _ => throw new ArgumentOutOfRangeException(nameof(role), role, "No provider mapped for the given AgentRole.")
         };
 }

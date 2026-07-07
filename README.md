@@ -45,8 +45,7 @@ flowchart TD
         App -->|IDomainEventDispatcher| Dispatcher
         Dispatcher -->|SignalR| React[React Frontend]
         Dispatcher -->|Orchestration handlers| Workers[Agent BackgroundServices]
-        Workers -->|ILLMProvider| Groq[Groq — complex roles]
-        Workers -->|ILLMProvider| Llama[LlamaSharp — repetitive roles]
+        Workers -->|ILLMProvider| InferRouter[InferRouter — role-preferred routing]
     end
 
     Human -->|HTTP| API
@@ -111,15 +110,14 @@ Singleton constraints (BA, Architect, Scrum Master) are enforced at the domain l
 
 ```
 ILLMProvider
-├── GroqLlmProvider          — Groq API, Llama 3.3 70B (complex reasoning roles)
-├── LlamaSharpLlmProvider    — CPU-only in-process GGUF inference (repetitive roles)
-└── OpenAICompatibleProvider — any OpenAI-compatible endpoint (fallback)
+└── InferRouterLlmProvider — calls InferRouter's /v1/chat/completions,
+                             two keyed instances differ only by preferred_provider_name
 ```
 
-| Roles | Provider | Rationale |
-|---|---|---|
-| BA, Architect, Scrum Master | Groq (free tier) | Deep reasoning, structured output — latency acceptable |
-| Developer, Tester, Reviewer, Technical Writer | LlamaSharp | Repetitive cycles, CPU-feasible, offline-capable |
+| Roles | Keyed provider | Preferred provider name | Rationale |
+|---|---|---|---|
+| BA, Architect, Scrum Master | `cloud-preferred` | `groq` | Deep reasoning, structured output — latency acceptable |
+| Developer, Tester, Reviewer, Technical Writer | `local-preferred` | `local-llama` | Repetitive cycles, CPU-feasible, offline-capable |
 
 ---
 
@@ -129,8 +127,7 @@ ILLMProvider
 - **Frontend:** React, Vite, TypeScript
 - **Real-time:** ASP.NET Core SignalR
 - **ORM/DB:** EF Core + SQLite — zero external infrastructure
-- **Local LLM:** LlamaSharp (llama.cpp bindings, CPU-only, GGUF models)
-- **Cloud LLM:** Groq API free tier (Llama 3.3 70B)
+- **LLM routing:** InferRouter (companion service) — OpenAI-compatible `/v1/chat/completions`, multi-provider fallback
 - **CQRS dispatch:** MediatR with FluentValidation pipeline behaviors
 - **Testing:** xUnit, FluentAssertions, NSubstitute
 
@@ -154,7 +151,7 @@ ILLMProvider
 
 ## Getting Started
 
-**Prerequisites:** .NET 10 SDK, Node.js 20+, Groq API key (free at [console.groq.com](https://console.groq.com)), a GGUF model file for LlamaSharp.
+**Prerequisites:** .NET 10 SDK, Node.js 20+, an InferRouter instance running and reachable on the local network.
 
 ```bash
 git clone https://github.com/vvidman/ChaosForge.git
@@ -170,10 +167,7 @@ Edit the file:
 
 ```json
 {
-  "LLMProviders": {
-    "Groq": { "ApiKey": "YOUR_GROQ_API_KEY" },
-    "LlamaSharp": { "ModelPath": "/path/to/model.gguf" }
-  }
+  "InferRouter": { "BaseUrl": "http://<your-inferrouter-host>:5100" }
 }
 ```
 

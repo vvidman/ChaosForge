@@ -2,7 +2,7 @@
 category: specs
 title: "InferRouter LLM Provider"
 branch: "llm-router"
-status: ready
+status: done
 date: "2026-07-07"
 related_domain: []
 related_adr: [011-inferrouter-integration]
@@ -81,20 +81,20 @@ Specs 19 and 20 implemented `ILlmProvider` via two direct SDK integrations: `Gro
 
 ## Implementation Scope — What must be done
 
-- [ ] Remove `GroqLlmProvider`, `GroqOptions`, and their DI registration
-- [ ] Remove `LlamaSharpLlmProvider`, `LlamaSharpOptions`, and their DI registration (and the `LLamaSharp` NuGet package reference if nothing else in the project uses it)
-- [ ] Add `InferRouterOptions` and bind it from the `"InferRouter"` config section
-- [ ] Implement `InferRouterLlmProvider : ILlmProvider` calling `/v1/chat/completions`, using the `OpenAiChatRequest`/`OpenAiChatResponse` DTOs defined above
-- [ ] Register `InferRouterLlmProvider` as a typed `HttpClient`, and expose it via two keyed `ILlmProvider` registrations (`"cloud-preferred"`, `"local-preferred"`)
-- [ ] Update `LlmProviderSelector` to resolve the new keys; role-to-provider mapping itself does not change
-- [ ] Update `appsettings.Development.example.json`: remove `Groq` and `LlamaSharp` sections, add `InferRouter: { "BaseUrl": "http://<your-inferrouter-host>:5100" }` (placeholder, not a real address); set the real address only in the git-ignored `appsettings.Development.json`
-- [ ] Delete `GroqLlmProviderTests.cs` and the LlamaSharp provider test file; add `InferRouterLlmProviderTests.cs` (see Test Expectations)
-- [ ] Update `LlmProviderSelector` tests to assert the new keyed resolution
-- [ ] Update `docs/architecture/llm-strategy.md` to describe the InferRouter-backed design instead of the Groq/LlamaSharp split
-- [ ] Update the root `README.md`: architecture Mermaid diagram (single `InferRouter` node instead of separate `Groq`/`Llama` nodes) and "Getting Started" prerequisites (InferRouter running and reachable, instead of a Groq API key and a local GGUF file)
-- [ ] Set `docs/specs/19-llm-provider-groq.md` and `docs/specs/20-llm-provider-llamasharp.md` frontmatter `status: superseded`, add `related_adr: [011-inferrouter-integration]`, and add a one-line note at the top of each pointing to this spec and to ADR-011
-- [ ] Update `docs/specs/README.md`: add this spec's row/frontmatter entry (status `ready`, to be flipped to `done` per the normal workflow), and update the status column for specs 19 and 20 to `superseded`
-- [ ] Update `docs/adr/README.md`: add the ADR-011 frontmatter entry and table row
+- [x] Remove `GroqLlmProvider`, `GroqOptions`, and their DI registration
+- [x] Remove `LlamaSharpLlmProvider`, `LlamaSharpOptions`, and their DI registration (and the `LLamaSharp` NuGet package reference if nothing else in the project uses it)
+- [x] Add `InferRouterOptions` and bind it from the `"InferRouter"` config section
+- [x] Implement `InferRouterLlmProvider : ILlmProvider` calling `/v1/chat/completions`, using the `OpenAiChatRequest`/`OpenAiChatResponse` DTOs defined above
+- [x] Register `InferRouterLlmProvider` as a typed `HttpClient`, and expose it via two keyed `ILlmProvider` registrations (`"cloud-preferred"`, `"local-preferred"`)
+- [x] Update `LlmProviderSelector` to resolve the new keys; role-to-provider mapping itself does not change
+- [x] Update `appsettings.Development.example.json`: remove `Groq` and `LlamaSharp` sections, add `InferRouter: { "BaseUrl": "http://<your-inferrouter-host>:5100" }` (placeholder, not a real address); set the real address only in the git-ignored `appsettings.Development.json`
+- [x] Delete `GroqLlmProviderTests.cs` and the LlamaSharp provider test file; add `InferRouterLlmProviderTests.cs` (see Test Expectations)
+- [x] Update `LlmProviderSelector` tests to assert the new keyed resolution
+- [x] Update `docs/architecture/llm-strategy.md` to describe the InferRouter-backed design instead of the Groq/LlamaSharp split
+- [x] Update the root `README.md`: architecture Mermaid diagram (single `InferRouter` node instead of separate `Groq`/`Llama` nodes) and "Getting Started" prerequisites (InferRouter running and reachable, instead of a Groq API key and a local GGUF file)
+- [x] Set `docs/specs/19-llm-provider-groq.md` and `docs/specs/20-llm-provider-llamasharp.md` frontmatter `status: superseded`, add `related_adr: [011-inferrouter-integration]`, and add a one-line note at the top of each pointing to this spec and to ADR-011
+- [x] Update `docs/specs/README.md`: add this spec's row/frontmatter entry (status `ready`, to be flipped to `done` per the normal workflow), and update the status column for specs 19 and 20 to `superseded`
+- [x] Update `docs/adr/README.md`: add the ADR-011 frontmatter entry and table row
 
 ## Out of Scope — What must NOT be done
 

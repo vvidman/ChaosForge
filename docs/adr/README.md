@@ -41,7 +41,11 @@ documents:
   - file: 010-revision-gate-type-naming.md
     title: "RevisionGateType naming: phase-centric over agent-centric"
     status: accepted
-    date: "2026-04-12"	
+    date: "2026-04-12"
+  - file: 011-inferrouter-integration.md
+    title: "Route LLM calls through InferRouter instead of direct provider SDKs"
+    status: accepted
+    date: "2026-07-07"
 ---
 
 # Architecture Decision Records
@@ -70,6 +74,7 @@ principle, the ADR wins.
 | 008 | SQLite with EF Core for persistence | accepted | 2026-03-29 |
 | 009 | SignalR for real-time agent event delivery | accepted | 2026-03-29 |
 | 010 | RevisionGateType naming: phase-centric over agent-centric | accepted | 2026-04-12 |
+| 011 | Route LLM calls through InferRouter instead of direct provider SDKs | accepted | 2026-07-07 |
 
 ---
 
