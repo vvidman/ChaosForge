@@ -62,9 +62,6 @@ internal sealed class TesterWorker : AgentWorkerBase
     protected override async Task ExecuteWorkAsync(IServiceScope scope, AgentInstance instance, CancellationToken ct)
     {
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-        var useCaseRepo = scope.ServiceProvider.GetRequiredService<IUseCaseRepository>();
-        var ursRepo = scope.ServiceProvider.GetRequiredService<IURSRepository>();
-        var srsRepo = scope.ServiceProvider.GetRequiredService<ISRSRepository>();
         var workTaskRepo = scope.ServiceProvider.GetRequiredService<IWorkTaskRepository>();
         var taskAttemptRepo = scope.ServiceProvider.GetRequiredService<ITaskAttemptRepository>();
         var llmSelector = scope.ServiceProvider.GetRequiredService<ILlmProviderSelector>();
@@ -73,7 +70,8 @@ internal sealed class TesterWorker : AgentWorkerBase
         var projectId = instance.ProjectId;
 
         // Step 1: find first InTesting task for this project
-        var task = await FindEligibleTaskAsync(projectId, useCaseRepo, ursRepo, srsRepo, workTaskRepo, ct);
+        var allTasks = await workTaskRepo.GetByProjectIdAsync(projectId, ct);
+        var task = allTasks.FirstOrDefault(t => t.Status == WorkTaskStatus.InTesting);
 
         if (task is null)
         {
@@ -134,38 +132,4 @@ internal sealed class TesterWorker : AgentWorkerBase
     // Exposed for unit testing via InternalsVisibleTo — do not call from production code.
     internal Task InvokeExecuteWorkAsync(IServiceScope scope, AgentInstance instance, CancellationToken ct)
         => ExecuteWorkAsync(scope, instance, ct);
-
-    private static async Task<WorkTask?> FindEligibleTaskAsync(
-        Guid projectId,
-        IUseCaseRepository useCaseRepo,
-        IURSRepository ursRepo,
-        ISRSRepository srsRepo,
-        IWorkTaskRepository workTaskRepo,
-        CancellationToken ct)
-    {
-        var useCases = await useCaseRepo.GetByProjectIdAsync(projectId, ct);
-
-        foreach (var useCase in useCases)
-        {
-            var ursList = await ursRepo.GetByUseCaseIdAsync(useCase.Id, ct);
-
-            foreach (var urs in ursList)
-            {
-                var srsList = await srsRepo.GetByURSIdAsync(urs.Id, ct);
-
-                foreach (var srs in srsList)
-                {
-                    var tasks = await workTaskRepo.GetBySRSIdAsync(srs.Id, ct);
-                    var eligible = tasks.FirstOrDefault(t => t.Status == WorkTaskStatus.InTesting);
-
-                    if (eligible is not null)
-                    {
-                        return eligible;
-                    }
-                }
-            }
-        }
-
-        return null;
-    }
 }

@@ -53,6 +53,17 @@ public static class WorkTaskEndpoints
             return result.IsSuccess ? Results.Ok(result.Value) : Results.BadRequest(new { error = result.Error });
         });
 
+        group.MapGet("/by-project/{projectId:guid}", async (
+            Guid projectId,
+            IMediator mediator,
+            CancellationToken ct) =>
+        {
+            var query = new GetWorkTasksByProjectIdQuery(projectId);
+            var result = await mediator.Send(query, ct);
+
+            return result.IsSuccess ? Results.Ok(result.Value) : Results.BadRequest(new { error = result.Error });
+        });
+
         group.MapGet("/by-sprint/{sprintId:guid}", async (
             Guid sprintId,
             IMediator mediator,

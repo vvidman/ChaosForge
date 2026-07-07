@@ -36,9 +36,6 @@ namespace ChaosForge.Infrastructure.Tests.Agents;
 public sealed class TechnicalWriterWorkerTests
 {
     private readonly IMediator _mediator = Substitute.For<IMediator>();
-    private readonly IUseCaseRepository _useCaseRepo = Substitute.For<IUseCaseRepository>();
-    private readonly IURSRepository _ursRepo = Substitute.For<IURSRepository>();
-    private readonly ISRSRepository _srsRepo = Substitute.For<ISRSRepository>();
     private readonly IWorkTaskRepository _workTaskRepo = Substitute.For<IWorkTaskRepository>();
     private readonly ITaskAttemptRepository _taskAttemptRepo = Substitute.For<ITaskAttemptRepository>();
     private readonly ILlmProviderSelector _llmSelector = Substitute.For<ILlmProviderSelector>();
@@ -57,9 +54,6 @@ public sealed class TechnicalWriterWorkerTests
 
         var provider = Substitute.For<IServiceProvider>();
         provider.GetService(typeof(IMediator)).Returns(_mediator);
-        provider.GetService(typeof(IUseCaseRepository)).Returns(_useCaseRepo);
-        provider.GetService(typeof(IURSRepository)).Returns(_ursRepo);
-        provider.GetService(typeof(ISRSRepository)).Returns(_srsRepo);
         provider.GetService(typeof(IWorkTaskRepository)).Returns(_workTaskRepo);
         provider.GetService(typeof(ITaskAttemptRepository)).Returns(_taskAttemptRepo);
         provider.GetService(typeof(ILlmProviderSelector)).Returns(_llmSelector);
@@ -71,22 +65,13 @@ public sealed class TechnicalWriterWorkerTests
         _llmSelector.GetProviderForRole(AgentRole.TechnicalWriter).Returns(_llm);
     }
 
-    private (Guid projectId, AgentInstance instance, SRS srs) SetUpProjectHierarchy()
+    private (Guid projectId, AgentInstance instance, Guid srsId) SetUpProjectHierarchy()
     {
         var projectId = Guid.NewGuid();
         var instance = new AgentInstance(projectId, AgentRole.TechnicalWriter, "TW");
-        var useCase = new UseCase(projectId, "Login", "User logs in", 1);
-        var urs = new URS(useCase.Id, "Login URS", "Requirements");
-        var srs = new SRS(urs.Id, "Login SRS", "Technical description");
+        var srsId = Guid.NewGuid();
 
-        _useCaseRepo.GetByProjectIdAsync(projectId, Arg.Any<CancellationToken>())
-            .Returns(new List<UseCase> { useCase }.AsReadOnly());
-        _ursRepo.GetByUseCaseIdAsync(useCase.Id, Arg.Any<CancellationToken>())
-            .Returns(new List<URS> { urs }.AsReadOnly());
-        _srsRepo.GetByURSIdAsync(urs.Id, Arg.Any<CancellationToken>())
-            .Returns(new List<SRS> { srs }.AsReadOnly());
-
-        return (projectId, instance, srs);
+        return (projectId, instance, srsId);
     }
 
     private static WorkTask MakeInDocumentationTask(Guid srsId)
@@ -105,10 +90,10 @@ public sealed class TechnicalWriterWorkerTests
     public async Task ExecuteWorkAsync_HappyPath_ExecutesCompleteCommandSequence()
     {
         // Arrange
-        var (_, instance, srs) = SetUpProjectHierarchy();
-        var task = MakeInDocumentationTask(srs.Id);
+        var (projectId, instance, srsId) = SetUpProjectHierarchy();
+        var task = MakeInDocumentationTask(srsId);
 
-        _workTaskRepo.GetBySRSIdAsync(srs.Id, Arg.Any<CancellationToken>())
+        _workTaskRepo.GetByProjectIdAsync(projectId, Arg.Any<CancellationToken>())
             .Returns(new List<WorkTask> { task }.AsReadOnly());
 
         _taskAttemptRepo.GetByWorkTaskIdAsync(task.Id, Arg.Any<CancellationToken>())
@@ -138,6 +123,11 @@ public sealed class TechnicalWriterWorkerTests
             Arg.Is<CompleteTaskAttemptCommand>(c => c.TaskAttemptId == attemptId),
             Arg.Any<CancellationToken>());
 
+        // Assert — attempt approved
+        await _mediator.Received(1).Send(
+            Arg.Is<ApproveTaskAttemptCommand>(c => c.TaskAttemptId == attemptId),
+            Arg.Any<CancellationToken>());
+
         // Assert — task completed
         await _mediator.Received(1).Send(
             Arg.Is<CompleteWorkTaskCommand>(c => c.WorkTaskId == task.Id),
@@ -153,10 +143,10 @@ public sealed class TechnicalWriterWorkerTests
     public async Task ExecuteWorkAsync_WhenLlmThrows_ReleasesAgentAndLeavesTaskInCurrentStatus()
     {
         // Arrange
-        var (_, instance, srs) = SetUpProjectHierarchy();
-        var task = MakeInDocumentationTask(srs.Id);
+        var (projectId, instance, srsId) = SetUpProjectHierarchy();
+        var task = MakeInDocumentationTask(srsId);
 
-        _workTaskRepo.GetBySRSIdAsync(srs.Id, Arg.Any<CancellationToken>())
+        _workTaskRepo.GetByProjectIdAsync(projectId, Arg.Any<CancellationToken>())
             .Returns(new List<WorkTask> { task }.AsReadOnly());
 
         _taskAttemptRepo.GetByWorkTaskIdAsync(task.Id, Arg.Any<CancellationToken>())

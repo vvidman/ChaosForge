@@ -25,8 +25,18 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+if (string.IsNullOrWhiteSpace(connectionString))
+    throw new InvalidOperationException(
+        "ConnectionStrings:DefaultConnection is required. " +
+        "Set it via appsettings.json or the ConnectionStrings__DefaultConnection environment variable.");
+
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+
+var allowedOrigins = builder.Configuration
+    .GetSection("Cors:AllowedOrigins")
+    .Get<string[]>() ?? [];
 
 if (builder.Environment.IsDevelopment())
 {
@@ -34,6 +44,8 @@ if (builder.Environment.IsDevelopment())
 }
 
 var app = builder.Build();
+
+app.UseStaticFiles();
 
 app.UseExceptionHandler(exceptionHandlerApp =>
 {
@@ -65,7 +77,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+app.UseCors(policy =>
+{
+    if (allowedOrigins.Length > 0)
+        policy.WithOrigins(allowedOrigins).AllowAnyHeader().AllowAnyMethod();
+    else
+        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+});
 
 using (var scope = app.Services.CreateScope())
 {
@@ -84,5 +102,7 @@ app.MapAgentInstanceEndpoints();
 app.MapTaskAttemptEndpoints();
 
 app.MapHub<ChaosForgeHub>("/hubs/chaosforge");
+
+app.MapFallbackToFile("index.html");
 
 app.Run();

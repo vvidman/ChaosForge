@@ -34,7 +34,7 @@ namespace ChaosForge.Infrastructure.Agents;
 /// Background worker for the Architect agent. Runs during <see cref="ProjectStatus.ArchitecturePhase"/>.
 /// For each URS item it generates an SRS via LLM, then decomposes each SRS into WorkTasks via a
 /// second LLM call that returns structured JSON. When complete, opens an
-/// <see cref="RevisionGateType.AfterArchitect"/> gate for human review.
+/// <see cref="RevisionGateType.Architecture"/> gate for human review.
 /// </summary>
 internal sealed class ArchitectWorker : AgentWorkerBase
 {
