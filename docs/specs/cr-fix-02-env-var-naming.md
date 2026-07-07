@@ -2,7 +2,7 @@
 category: specs
 title: "CR Fix: Env var naming inconsistency in SignalRContext"
 branch: "fix-env-var-naming"
-status: ready
+status: done
 date: "2026-04-25"
 related_domain: []
 related_adr: []
@@ -49,7 +49,7 @@ is constructed manually by appending `/hubs/chaosforge` to the base URL.
 
 ## Implementation Scope — What must be done
 
-- [ ] Update `src/context/SignalRContext.tsx`:
+- [x] Update `src/context/SignalRContext.tsx`:
   ```typescript
   // Remove:
   const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5143'
@@ -59,9 +59,9 @@ is constructed manually by appending `/hubs/chaosforge` to the base URL.
   const HUB_URL = import.meta.env.VITE_HUB_URL ?? 'http://localhost:5143/hubs/chaosforge'
   ```
 
-- [ ] Verify `.env.example` already has `VITE_HUB_URL` defined (it does — no change needed)
+- [x] Verify `.env.example` already has `VITE_HUB_URL` defined (it does — no change needed)
 
-- [ ] Run `npm run build` — zero TypeScript errors
+- [x] Run `npm run build` — zero TypeScript errors
 
 ---
 

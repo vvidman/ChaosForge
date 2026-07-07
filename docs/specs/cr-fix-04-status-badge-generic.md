@@ -2,7 +2,7 @@
 category: specs
 title: "CR Fix: StatusBadge only handles ProjectStatus"
 branch: "fix-status-badge-generic"
-status: ready
+status: done
 date: "2026-04-25"
 related_domain: []
 related_adr: []
@@ -78,18 +78,18 @@ Use the existing `status.*` design tokens from `tailwind.config.ts` for colors:
 
 ## Implementation Scope — What must be done
 
-- [ ] Update `src/components/ui/statusConfig.ts` — add all new entries above with
+- [x] Update `src/components/ui/statusConfig.ts` — add all new entries above with
   appropriate Tailwind classes using the design token colors
-- [ ] Update `src/components/ui/StatusBadge.tsx`:
+- [x] Update `src/components/ui/StatusBadge.tsx`:
   - Change prop type from `status: ProjectStatus` to `status: string`
   - Add fallback for unknown status:
     ```typescript
     const config = statusConfig[status] ?? { label: status, className: 'border-surface-border text-gray-400' }
     ```
-- [ ] Update `StatusBadge.test.tsx` to cover at least one `WorkTaskStatus` and one
+- [x] Update `StatusBadge.test.tsx` to cover at least one `WorkTaskStatus` and one
   `AgentInstanceStatus` value
 
-- [ ] Run `npm run build` — zero TypeScript errors
+- [x] Run `npm run build` — zero TypeScript errors
 
 ---
 

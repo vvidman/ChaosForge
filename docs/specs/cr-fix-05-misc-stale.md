@@ -2,7 +2,7 @@
 category: specs
 title: "CR Fix: RevisionGatePage stale placeholder and hook typo"
 branch: "fix-misc-stale"
-status: ready
+status: done
 date: "2026-04-25"
 related_domain: []
 related_adr: []
@@ -48,11 +48,11 @@ imports it, but it will cause issues when connected.
 
 ## Implementation Scope — What must be done
 
-- [ ] Delete `src/pages/RevisionGatePage.tsx`
-- [ ] Rename `useMustateSendToReview` → `useMutateSendToReview` in
+- [x] Delete `src/pages/RevisionGatePage.tsx`
+- [x] Rename `useMustateSendToReview` → `useMutateSendToReview` in
   `src/hooks/useWorkTasks.ts`
-- [ ] Update `src/hooks/index.ts` export if `useMustateSendToReview` is exported there
-- [ ] Run `npm run build` — zero TypeScript errors
+- [x] Update `src/hooks/index.ts` export if `useMustateSendToReview` is exported there
+- [x] Run `npm run build` — zero TypeScript errors
 
 ---
 

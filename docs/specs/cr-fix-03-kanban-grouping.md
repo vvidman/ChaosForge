@@ -2,7 +2,7 @@
 category: specs
 title: "CR Fix: KanbanBoard incorrect grouping logic"
 branch: "fix-kanban-grouping"
-status: ready
+status: done
 date: "2026-04-25"
 related_domain: [WorkTask]
 related_adr: []
@@ -65,7 +65,7 @@ the Backlog column. Done.
 
 ## Implementation Scope — What must be done
 
-- [ ] Update `src/components/sprint/KanbanBoard.tsx`:
+- [x] Update `src/components/sprint/KanbanBoard.tsx`:
   ```typescript
   // Remove:
   const col = task.sprintId === null ? 'Backlog' : task.status
@@ -74,8 +74,8 @@ the Backlog column. Done.
   const col = task.status
   ```
 
-- [ ] Run `npm run build` — zero TypeScript errors
-- [ ] Update the existing `KanbanBoard` unit test to reflect the corrected grouping logic
+- [x] Run `npm run build` — zero TypeScript errors
+- [x] Update the existing `KanbanBoard` unit test to reflect the corrected grouping logic
   (test that tasks are grouped by `status`, not by `sprintId`)
 
 ---

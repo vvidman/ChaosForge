@@ -2,7 +2,7 @@
 category: specs
 title: "CR Fix: SignalR WorkTaskStatusChanged cache invalidation too broad"
 branch: "fix-signalr-invalidation"
-status: ready
+status: done
 date: "2026-04-25"
 related_domain: []
 related_adr: [009-signalr-events]
@@ -87,7 +87,7 @@ This is getting complex. **Practical decision for this spec:**
 
 ## Implementation Scope — What must be done
 
-- [ ] Update `src/context/SignalRContext.tsx`, `WorkTaskStatusChanged` case:
+- [x] Update `src/context/SignalRContext.tsx`, `WorkTaskStatusChanged` case:
   ```typescript
   case 'WorkTaskStatusChanged': {
     const wTaskId = payload['workTaskId'] as string | undefined
@@ -107,7 +107,7 @@ This is getting complex. **Practical decision for this spec:**
   }
   ```
 
-- [ ] Run `npm run build` — zero TypeScript errors
+- [x] Run `npm run build` — zero TypeScript errors
 
 ---
 
