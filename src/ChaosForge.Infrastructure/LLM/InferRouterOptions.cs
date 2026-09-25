@@ -18,5 +18,7 @@ namespace ChaosForge.Infrastructure.LLM;
 
 public sealed class InferRouterOptions
 {
+    public const string SectionName = "InferRouter";
+
     public string BaseUrl { get; init; } = string.Empty;
 }

@@ -1,7 +1,7 @@
 ---
 category: toolchain
 title: Docker
-covers: ["Docker", "docker-compose", "container", "static files", "Groq API key", "LlamaSharp model", "production build"]
+covers: ["Docker", "docker-compose", "container", "static files", "InferRouter", "host.docker.internal", "production build"]
 ---
 
 # Docker
@@ -11,31 +11,27 @@ Runs the full stack (API + React SPA) as a single container on port 8080.
 ## Prerequisites
 
 - Docker Desktop (or Docker Engine + Compose plugin)
-- A Groq API key (optional — app starts without one, LLM calls fail at runtime)
-- A GGUF model file on the host (optional — LlamaSharp is disabled if path is absent)
+- A running InferRouter instance reachable from the container (required — the API
+  refuses to start without `InferRouter:BaseUrl`, see `configuration.md`)
 
 ## Setup
 
+On Windows, `.\Start-ChaosForge.ps1` does the steps below and prompts for anything missing.
+
 ```bash
-# From ChaosForge/ (same directory as docker-compose.yml)
+# From the repository root (same directory as docker-compose.yml)
 cp .env.docker.example .env.docker
 ```
 
-Edit `.env.docker` and set at minimum:
+Edit `.env.docker`:
 
 ```
-GROQ_API_KEY=gsk_...your_key_here...
+INFERROUTER_BASE_URL=http://host.docker.internal:5100
 ```
 
-If you want local LlamaSharp inference, also set:
-
-```
-LLAMA_MODEL_DIR=/absolute/path/to/folder/containing/model
-LLAMA_MODEL_PATH=/models/your-model.gguf
-```
-
-`LLAMA_MODEL_DIR` is the host directory. It is mounted read-only at `/models` inside the
-container. `LLAMA_MODEL_PATH` must use the `/models/...` path (container side).
+The URL is resolved **inside the container**: `localhost` would be the container itself.
+Use `host.docker.internal` for an InferRouter running on the Docker host (the compose file maps
+it via `host-gateway`, so this also works on Linux engines), or a LAN address otherwise.
 
 ## Build and run
 
@@ -49,13 +45,13 @@ docker compose --env-file .env.docker up --build
 ## Stopping
 
 ```bash
-docker compose down
+docker compose --env-file .env.docker down
 ```
 
 Data persists in the `chaosforge-data` named volume. To wipe it:
 
 ```bash
-docker compose down -v
+docker compose --env-file .env.docker down -v
 ```
 
 ## Architecture notes

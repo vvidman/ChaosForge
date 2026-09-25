@@ -76,5 +76,5 @@ for display purposes and tracks its current task assignment.
 
 ## References
 - See ADR-003 for BackgroundService worker design
-- See ADR-004 for ILLMProvider abstraction per role
+- See ADR-004 for ILlmProvider abstraction per role
 - See `agent-design.md` (architecture) for execution mechanics and prompt injection

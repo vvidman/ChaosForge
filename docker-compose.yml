@@ -7,13 +7,12 @@ services:
       - "8080:8080"
     volumes:
       - chaosforge-data:/data
-      - ${LLAMA_MODEL_DIR:-/tmp}:/models:ro
+    extra_hosts:
+      # Makes host.docker.internal resolvable on Linux engines too (built in on Docker Desktop).
+      - "host.docker.internal:host-gateway"
     environment:
       - ConnectionStrings__DefaultConnection=Data Source=/data/chaosforge.db
-      - Groq__ApiKey=${GROQ_API_KEY:-}
-      - Groq__Model=${GROQ_MODEL:-llama-3.3-70b-versatile}
-      - LlamaSharp__ModelPath=${LLAMA_MODEL_PATH:-}
-      - LlamaSharp__MaxTokens=${LLAMA_MAX_TOKENS:-512}
+      - InferRouter__BaseUrl=${INFERROUTER_BASE_URL:?INFERROUTER_BASE_URL must be set in .env.docker}
       - Agents__PollingIntervalMs=${POLLING_INTERVAL_MS:-3000}
 
 volumes:

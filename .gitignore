@@ -67,4 +67,7 @@ appsettings.Local.json
 
 ## [ Operációs rendszer ]
 .DS_Store
-Thumbs.db.claude/worktrees/
+Thumbs.db
+
+## [ Claude Code ]
+.claude/worktrees/

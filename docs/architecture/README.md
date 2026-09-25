@@ -11,7 +11,7 @@ documents:
   - file: agent-design.md
     covers: ["agent roles", "BackgroundService", "AgentWorkerService", "RevisionGate", "TaskAttempt", "ButterflyService", "workflow phases", "task lifecycle"]
   - file: llm-strategy.md
-    covers: ["ILLMProvider", "LlamaSharp", "Groq", "OpenAICompatible", "provider mapping", "role assignment"]
+    covers: ["ILlmProvider", "InferRouter", "preferred provider", "provider mapping", "role assignment"]
 ---
 
 # Architecture Principles
@@ -47,7 +47,7 @@ Agent role definitions, `BackgroundService` worker pattern, `TaskAttempt` lifecy
 Load when: working on any agent worker, implementing revision gates, reasoning about task or workflow state.
 
 ### `llm-strategy.md`
-`ILLMProvider` abstraction, the three provider implementations, and the role-to-provider
+`ILlmProvider` abstraction, the InferRouter-backed implementation, and the role-to-provider
 mapping strategy.
 Load when: adding or changing an LLM provider, configuring role assignments, reviewing DI registration.
 

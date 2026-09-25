@@ -72,7 +72,10 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.Configure<InferRouterOptions>(configuration.GetSection("InferRouter"));
+        services.AddOptions<InferRouterOptions>()
+            .Bind(configuration.GetSection(InferRouterOptions.SectionName))
+            .ValidateOnStart();
+        services.AddSingleton<IValidateOptions<InferRouterOptions>, InferRouterOptionsValidator>();
 
         services.AddHttpClient(InferRouterHttpClientName, (sp, client) =>
         {

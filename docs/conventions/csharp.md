@@ -27,7 +27,7 @@ When a rule conflicts with an ADR, the ADR takes precedence.
 | Element | Convention | Example |
 |---|---|---|
 | Class, record, enum | PascalCase | `WorkTask`, `AttemptResult` |
-| Interface | `I` + PascalCase | `ILLMProvider` |
+| Interface | `I` + PascalCase | `ILlmProvider` |
 | Method | PascalCase | `ResolveGateAsync` |
 | Property | PascalCase | `RejectionReason` |
 | Local variable | camelCase | `taskAttempt` |

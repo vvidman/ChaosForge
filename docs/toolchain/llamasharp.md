@@ -2,9 +2,15 @@
 category: toolchain
 tool: "LlamaSharp — Local LLM Inference"
 last_updated: "2026-03-29"
+status: superseded
+superseded_by: ADR-011
 ---
 
 # LlamaSharp — Local LLM Inference
+
+> **Superseded by [ADR-011](../adr/011-inferrouter-integration.md).** ChaosForge no longer calls
+> LlamaSharp directly — all LLM traffic goes through InferRouter. Kept for historical context only;
+> for current setup see `configuration.md`.
 
 ## Purpose
 LlamaSharp runs llama.cpp in-process with the .NET host — no separate process, no HTTP overhead.

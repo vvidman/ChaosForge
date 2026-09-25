@@ -14,7 +14,7 @@ five before it is considered done.
 
 ## SRP — Single Responsibility
 One reason to change. `AgentWorkerService` polls for tasks — it does not format prompts.
-`LlamaSharpProvider` runs inference — it does not decide which role uses it.
+`InferRouterLlmProvider` calls the model — it does not decide which role uses it.
 
 - **Must**: a class that combines I/O and business logic → split it
 - **?** If this class changes, does the change affect more than one workflow concern?
@@ -26,16 +26,16 @@ Open for extension, closed for modification. New agent roles or providers are ad
 implementing an interface — not by editing existing classes.
 
 - **Must**: adding a new `AgentRole` must not require editing existing handlers
-- **?** Would adding a new LLM provider require touching anything outside `AddInfrastructureServices`?
+- **?** Would adding a new LLM provider require touching anything outside `AddInfrastructure`?
 
 ---
 
 ## LSP — Liskov Substitution
-Any `ILLMProvider` implementation must honour the same contract: return a completion or
+Any `ILlmProvider` implementation must honour the same contract: return a completion or
 throw a typed exception — never silently return null or swallow errors.
 
-- **Must**: `ILLMProvider` implementors must not return null on success
-- **?** Can I swap `LlamaSharpProvider` for `GroqProvider` in a unit test without changing the test?
+- **Must**: `ILlmProvider` implementors must not return null on success
+- **?** Can I swap `InferRouterLlmProvider` for a test double in a unit test without changing the test?
 
 ---
 
@@ -49,7 +49,7 @@ only reads tasks does not depend on project persistence.
 ---
 
 ## DIP — Dependency Inversion
-Application handlers depend on `ILLMProvider`, `IUnitOfWork` — never on concrete
+Application handlers depend on `ILlmProvider`, `IUnitOfWork` — never on concrete
 infrastructure types. Concrete types are resolved exclusively in Infrastructure DI registration.
 
 - **Must**: constructor parameters in Application and Domain must be interfaces or value types — never concrete infrastructure types

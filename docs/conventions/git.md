@@ -38,7 +38,7 @@ Format: `<type>(<scope>): <short summary>` — imperative mood, max 72 character
 ```
 feat(revision-gate): add RejectionReason required validation
 fix(task-attempt): set CompletedAt on rejection result
-chore(deps): update LlamaSharp to 0.14.0
+chore(deps): update MediatR to 14.1.0
 test(handlers): add ResolveRevisionGateHandler edge cases
 ```
 

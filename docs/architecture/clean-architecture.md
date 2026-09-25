@@ -28,7 +28,7 @@ without touching the core.
 | API | ChaosForge.API | Application (via MediatR) |
 
 ### Dependency inversion at boundaries
-Interfaces (`ILLMProvider`, `IProjectRepository`, `IUnitOfWork`) are declared in Domain or
+Interfaces (`ILlmProvider`, `IProjectRepository`, `IUnitOfWork`) are declared in Domain or
 Application. Infrastructure implements them. API wires everything via DI extension methods:
 `AddDomainServices()` / `AddApplicationServices()` / `AddInfrastructureServices(configuration)`.
 
@@ -56,4 +56,4 @@ Everything goes through a Command or Query handler.
 
 ## References
 - See `cqrs.md` — the Command/Query split that reinforces Application layer boundaries
-- See `llm-strategy.md` — how `ILLMProvider` is resolved at runtime
+- See `llm-strategy.md` — how `ILlmProvider` is resolved at runtime

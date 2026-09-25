@@ -4,7 +4,7 @@ id: "011"
 title: "Route LLM calls through InferRouter instead of direct provider SDKs"
 status: accepted
 date: "2026-07-07"
-supersedes: null
+supersedes: "007"
 superseded_by: null
 related_principles: [llm-strategy, solid]
 ---

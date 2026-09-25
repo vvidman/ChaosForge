@@ -1,6 +1,6 @@
 ---
 category: adr
-last_updated: "2026-03-29"
+last_updated: "2026-09-25"
 documents:
   - file: 001-clean-architecture.md
     title: "Clean Architecture layer model"
@@ -28,7 +28,7 @@ documents:
     date: "2026-03-29"
   - file: 007-llamasharp-vs-ollama.md
     title: "LlamaSharp for local inference over Ollama HTTP"
-    status: accepted
+    status: superseded
     date: "2026-03-29"
   - file: 008-sqlite-efcore.md
     title: "SQLite with EF Core for persistence"
@@ -70,7 +70,7 @@ principle, the ADR wins.
 | 004 | ILLMProvider abstraction for all LLM calls | accepted | 2026-03-29 |
 | 005 | RevisionGate as a first-class domain entity | accepted | 2026-03-29 |
 | 006 | TaskAttempt record per dev/review/test cycle | accepted | 2026-03-29 |
-| 007 | LlamaSharp for local inference over Ollama HTTP | accepted | 2026-03-29 |
+| 007 | LlamaSharp for local inference over Ollama HTTP | superseded by 011 | 2026-03-29 |
 | 008 | SQLite with EF Core for persistence | accepted | 2026-03-29 |
 | 009 | SignalR for real-time agent event delivery | accepted | 2026-03-29 |
 | 010 | RevisionGateType naming: phase-centric over agent-centric | accepted | 2026-04-12 |

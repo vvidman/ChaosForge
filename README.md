@@ -1,5 +1,8 @@
 # ChaosForge
 
+[![CI](https://github.com/vvidman/ChaosForge/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/vvidman/ChaosForge/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+
 A multi-agent AI software development team simulator built in .NET 10. A human defines a project with Use Cases; seven AI agents (BA, Architect, Scrum Master, Developer, Tester, Reviewer, Technical Writer) execute a full Scrum-like workflow autonomously, with the human acting as judge at three mandatory revision gates.
 
 ---
@@ -45,7 +48,7 @@ flowchart TD
         App -->|IDomainEventDispatcher| Dispatcher
         Dispatcher -->|SignalR| React[React Frontend]
         Dispatcher -->|Orchestration handlers| Workers[Agent BackgroundServices]
-        Workers -->|ILLMProvider| InferRouter[InferRouter — role-preferred routing]
+        Workers -->|ILlmProvider| InferRouter[InferRouter — role-preferred routing]
     end
 
     Human -->|HTTP| API
@@ -57,15 +60,15 @@ flowchart TD
 
 ## Key Design Decisions
 
-- **Clean Architecture with a zero-dependency Domain layer.** Domain has no NuGet references. All external interfaces (`ILLMProvider`, `IProjectRepository`, `IDomainEventDispatcher`) are declared in Domain or Application and implemented in Infrastructure. Layer violations are detectable by project reference analysis alone. → [ADR-001](docs/adr/001-clean-architecture.md)
+- **Clean Architecture with a zero-dependency Domain layer.** Domain has no NuGet references. All external interfaces (`ILlmProvider`, `IProjectRepository`, `IDomainEventDispatcher`) are declared in Domain or Application and implemented in Infrastructure. Layer violations are detectable by project reference analysis alone. → [ADR-001](docs/adr/001-clean-architecture.md)
 
-- **ILLMProvider abstraction decouples agents from LLM backends.** Application handlers call `ILLMProvider` via constructor injection and never reference LlamaSharp, Groq, or any SDK namespace. Role-to-provider mapping is resolved once in `AddInfrastructureServices()`. Adding a new provider requires no changes outside Infrastructure. → [ADR-004](docs/adr/004-illmprovider-abstraction.md)
+- **ILlmProvider abstraction decouples agents from LLM backends.** Application handlers call `ILlmProvider` via constructor injection and never reference a provider SDK. Role-to-provider mapping is resolved once in `AddInfrastructure()`. The abstraction made the later move from in-process providers to InferRouter an Infrastructure-only change. → [ADR-004](docs/adr/004-illmprovider-abstraction.md), [ADR-011](docs/adr/011-inferrouter-integration.md)
 
 - **RevisionGate is a first-class domain entity, not a flag.** It stores the original agent output, the human-edited version, the decision, and the rejection reason — enabling full audit trails and clean retry cycles. `EditAndAccept` raises a domain event consumed by `ButterflyService`, which propagates changes downstream without special-casing in callers. → [ADR-005](docs/adr/005-revision-gate-entity.md)
 
 - **TaskAttempt per dev/review/test cycle enables prompt-level learning from rejection.** Every cycle creates an immutable `TaskAttempt`. When a new cycle starts on a rejected task, the previous attempt's output and rejection note are injected into the prompt — agents receive context without maintaining in-memory state. → [ADR-006](docs/adr/006-task-attempt-per-cycle.md)
 
-- **LlamaSharp over Ollama for local inference.** LlamaSharp runs llama.cpp in-process via P/Invoke — no external daemon, no HTTP overhead, no Docker container. `dotnet run` is sufficient to start the entire system including local LLM inference. → [ADR-007](docs/adr/007-llamasharp-vs-ollama.md)
+- **LLM routing is delegated to InferRouter.** The first version ran LlamaSharp in-process next to a direct Groq client ([ADR-007](docs/adr/007-llamasharp-vs-ollama.md), now superseded). Once the companion router [InferRouter](https://github.com/vvidman/InferRouter) existed, keeping its own provider integrations duplicated what InferRouter already owns: provider fallback, rate-limit tracking and health checks. ChaosForge now sends every call through InferRouter and only states a *preferred* provider per role, which keeps the role-based routing and adds a shared fallback chain. → [ADR-011](docs/adr/011-inferrouter-integration.md)
 
 - **Agent workers are BackgroundServices with no transport awareness.** Workers dispatch MediatR commands and emit domain events only. SignalR is wired via `IDomainEventDispatcher` in Infrastructure — swapping the real-time transport requires a single new implementation, no changes to agents. → [ADR-003](docs/adr/003-background-service-workers.md), [ADR-009](docs/adr/009-signalr-events.md)
 
@@ -109,7 +112,7 @@ Singleton constraints (BA, Architect, Scrum Master) are enforced at the domain l
 ## LLM Provider Strategy
 
 ```
-ILLMProvider
+ILlmProvider
 └── InferRouterLlmProvider — calls InferRouter's /v1/chat/completions,
                              two keyed instances differ only by preferred_provider_name
 ```
@@ -129,56 +132,84 @@ ILLMProvider
 - **ORM/DB:** EF Core + SQLite — zero external infrastructure
 - **LLM routing:** InferRouter (companion service) — OpenAI-compatible `/v1/chat/completions`, multi-provider fallback
 - **CQRS dispatch:** MediatR with FluentValidation pipeline behaviors
-- **Testing:** xUnit, FluentAssertions, NSubstitute
+- **Frontend libraries:** TanStack Query, Zustand, Tailwind, dnd-kit
+- **Testing:** xUnit, FluentAssertions, NSubstitute (backend), Vitest (frontend)
+- **CI:** GitHub Actions — backend build/test, frontend lint/test/build
+- **Packaging:** multi-stage Dockerfile, single container serving API + SPA
 
 ---
 
 ## Project Status
 
-**Backend: complete.** All 31 feature specs implemented and merged (as of 2026-04-12):
-- Domain entities, events, and repository interfaces
-- Full CQRS command/query layer (MediatR + FluentValidation)
-- EF Core + SQLite persistence with migrations
-- Groq and LlamaSharp LLM providers
-- All seven agent workers as BackgroundServices
-- Phase orchestration and development loop handlers
-- ButterflyService (EditAndAccept downstream propagation)
-- SignalR hub with domain event notification handlers
+**Feature-complete for the v1 scope** — backend, frontend, Docker packaging and InferRouter integration are implemented and merged.
 
-**Next milestone:** React frontend — Sprint Board, Revision Gate panel, live agent monitor.
+- **Backend:** domain model and events, full CQRS layer (MediatR + FluentValidation), EF Core + SQLite persistence, seven agent workers, phase and development-loop orchestration, `ButterflyService`, SignalR notifications
+- **Frontend:** project list and detail, Revision Gate judge UI, requirements pipeline, drag-and-drop sprint board, live agent monitor, task attempt history
+- **Operations:** single-container Docker build, production configuration, startup validation of required settings
+- **Documentation:** 11 ADRs, 45 feature specs and 6 code-review fix specs under [`docs/`](docs/README.md)
+
+**Next:** a v2 is in progress on Microsoft Agent Framework (agents as A2A services, Postgres checkpointing) — it lives in a separate repository.
+
+---
+
+## How This Was Built
+
+ChaosForge is also an experiment in **spec-driven, AI-assisted development**: the human orchestrates, the AI executes. Claude Code did the implementation; design, scope and review stayed with the human.
+
+- **Knowledge base as the source of truth.** [`docs/`](docs/README.md) is split into ADRs, architecture principles, domain rules, conventions, toolchain and specs. Each category has a manifest (`README.md` with a frontmatter index), so an agent loads only what the current task needs instead of the whole repo.
+- **[`CLAUDE.md`](CLAUDE.md) as project memory.** It holds the non-negotiable rules, a trigger table (which manifest to load for which kind of task) and an explicit conflict order: **ADR > Domain > Architecture > Conventions > Toolchain**.
+- **One spec → one branch → one PR.** Every feature starts as a spec in [`docs/specs/`](docs/specs/README.md) with its branch name in the frontmatter. The agent produces a numbered plan, waits for approval, implements, adds tests, builds, marks the spec `done`, and opens a PR to `dev`.
+- **Review findings become specs too.** Code-review findings were written up as `cr-fix-*` specs and went through the same flow, so fixes are traceable.
+- **Custom tooling for context.** A Claude Code command ([`.claude/commands/gen-api-map.md`](.claude/commands/gen-api-map.md)) generates a backend API map, so frontend work could run against a compact contract instead of reading the C# sources.
 
 ---
 
 ## Getting Started
 
-**Prerequisites:** .NET 10 SDK, Node.js 20+, an InferRouter instance running and reachable on the local network.
+**Prerequisites:** a running [InferRouter](https://github.com/vvidman/InferRouter) instance. Then either Docker, or the .NET 10 SDK plus Node.js 20+.
 
 ```bash
 git clone https://github.com/vvidman/ChaosForge.git
 cd ChaosForge
 ```
 
+### Option A — Docker (single container)
+
 ```bash
+cp .env.docker.example .env.docker   # set INFERROUTER_BASE_URL
+docker compose --env-file .env.docker up --build
+```
+
+Open `http://localhost:8080`. On Windows, `.\Start-ChaosForge.ps1` does the same and prompts for missing settings. Details: [docs/toolchain/docker.md](docs/toolchain/docker.md).
+
+### Option B — Local development
+
+```bash
+# Backend — set InferRouter:BaseUrl, then run (migrations are applied on startup)
 cp src/ChaosForge.API/appsettings.Development.example.json \
    src/ChaosForge.API/appsettings.Development.json
+dotnet run --project src/ChaosForge.API          # http://localhost:5143
+
+# Frontend — in a second terminal
+cd web
+npm ci
+npm run dev                                       # Vite dev server
 ```
 
-Edit the file:
+The API refuses to start if `InferRouter:BaseUrl` is missing or is not an absolute http(s) URL. All settings are listed in [docs/toolchain/configuration.md](docs/toolchain/configuration.md).
 
-```json
-{
-  "InferRouter": { "BaseUrl": "http://<your-inferrouter-host>:5100" }
-}
-```
+### Tests
 
 ```bash
-dotnet ef database update --project src/ChaosForge.Infrastructure \
-                          --startup-project src/ChaosForge.API
-
-dotnet run --project src/ChaosForge.API
+dotnet test
+cd web && npm test
 ```
 
-API available at `https://localhost:5001`.
+---
+
+## Related
+
+- **[InferRouter](https://github.com/vvidman/InferRouter)** — the self-hosted, OpenAI-compatible LLM router ChaosForge uses: provider chaining, rate-limit fallback, local model fallback.
 
 ---
 
@@ -192,11 +223,11 @@ API available at `https://localhost:5001`.
 
 ```
 feat(domain): add TaskAttempt retry count cap
-fix(infra): handle Groq rate limit with exponential backoff
+fix(infra): retry InferRouter calls on transient 5xx responses
 ```
 
 **PR checklist:**
-- [ ] `dotnet test` passes
+- [ ] `dotnet test` and `npm test` (in `web/`) pass
 - [ ] New behavior covered by tests
 - [ ] No new compiler warnings
 - [ ] `appsettings.Development.example.json` updated if new config keys added
