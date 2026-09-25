@@ -2,17 +2,17 @@
 category: adr
 id: "007"
 title: "LlamaSharp for local inference over Ollama HTTP"
-status: accepted
+status: superseded
 date: "2026-03-29"
 supersedes: null
-superseded_by: null
+superseded_by: "011"
 related_principles: [llm-strategy]
 ---
 
 # ADR-007: LlamaSharp for local inference over Ollama HTTP
 
 ## Status
-`accepted`
+`superseded` by [ADR-011](011-inferrouter-integration.md) — LLM calls now go through InferRouter; ChaosForge no longer hosts local inference in-process.
 
 ## Context
 ChaosForge runs LLM inference locally on CPU (no GPU). The local provider must run

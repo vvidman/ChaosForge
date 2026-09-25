@@ -5,7 +5,7 @@
 
 .DESCRIPTION
     Checks prerequisites, creates .env.docker from .env.docker.example if missing,
-    prompts for GROQ_API_KEY, then runs docker compose up --build.
+    makes sure INFERROUTER_BASE_URL is set, then runs docker compose up --build.
 
 .PARAMETER Detach
     Run containers in background (-d).
@@ -95,38 +95,36 @@ Get-Content $EnvFile | Where-Object { $_ -match '^\s*[^#].*=' } | ForEach-Object
     $envVars[$parts[0].Trim()] = $parts[1].Trim()
 }
 
-# ── Groq API key prompt ────────────────────────────────────────────────────────
+# ── InferRouter URL ────────────────────────────────────────────────────────────
 
-$groqKey = $envVars['GROQ_API_KEY']
-if ([string]::IsNullOrWhiteSpace($groqKey) -or $groqKey -eq 'your-key-here') {
-    Write-Warn "GROQ_API_KEY is not set in .env.docker"
-    $entered = Read-Host "  Enter Groq API key (leave blank to skip — LLM calls will fail at runtime)"
-    if (-not [string]::IsNullOrWhiteSpace($entered)) {
-        # Update the key in the file
-        $content = Get-Content $EnvFile -Raw
-        $content = $content -replace '(?m)^GROQ_API_KEY=.*$', "GROQ_API_KEY=$entered"
-        Set-Content $EnvFile $content -NoNewline
-        Write-Ok "GROQ_API_KEY saved to .env.docker"
-    } else {
-        Write-Warn "Skipped — app will start but LLM agent calls will fail"
+$inferUrl = $envVars['INFERROUTER_BASE_URL']
+if ([string]::IsNullOrWhiteSpace($inferUrl)) {
+    Write-Warn "INFERROUTER_BASE_URL is not set in .env.docker"
+    $inferUrl = Read-Host "  Enter InferRouter base URL as seen from the container (e.g. http://host.docker.internal:5100)"
+    if ([string]::IsNullOrWhiteSpace($inferUrl)) {
+        Abort "INFERROUTER_BASE_URL is required - the API refuses to start without it."
     }
+    $content = Get-Content $EnvFile -Raw
+    if ($content -match '(?m)^INFERROUTER_BASE_URL=') {
+        $content = [regex]::Replace($content, '(?m)^INFERROUTER_BASE_URL=.*$', { "INFERROUTER_BASE_URL=$inferUrl" })
+    } else {
+        $content = $content.TrimEnd() + [Environment]::NewLine + "INFERROUTER_BASE_URL=$inferUrl" + [Environment]::NewLine
+    }
+    Set-Content $EnvFile $content -NoNewline
+    Write-Ok "INFERROUTER_BASE_URL saved to .env.docker"
 } else {
-    Write-Ok "GROQ_API_KEY is set"
+    Write-Ok "InferRouter: $inferUrl"
 }
 
-# ── LlamaSharp model (optional) ────────────────────────────────────────────────
+if ($inferUrl -match '://(localhost|127\.0\.0\.1)([:/]|$)') {
+    Write-Warn "INFERROUTER_BASE_URL points to localhost - inside the container that is the container itself."
+    Write-Warn "Use http://host.docker.internal:<port> for an InferRouter running on this machine."
+}
 
-$modelDir  = $envVars['LLAMA_MODEL_DIR']
-$modelPath = $envVars['LLAMA_MODEL_PATH']
-
-if ([string]::IsNullOrWhiteSpace($modelDir) -or $modelDir -eq '/path/to/your/models') {
-    Write-Warn "LLAMA_MODEL_DIR not configured — local inference disabled (Groq only)"
-} else {
-    if (Test-Path $modelDir) {
-        Write-Ok "LlamaSharp model dir: $modelDir"
-    } else {
-        Write-Warn "LLAMA_MODEL_DIR '$modelDir' does not exist — local inference disabled"
-    }
+$legacyKeys = @('GROQ_API_KEY', 'GROQ_MODEL', 'LLAMA_MODEL_DIR', 'LLAMA_MODEL_PATH') |
+    Where-Object { $envVars.ContainsKey($_) }
+if ($legacyKeys) {
+    Write-Warn "Ignoring legacy keys in .env.docker (LLM routing moved to InferRouter, see ADR-011): $($legacyKeys -join ', ')"
 }
 
 # ── Build + run ────────────────────────────────────────────────────────────────

@@ -9,13 +9,14 @@ The system embraces non-determinism — chaos is by design.
 
 ## Tech Stack
 * **Backend**: .NET 10, ASP.NET Core Web API
-* **Frontend**: React (Vite + TypeScript)
+* **Frontend**: React 19 (Vite + TypeScript), TanStack Query, Zustand, Tailwind — lives in `web/`
 * **Real-time**: SignalR
 * **ORM**: Entity Framework Core + SQLite
-* **LLM Local**: LlamaSharp (CPU-only, no GPU)
-* **LLM Online**: Groq API (free tier), OpenAI-compatible
-* **Architecture**: Clean Architecture + CQRS (MediatR)
-* **Testing**: xUnit, FluentAssertions, NSubstitute
+* **LLM**: InferRouter (companion OpenAI-compatible router, `InferRouter:BaseUrl`) — ChaosForge
+  sends a `preferred_provider_name` per role; provider keys and fallback live in InferRouter (ADR-011)
+* **Architecture**: Clean Architecture + CQRS (MediatR + FluentValidation)
+* **Testing**: xUnit, FluentAssertions, NSubstitute (backend); Vitest (frontend)
+* **CI**: GitHub Actions — `.github/workflows/ci.yml` (backend build/test, frontend lint/test/build)
 
 ## Solution Structure
 ```
@@ -23,9 +24,9 @@ ChaosForge.slnx
 ├── src/
 │   ├── ChaosForge.Domain          ← Entities, domain events, interfaces. ZERO external deps.
 │   ├── ChaosForge.Application     ← CQRS Commands/Queries via MediatR, use cases
-│   ├── ChaosForge.Infrastructure  ← EF Core, LlamaSharp, Groq, BackgroundService workers
-│   ├── ChaosForge.API             ← ASP.NET Core controllers, SignalR Hub, thin layer only
-│   └── ChaosForge.Web             ← React frontend (Vite + TypeScript)
+│   ├── ChaosForge.Infrastructure  ← EF Core, InferRouter LLM client, SignalR hub, BackgroundService workers
+│   └── ChaosForge.API             ← Minimal API endpoints, thin layer only; serves the SPA in Docker
+├── web/                           ← React frontend (Vite + TypeScript)
 └── tests/
     ├── ChaosForge.Domain.Tests
     ├── ChaosForge.Application.Tests
@@ -43,9 +44,9 @@ Key non-negotiables:
 * `nameof` instead of string literals for member names
 
 ## Permanent Prohibitions
-* NEVER put business logic in controllers or SignalR hubs
+* NEVER put business logic in API endpoints or SignalR hubs
 * NEVER reference Infrastructure from Domain or Application
-* NEVER call LLM providers directly from Application layer — always through ILLMProvider
+* NEVER call LLM providers directly from Application layer — always through ILlmProvider
 * NEVER make AgentWorkerService aware of HTTP/SignalR — use domain events
 * NEVER use raw SQL — EF Core only
 * NEVER commit secrets or API keys — use dotnet user-secrets or environment variables

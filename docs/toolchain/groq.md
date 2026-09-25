@@ -2,9 +2,15 @@
 category: toolchain
 tool: "Groq — Cloud LLM API"
 last_updated: "2026-03-29"
+status: superseded
+superseded_by: ADR-011
 ---
 
 # Groq — Cloud LLM API
+
+> **Superseded by [ADR-011](../adr/011-inferrouter-integration.md).** ChaosForge no longer calls
+> Groq directly — all LLM traffic goes through InferRouter. Kept for historical context only;
+> for current setup see `configuration.md`.
 
 ## Purpose
 Groq provides fast cloud inference for complex agent roles (BusinessAnalyst, Architect,
@@ -82,6 +88,6 @@ Free tier limits reset daily. Check at: https://console.groq.com/settings/limits
 **Fix:** Retry is handled automatically by `GroqProvider`. If latency is consistently high, switch to `llama-3.1-8b-instant` for the session.
 
 ## References
-- See ADR-004 for `ILLMProvider` abstraction rationale
+- See ADR-004 for `ILlmProvider` abstraction rationale
 - See `llamasharp.md` for the local provider used by repetitive agent roles
 - See `llm-strategy.md` (architecture) for role-to-provider mapping

@@ -1,7 +1,7 @@
 ---
 category: conventions
 topic: "Toolchain and Build Commands"
-last_updated: "2026-03-29"
+last_updated: "2026-09-25"
 related_adr: [ADR-008]
 ---
 
@@ -50,12 +50,14 @@ dotnet test tests/ChaosForge.Application.Tests
 
 ```bash
 # Install dependencies (first time or after package.json changes)
-cd src/ChaosForge.Web && npm install
+cd web && npm ci
 
 # Run dev server
 npm run dev
 
-# Build for production
+# Lint, test, build (same steps CI runs)
+npm run lint
+npm test
 npm run build
 ```
 
@@ -88,15 +90,16 @@ Examples: `AddRevisionGateEntity`, `AddTaskAttemptReviewNote`, `SeedAgentRoles`
 ## Secrets and Configuration
 
 ```bash
-# Set a user secret (never commit secrets to source)
-dotnet user-secrets set "Groq:ApiKey" "<value>" --project src/ChaosForge.API
+# Point the API at an InferRouter instance (machine-specific, keep out of source control)
+dotnet user-secrets set "InferRouter:BaseUrl" "http://<host>:5100" --project src/ChaosForge.API
 
 # List current user secrets
 dotnet user-secrets list --project src/ChaosForge.API
 ```
 
 Environment variable override pattern (production / CI):
-`ChaosForge__Groq__ApiKey=<value>` — double underscore maps to nested JSON keys.
+`InferRouter__BaseUrl=<value>` — double underscore maps to nested JSON keys.
+Provider API keys live in InferRouter, not in ChaosForge.
 
 ---
 
