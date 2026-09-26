@@ -46,6 +46,8 @@ internal sealed class ScrumMasterWorker : AgentWorkerBase
         text outside the JSON object.
         """;
 
+    private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
+
     public ScrumMasterWorker(
         IServiceScopeFactory scopeFactory,
         IOptions<AgentWorkerOptions> options,
@@ -143,9 +145,7 @@ internal sealed class ScrumMasterWorker : AgentWorkerBase
 
         try
         {
-            var dto = JsonSerializer.Deserialize<SprintPlanDto>(
-                rawResponse,
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var dto = JsonSerializer.Deserialize<SprintPlanDto>(LlmJson.Extract(rawResponse), JsonOptions);
 
             if (dto?.SprintTaskIds is { Count: > 0 })
             {

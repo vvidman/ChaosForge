@@ -53,6 +53,8 @@ internal sealed class ArchitectWorker : AgentWorkerBase
         Do not include any explanation or text outside the JSON array.
         """;
 
+    private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
+
     public ArchitectWorker(
         IServiceScopeFactory scopeFactory,
         IOptions<AgentWorkerOptions> options,
@@ -149,6 +151,8 @@ internal sealed class ArchitectWorker : AgentWorkerBase
         }
 
         // Step 6 (Pass 2): decompose each newly created SRS into WorkTasks
+        var undecomposedSrsTitles = new List<string>();
+
         foreach (var urs in ursList)
         {
             var srsItems = await srsRepo.GetByURSIdAsync(urs.Id, ct);
@@ -181,13 +185,11 @@ internal sealed class ArchitectWorker : AgentWorkerBase
                 return;
             }
 
-            List<WorkTaskDto>? tasks;
+            List<WorkTaskDto> tasks;
 
             try
             {
-                tasks = JsonSerializer.Deserialize<List<WorkTaskDto>>(
-                    rawJson,
-                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                tasks = LlmJson.DeserializeList<WorkTaskDto>(rawJson, JsonOptions);
             }
             catch (JsonException ex)
             {
@@ -197,15 +199,19 @@ internal sealed class ArchitectWorker : AgentWorkerBase
                     srs.Id,
                     rawJson);
 
+                undecomposedSrsTitles.Add(srs.Title);
+
                 continue;
             }
 
-            if (tasks is null)
+            if (tasks.Count == 0)
             {
-                logger.LogError(
-                    "ArchitectWorker: JSON deserialized to null for SRS {SRSId}. Raw output: {RawOutput}",
+                logger.LogWarning(
+                    "ArchitectWorker: LLM returned no work tasks for SRS {SRSId}. Raw output: {RawOutput}",
                     srs.Id,
                     rawJson);
+
+                undecomposedSrsTitles.Add(srs.Title);
 
                 continue;
             }
@@ -218,6 +224,12 @@ internal sealed class ArchitectWorker : AgentWorkerBase
         }
 
         // Step 7: open the AfterArchitect revision gate with the combined SRS output
+        // A failed decomposition must be visible to the human judge, not only in the log.
+        if (undecomposedSrsTitles.Count > 0)
+        {
+            summaryParts.Insert(0, BuildDecompositionWarning(undecomposedSrsTitles));
+        }
+
         var agentOutput = string.Join("\n\n", summaryParts);
         await mediator.Send(new OpenRevisionGateCommand(projectId, RevisionGateType.Architecture, agentOutput), ct);
 
@@ -237,6 +249,13 @@ internal sealed class ArchitectWorker : AgentWorkerBase
         }
 
         return $"{urs.Title}\n{urs.Description}";
+    }
+
+    private static string BuildDecompositionWarning(IReadOnlyList<string> srsTitles)
+    {
+        var lines = string.Join("\n", srsTitles.Select(title => $"- {title}"));
+
+        return $"> **Warning:** no work tasks could be created for the following SRS items:\n{lines}";
     }
 
     private static string BuildSystemPromptWithRejection(string? rejectionReason)
