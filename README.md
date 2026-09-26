@@ -5,6 +5,8 @@
 
 A multi-agent AI software development team simulator built in .NET 10. A human defines a project with Use Cases; seven AI agents (BA, Architect, Scrum Master, Developer, Tester, Reviewer, Technical Writer) execute a full Scrum-like workflow autonomously, with the human acting as judge at three mandatory revision gates.
 
+**Built deliberately with Claude Code as the implementer.** This repository showcases the design and work-management side of a human–AI development workflow: the human designs, specifies and reviews, the AI implements. See [How This Was Built](#how-this-was-built).
+
 ![Revision Gate: the human reviews the Business Analyst's requirements document and decides to accept, edit and accept, or reject it](docs/images/ba-revision.png)
 
 ---
@@ -159,7 +161,7 @@ ILlmProvider
 
 ## Project Status
 
-**Feature-complete for the v1 scope** — backend, frontend, Docker packaging and InferRouter integration are implemented and merged.
+**Feature-complete for the v1 scope** — backend, frontend, Docker packaging and InferRouter integration are implemented and merged. See [Known Limitations](#known-limitations) for what does not work yet.
 
 - **Backend:** domain model and events, full CQRS layer (MediatR + FluentValidation), EF Core + SQLite persistence, seven agent workers, phase and development-loop orchestration, `ButterflyService`, SignalR notifications
 - **Frontend:** project list and detail, Revision Gate judge UI, requirements pipeline, drag-and-drop sprint board, live agent monitor, task attempt history
@@ -170,15 +172,49 @@ ILlmProvider
 
 ---
 
+## Known Limitations
+
+- **Reject at a revision gate does not restart the agent.** The phase agent is marked `Finished` when it opens its gate, and agent instances are only created on phase transitions, so after a Reject the project waits indefinitely. Accept and Edit & Accept work. A proper fix needs to re-activate the agent and supersede the SRS items and tasks of the rejected attempt.
+- **Stale review banner.** After a phase transition the "Human review required" banner can still show the previous gate.
+- **No authentication.** The API and UI are meant for local or demo use.
+- **Single process by design.** Agent workers are polling `BackgroundService`s inside the API host, without a durable queue ([ADR-003](docs/adr/003-background-service-workers.md)). Scaling out is a deliberate future decision.
+
+---
+
 ## How This Was Built
 
-ChaosForge is also an experiment in **spec-driven, AI-assisted development**: the human orchestrates, the AI executes. Claude Code did the implementation; design, scope and review stayed with the human.
+**ChaosForge was implemented with Claude Code on purpose.** The goal was not to show how fast I can write C#. It was to design and try out a working model for a human–AI development team, where **the human designs, plans and reviews, and the AI implements.** What this repository demonstrates is the design and the work management around the code: the architecture decisions, the domain model, and how the work was broken down, specified, reviewed and corrected.
 
-- **Knowledge base as the source of truth.** [`docs/`](docs/README.md) is split into ADRs, architecture principles, domain rules, conventions, toolchain and specs. Each category has a manifest (`README.md` with a frontmatter index), so an agent loads only what the current task needs instead of the whole repo.
-- **[`CLAUDE.md`](CLAUDE.md) as project memory.** It holds the non-negotiable rules, a trigger table (which manifest to load for which kind of task) and an explicit conflict order: **ADR > Domain > Architecture > Conventions > Toolchain**.
-- **One spec → one branch → one PR.** Every feature starts as a spec in [`docs/specs/`](docs/specs/README.md) with its branch name in the frontmatter. The agent produces a numbered plan, waits for approval, implements, adds tests, builds, marks the spec `done`, and opens a PR to `dev`.
-- **Review findings become specs too.** Code-review findings were written up as `cr-fix-*` specs and went through the same flow, so fixes are traceable.
-- **Custom tooling for context.** A Claude Code command ([`.claude/commands/gen-api-map.md`](.claude/commands/gen-api-map.md)) generates a backend API map, so frontend work could run against a compact contract instead of reading the C# sources.
+### Division of responsibilities
+
+| | Human (architect / tech lead) | Claude Code (implementer) |
+|---|---|---|
+| **Architecture** | Writes the ADRs, sets layer boundaries and the priority order between rules | Follows them and flags conflicts instead of deviating |
+| **Scope** | Breaks the product into 45 feature specs, each with explicit in-scope and out-of-scope lists | Implements exactly one spec per branch |
+| **Planning** | Approves or corrects the implementation plan before any code is written | Proposes a numbered plan from the spec and waits for approval |
+| **Quality** | Reviews every PR and turns findings into `cr-fix-*` specs | Writes the tests, keeps the build green, marks the spec `done` |
+| **Change** | Owns the trade-offs, e.g. moving LLM routing out to InferRouter ([ADR-011](docs/adr/011-inferrouter-integration.md)) | Carries out the migration against the ADR |
+
+### The workflow
+
+1. **Decide.** Architectural decisions are recorded as ADRs in [`docs/adr/`](docs/adr/README.md) before the code that depends on them exists.
+2. **Specify.** Every feature is a spec in [`docs/specs/`](docs/specs/README.md): context, domain impact, architecture decisions, an implementation checklist, what is out of scope, test expectations and open questions. The branch name is part of the spec.
+3. **Plan.** Claude Code reads the spec and only the documentation relevant to it, then produces a numbered plan. Nothing is implemented until the plan is approved.
+4. **Implement.** Claude Code implements the plan on the spec's branch, adds tests, keeps `dotnet build` at zero errors and updates the spec's status.
+5. **Review.** The human reviews the PR to `dev`. Findings become new `cr-fix-*` specs and go through the same loop, so every correction is traceable to a written decision.
+6. **Integrate.** Reviewed work is promoted from `dev` to `main`.
+
+### Engineering the context
+
+The workflow only works if the AI gets the right context, and only that.
+
+- **Knowledge base as the source of truth.** [`docs/`](docs/README.md) is split into ADRs, architecture principles, domain rules, conventions, toolchain guides and specs. Every category has a manifest (`README.md` with a frontmatter index), so an agent loads only what the current task needs.
+- **[`CLAUDE.md`](CLAUDE.md) as project memory.** It holds the non-negotiable rules, a trigger table that maps each kind of task to the manifest to load, and an explicit conflict order: **ADR > Domain > Architecture > Conventions > Toolchain**.
+- **Custom tooling.** A Claude Code command ([`.claude/commands/gen-api-map.md`](.claude/commands/gen-api-map.md)) generates a compact backend API map, so frontend specs were implemented against a contract instead of the C# sources.
+
+### What the end-to-end run taught
+
+Running the whole pipeline end to end for the screenshots in this README surfaced integration defects that the per-spec unit tests could not catch: the enum format between API and frontend, a missing CORS registration, LLM output wrapped in Markdown code fences, and a worker loop in which one stuck project blocked the others. Each was fixed through the same review loop and got a regression test. The lesson for the workflow: spec-sized slices verified by mocked unit tests need an end-to-end check as part of the definition of done.
 
 ---
 
