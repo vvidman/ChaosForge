@@ -18,6 +18,7 @@ using ChaosForge.Domain.Common;
 using ChaosForge.Domain.Entities;
 using ChaosForge.Domain.Events;
 using ChaosForge.Domain.Repositories;
+using ChaosForge.Infrastructure.Persistence.Converters;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChaosForge.Infrastructure.Persistence;
@@ -62,6 +63,13 @@ public sealed class AppDbContext(
         }
 
         return result;
+    }
+
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        // All timestamps are UTC by convention (entities use DateTime.UtcNow).
+        configurationBuilder.Properties<DateTime>().HaveConversion<UtcDateTimeConverter>();
+        configurationBuilder.Properties<DateTime?>().HaveConversion<UtcDateTimeConverter>();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

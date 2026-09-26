@@ -5,6 +5,8 @@
 
 A multi-agent AI software development team simulator built in .NET 10. A human defines a project with Use Cases; seven AI agents (BA, Architect, Scrum Master, Developer, Tester, Reviewer, Technical Writer) execute a full Scrum-like workflow autonomously, with the human acting as judge at three mandatory revision gates.
 
+![Revision Gate: the human reviews the Business Analyst's requirements document and decides to accept, edit and accept, or reject it](docs/images/ba-revision.png)
+
 ---
 
 ## Why This Exists
@@ -55,6 +57,22 @@ flowchart TD
     Human -->|Gate decisions| API
     React -->|Live events| Human
 ```
+
+---
+
+## Screenshots
+
+**Agent Monitor.** Phase-scoped agents are activated from the project's agent slots. Here the Business Analyst has finished and the Architect is working on the SRS.
+
+![Agent Monitor during the Architecture phase: Business Analyst finished, Architect working](docs/images/architect-agent-working.png)
+
+**Sprint Board.** After the Sprint Planning gate, Developer, Reviewer, Tester and Technical Writer agents pull tasks through the board in parallel.
+
+![Sprint Board in the Development phase with tasks in Backlog and In Review](docs/images/kanban-board.png)
+
+**Architecture gate.** Every phase ends at a human checkpoint; the Architect's SRS is reviewed before the Scrum Master plans the sprint.
+
+![Architecture Review gate showing the generated SRS with Accept, Edit & Accept and Reject actions](docs/images/architect-agent-revision.png)
 
 ---
 
