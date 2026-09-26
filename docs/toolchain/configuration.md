@@ -15,7 +15,7 @@ All configuration keys, their types, requirements, and defaults.
 | `ConnectionStrings:DefaultConnection` | string | **Yes** | — | SQLite connection string. App throws on startup if missing. |
 | `InferRouter:BaseUrl` | string | **Yes** | — | Absolute http(s) URL of the InferRouter instance. Validated at startup (ADR-011). |
 | `Agents:PollingIntervalMs` | int | No | `3000` | Agent poll interval in milliseconds |
-| `Cors:AllowedOrigins` | string[] | No | `[]` | Empty = allow all origins (dev-friendly). Set in production. |
+| `Cors:AllowedOrigins` | string[] | No | `[]` | Explicit origins get a credentialed policy (required by SignalR from another origin, e.g. `http://localhost:5173` for the Vite dev server — set in `appsettings.Development.example.json`). Empty = any origin without credentials, suitable only for same-origin hosting (Docker). |
 
 ## Environment variable mapping
 

@@ -38,6 +38,25 @@ var allowedOrigins = builder.Configuration
     .GetSection("Cors:AllowedOrigins")
     .Get<string[]>() ?? [];
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        if (allowedOrigins.Length > 0)
+        {
+            // Explicit origins allow credentials, which the SignalR client needs
+            // when the SPA is served from another origin (e.g. the Vite dev server).
+            policy.WithOrigins(allowedOrigins).AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+        }
+        else
+        {
+            // Browsers reject credentialed requests to a wildcard origin, so this fallback
+            // only suits same-origin hosting (the Docker image serves the SPA itself).
+            policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+        }
+    });
+});
+
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddOpenApi();
@@ -77,13 +96,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors(policy =>
-{
-    if (allowedOrigins.Length > 0)
-        policy.WithOrigins(allowedOrigins).AllowAnyHeader().AllowAnyMethod();
-    else
-        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-});
+app.UseCors();
 
 using (var scope = app.Services.CreateScope())
 {

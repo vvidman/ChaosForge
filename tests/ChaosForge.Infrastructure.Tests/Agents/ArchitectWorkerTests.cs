@@ -265,9 +265,12 @@ public sealed class ArchitectWorkerTests
             Arg.Any<CreateWorkTaskCommand>(),
             Arg.Any<CancellationToken>());
 
-        // Assert — gate still opened (cycle completed)
+        // Assert — gate still opened (cycle completed), with a visible warning for the human judge
         await _mediator.Received(1).Send(
-            Arg.Is<OpenRevisionGateCommand>(c => c.Type == RevisionGateType.Architecture),
+            Arg.Is<OpenRevisionGateCommand>(c =>
+                c.Type == RevisionGateType.Architecture &&
+                c.AgentOutput.Contains("no work tasks could be created") &&
+                c.AgentOutput.Contains("Login URS")),
             Arg.Any<CancellationToken>());
 
         // Assert — agent marked Finished
@@ -402,5 +405,49 @@ public sealed class ArchitectWorkerTests
         // Assert — first call is SRS generation; its system prompt must contain the rejection reason
         capturedSystemPrompts.Should().NotBeEmpty();
         capturedSystemPrompts[0].Should().Contain("The SRS lacked detail");
+    }
+
+    [Fact]
+    public async Task ExecuteWorkAsync_WhenWorkTaskJsonIsWrappedInCodeFence_CreatesTasksWithoutWarning()
+    {
+        // Arrange
+        var projectId = Guid.NewGuid();
+        var instance = new AgentInstance(projectId, AgentRole.Architect, "Eve");
+        var useCase = new UseCase(projectId, "Login", "User logs in", 1);
+        var urs = new URS(useCase.Id, "Login URS", "User must be able to log in");
+        var srs = new SRS(urs.Id, "Login URS", "Technical implementation of login");
+        var fencedTaskJson = "Here are the tasks:\n```json\n[{\"title\":\"Task A\",\"description\":\"Do A\",\"storyPoints\":3}]\n```";
+
+        _revisionGateRepo.GetOpenByProjectIdAsync(projectId, Arg.Any<CancellationToken>())
+            .Returns((RevisionGate?)null);
+        _revisionGateRepo.GetByProjectIdAsync(projectId, Arg.Any<CancellationToken>())
+            .Returns(new List<RevisionGate>().AsReadOnly());
+        _useCaseRepo.GetByProjectIdAsync(projectId, Arg.Any<CancellationToken>())
+            .Returns(new List<UseCase> { useCase }.AsReadOnly());
+        _ursRepo.GetByUseCaseIdAsync(useCase.Id, Arg.Any<CancellationToken>())
+            .Returns(new List<URS> { urs }.AsReadOnly());
+        _srsRepo.GetByURSIdAsync(urs.Id, Arg.Any<CancellationToken>())
+            .Returns(new List<SRS> { srs }.AsReadOnly());
+
+        _llm.CompleteAsync(Arg.Any<string>(), Arg.Is<string>(s => s.Contains("Login URS")), Arg.Any<CancellationToken>())
+            .Returns("Technical implementation of login");
+        _llm.CompleteAsync(Arg.Any<string>(), Arg.Is<string>(s => s.Contains("Technical implementation")), Arg.Any<CancellationToken>())
+            .Returns(fencedTaskJson);
+
+        _mediator.Send(Arg.Any<IRequest<Application.Common.Result>>(), Arg.Any<CancellationToken>())
+            .Returns(Application.Common.Result.Success());
+
+        // Act
+        await _worker.InvokeExecuteWorkAsync(_scope, instance, CancellationToken.None);
+
+        // Assert
+        await _mediator.Received(1).Send(
+            Arg.Is<CreateWorkTaskCommand>(c => c.SRSId == srs.Id && c.Title == "Task A" && c.StoryPoints == 3),
+            Arg.Any<CancellationToken>());
+        await _mediator.Received(1).Send(
+            Arg.Is<OpenRevisionGateCommand>(c =>
+                c.Type == RevisionGateType.Architecture &&
+                !c.AgentOutput.Contains("Warning")),
+            Arg.Any<CancellationToken>());
     }
 }

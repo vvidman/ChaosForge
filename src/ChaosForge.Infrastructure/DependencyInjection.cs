@@ -52,6 +52,13 @@ public static class DependencyInjection
 
         services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
 
+        // HTTP (Minimal API) and SignalR share one wire format: enums travel as their names,
+        // matching the frontend's string union types. Numeric input is still accepted.
+        services.ConfigureHttpJsonOptions(options =>
+        {
+            options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        });
+
         services.AddSignalR().AddJsonProtocol(options =>
         {
             options.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter());

@@ -53,7 +53,7 @@ public abstract class AgentWorkerBase : BackgroundService
 
     /// <summary>
     /// Performs one unit of agent work for the given idle instance.
-    /// Called only when <see cref="ResolveIdleInstanceAsync"/> returns a non-null instance.
+    /// Called once per cycle for every instance returned by <see cref="ResolveIdleInstancesAsync"/>.
     /// </summary>
     protected abstract Task ExecuteWorkAsync(IServiceScope scope, AgentInstance instance, CancellationToken ct);
 
@@ -74,46 +74,62 @@ public abstract class AgentWorkerBase : BackgroundService
         }
     }
 
-    private async Task RunCycleAsync(CancellationToken ct)
+    /// <summary>
+    /// Runs one polling cycle: every project in <see cref="ActivePhase"/> with an idle instance of
+    /// <see cref="Role"/> gets one unit of work. Each instance runs in its own scope, so a project
+    /// that cannot make progress (or throws) does not starve the others.
+    /// </summary>
+    internal async Task RunCycleAsync(CancellationToken ct)
     {
-        using var scope = _scopeFactory.CreateScope();
+        IReadOnlyList<AgentInstance> instances;
 
-        var instance = await ResolveIdleInstanceAsync(scope, ct);
-        if (instance is null)
+        using (var resolveScope = _scopeFactory.CreateScope())
         {
-            return;
+            instances = await ResolveIdleInstancesAsync(resolveScope, ct);
         }
 
-        await ExecuteWorkAsync(scope, instance, ct);
+        foreach (var instance in instances)
+        {
+            using var scope = _scopeFactory.CreateScope();
+
+            try
+            {
+                await ExecuteWorkAsync(scope, instance, ct);
+            }
+            catch (Exception ex) when (ex is not OperationCanceledException)
+            {
+                _logger.LogError(
+                    ex,
+                    "Unhandled exception in {Role} worker for project {ProjectId}.",
+                    Role,
+                    instance.ProjectId);
+            }
+        }
     }
 
     /// <summary>
-    /// Finds the first idle <see cref="AgentInstance"/> matching <see cref="Role"/> within a project
-    /// that is currently in <see cref="ActivePhase"/>. Returns null if no eligible instance exists.
+    /// Returns the first idle <see cref="AgentInstance"/> matching <see cref="Role"/> for each project
+    /// that is currently in <see cref="ActivePhase"/>. Returns an empty list if none exists.
     /// </summary>
-    protected async Task<AgentInstance?> ResolveIdleInstanceAsync(IServiceScope scope, CancellationToken ct)
+    protected async Task<IReadOnlyList<AgentInstance>> ResolveIdleInstancesAsync(IServiceScope scope, CancellationToken ct)
     {
         var projectRepo = scope.ServiceProvider.GetRequiredService<IProjectRepository>();
         var agentRepo = scope.ServiceProvider.GetRequiredService<IAgentInstanceRepository>();
 
         var projects = await projectRepo.GetAllAsync(ct);
+        var idleInstances = new List<AgentInstance>();
 
-        foreach (var project in projects)
+        foreach (var project in projects.Where(p => p.Status == ActivePhase))
         {
-            if (project.Status != ActivePhase)
-            {
-                continue;
-            }
-
             var agents = await agentRepo.GetByProjectIdAsync(project.Id, ct);
             var idle = agents.FirstOrDefault(a => a.Role == Role && a.Status == AgentInstanceStatus.Idle);
 
             if (idle is not null)
             {
-                return idle;
+                idleInstances.Add(idle);
             }
         }
 
-        return null;
+        return idleInstances;
     }
 }
